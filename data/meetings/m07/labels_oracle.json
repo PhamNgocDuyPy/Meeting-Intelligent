@@ -1,0 +1,22 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Định dạng báo cáo cuối tháng", "category": "scope",
+     "options": [{"option_id": "P", "label": "Bản như đợt trước (bản Huy duyệt tháng Chín)"},
+                 {"option_id": "C", "label": "Bản mới có biểu đồ"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U002", "topic_id": "T1", "option_id": "P", "stance": "propose", "quote": "nên như đợt trước đi"},
+    {"utterance_id": "U003", "topic_id": "T1", "option_id": "P", "stance": "question", "quote": "Đợt trước là bản nào"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "C", "stance": "info", "quote": "khách bên đối tác lại đòi bản mới có biểu đồ"},
+    {"utterance_id": "U006", "topic_id": "T1", "option_id": "C", "stance": "question", "quote": "Biểu đồ thì phải xem lại"},
+    {"utterance_id": "U007", "topic_id": "T1", "option_id": "P", "stance": "support", "quote": "cứ thế đi"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Xuất file báo cáo tự động", "utterance_ids": ["U008", "U009", "U010"],
+     "quote": "xuất file báo cáo tự động", "assignee": "Nam", "assignee_basis": "mentioned_only", "deadline_text": "cuối tháng"},
+    {"kind": "open_question", "title": "Bản báo cáo \"đợt trước\" là bản PDF hay Excel?", "utterance_ids": ["U003"],
+     "quote": "Đợt trước là bản nào"},
+    {"kind": "open_question", "title": "Có làm bản mới có biểu đồ không (chưa có yêu cầu văn bản)", "utterance_ids": ["U006"],
+     "quote": "chưa thấy yêu cầu bằng văn bản"}
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "difficulty": "Phân biệt việc gán task và chỉ góp ý UI; bẫy là hệ thống có thể nhầm tưởng Linh cũng nhận việc code.",
+  "topics": [
+    {
+      "keywords": [
+        "UI",
+        "góp ý giao diện",
+        "đề xuất giao diện"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "góp ý UI được ghi lại để làm sprint sau"
+      ],
+      "not_final_keywords": [],
+      "superseded_keywords": [],
+      "is_conditional": false
+    },
+    {
+      "keywords": [
+        "bug payment gateway",
+        "giao việc fix bug",
+        "task payment gateway"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "Thắng fix bug payment gateway"
+      ],
+      "not_final_keywords": [
+        "Linh fix bug payment gateway"
+      ],
+      "superseded_keywords": [],
+      "is_conditional": false
+    },
+    {
+      "keywords": [
+        "deadline 15h mai",
+        "thời hạn fix bug",
+        "15h ngày mai"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "trước 15h ngày mai"
+      ],
+      "not_final_keywords": [],
+      "superseded_keywords": [],
+      "is_conditional": false
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "fix bug payment gateway",
+        "payment gateway bug"
+      ],
+      "assignee": "Thắng",
+      "deadline": "2025-09-26"
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "Linh được gán nhầm việc code payment gateway"
+      ]
+    }
+  ]
+}

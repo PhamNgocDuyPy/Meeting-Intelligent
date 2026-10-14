@@ -1,0 +1,41 @@
+{
+  "corpus_size": 212,
+  "distractor_count": 200,
+  "meetings_count": 4,
+  "avg_p@3": 0.75,
+  "avg_r@10": 0.9375,
+  "details": [
+    {
+      "meeting_id": "m01",
+      "query": "Họp kỹ thuật chọn backend Aurora Chốt hướng backend cho Aurora để kịp sprint 7 Chọn nền tảng backend Phân việc dựng môi trường",
+      "p@3": 1.0,
+      "r@10": 1.0,
+      "rel_count": 5,
+      "distractors_in_top10": 0
+    },
+    {
+      "meeting_id": "m02",
+      "query": "Họp tiến độ tuần Helios Chốt ngày demo cho khách và phân việc báo cáo doanh thu Ngày demo Phân việc báo cáo doanh thu",
+      "p@3": 0.6666666666666666,
+      "r@10": 1.0,
+      "rel_count": 4,
+      "distractors_in_top10": 2
+    },
+    {
+      "meeting_id": "m05",
+      "query": "Họp chọn cổng thanh toán Aurora Chọn cổng thanh toán cho bản 1.0 Aurora Stripe hay cổng nội địa Phí giao dịch",
+      "p@3": 0.6666666666666666,
+      "r@10": 1.0,
+      "rel_count": 3,
+      "distractors_in_top10": 0
+    },
+    {
+      "meeting_id": "m08",
+      "query": "Họp hạ tầng Aurora - hosting và monitoring Chọn nhà cung cấp hosting và công cụ monitoring Hosting Monitoring",
+      "p@3": 0.6666666666666666,
+      "r@10": 0.75,
+      "rel_count": 4,
+      "distractors_in_top10": 5
+    }
+  ]
+}

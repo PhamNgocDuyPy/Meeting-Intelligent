@@ -1,0 +1,7 @@
+id: m02
+title: Họp tiến độ tuần Helios
+date: "2026-10-07"
+project: helios
+purpose: Chốt ngày demo cho khách và phân việc báo cáo doanh thu
+agenda: ["Ngày demo", "Phân việc báo cáo doanh thu"]
+attendees: [ha, quan, nam, dat]

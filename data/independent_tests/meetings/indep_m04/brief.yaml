@@ -1,0 +1,12 @@
+id: indep_m04
+title: Họp rà soát phạm vi màn hình Onboarding
+date: '2026-10-18'
+project: nova
+purpose: Thống nhất phạm vi màn hình Onboarding
+agenda:
+- Thảo luận loại bỏ màn onboarding
+- Quyết định giữ lại màn onboarding
+attendees:
+- viet_pm
+- an
+- huy_des

@@ -1,0 +1,7 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: đủ loại việc: giao+hạn, tự nhận, chỉ nhắc tên, giao không hạn
+[00:00:48] Hà: Quân làm phần đăng nhập, xong trước ngày 18/11 nhé.
+[00:01:30] Quân: Ok, mình nhận.
+[00:02:11] Nam: Mình sẽ viết tài liệu cho phần giao diện.
+[00:02:36] Hà: Còn phần kiểm thử tự động thì chắc Đạt làm được nhỉ.
+[00:03:00] Đạt: Để em xem đã.
+[00:03:42] Hà: Trang cập nhật test case cho luồng thanh toán nhé.

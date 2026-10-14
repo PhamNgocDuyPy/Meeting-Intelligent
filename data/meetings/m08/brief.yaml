@@ -1,0 +1,7 @@
+id: m08
+title: Họp hạ tầng Aurora - hosting và monitoring
+date: "2026-10-16"
+project: aurora
+purpose: Chọn nhà cung cấp hosting và công cụ monitoring
+agenda: ["Hosting", "Monitoring"]
+attendees: [ha, minh, quan, phuc, trang]

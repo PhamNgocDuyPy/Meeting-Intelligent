@@ -1,0 +1,23 @@
+{
+  "topics": [
+    {
+      "keywords": [
+        "GitHub Actions",
+        "Jenkins"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "Jenkins"
+      ],
+      "not_final_keywords": [
+        "GitHub Actions"
+      ],
+      "superseded_keywords": [
+        "GitHub Actions"
+      ]
+    }
+  ],
+  "tasks": [],
+  "items": [],
+  "difficulty": "A đổi thành B, người có thẩm quyền chốt"
+}

@@ -1,0 +1,26 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Ngày demo cho khách", "category": "scope",
+     "options": [{"option_id": "D", "label": "Demo ngày 15/10"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "D", "stance": "propose", "quote": "mình đề xuất thứ Năm tuần sau, 15/10"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "D", "stance": "support", "quote": "Thứ Năm tuần sau được"},
+    {"utterance_id": "U006", "topic_id": "T1", "option_id": "D", "stance": "support", "quote": "Mình cũng ổn với 15/10"},
+    {"utterance_id": "U007", "topic_id": "T1", "option_id": "D", "stance": "conclude", "quote": "chốt demo ngày 15/10"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Hoàn thành bộ lọc theo chi nhánh", "utterance_ids": ["U008", "U009"],
+     "quote": "hoàn thành bộ lọc theo chi nhánh", "assignee": "Quân", "assignee_basis": "assigned", "deadline_text": "ngày mai"},
+    {"kind": "task", "title": "Gửi bản thiết kế biểu đồ", "utterance_ids": ["U010", "U011"],
+     "quote": "gửi bản thiết kế biểu đồ", "assignee": "Nam", "assignee_basis": "assigned", "deadline_text": "thứ Sáu này"},
+    {"kind": "task", "title": "Viết tài liệu hướng dẫn sử dụng", "utterance_ids": ["U012", "U013"],
+     "quote": "viết tài liệu hướng dẫn sử dụng", "assignee": "Đạt", "assignee_basis": "self_accepted", "deadline_text": "tuần sau"},
+    {"kind": "task", "title": "Hỏi bên vận hành về trùng mã", "utterance_ids": ["U015"],
+     "quote": "hỏi bên vận hành về vụ trùng mã", "assignee": "Hà", "assignee_basis": "self_accepted", "deadline_text": null},
+    {"kind": "issue", "title": "Dữ liệu chi nhánh Đà Nẵng bị trùng mã", "utterance_ids": ["U014"],
+     "quote": "dữ liệu chi nhánh Đà Nẵng bị trùng mã"},
+    {"kind": "feedback", "title": "Demo nên có dữ liệu mẫu gần với khách", "utterance_ids": ["U016"],
+     "quote": "bản demo nên có dữ liệu mẫu thật gần với khách"}
+  ]
+}

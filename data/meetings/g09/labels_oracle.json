@@ -1,0 +1,50 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Chọn cơ sở dữ liệu",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "PostgreSQL"
+        },
+        {
+          "option_id": "B",
+          "label": "MySQL"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "đề xuất MySQL"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "chốt MySQL"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "oppose",
+      "quote": "không đồng ý"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "info",
+      "quote": "quay lại sau"
+    }
+  ],
+  "items": []
+}

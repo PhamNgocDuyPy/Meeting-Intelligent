@@ -1,0 +1,7 @@
+id: m01
+title: Họp kỹ thuật chọn backend Aurora
+date: "2026-10-05"
+project: aurora
+purpose: Chốt hướng backend cho Aurora để kịp sprint 7
+agenda: ["Chọn nền tảng backend", "Phân việc dựng môi trường"]
+attendees: [ha, minh, quan, nam, lan, trang]

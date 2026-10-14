@@ -1,0 +1,57 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Hình thức khuyến mãi tháng 11",
+      "category": "scope",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "giảm giá phần trăm"
+        },
+        {
+          "option_id": "B",
+          "label": "tặng voucher"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất giảm giá phần trăm"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "conclude",
+      "quote": "chốt giảm giá phần trăm"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "info",
+      "quote": "thông tin mới từ khách"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "reverse",
+      "quote": "hủy giảm giá phần trăm"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "defer",
+      "quote": "để xem lại"
+    }
+  ],
+  "items": []
+}

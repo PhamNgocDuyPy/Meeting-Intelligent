@@ -1,0 +1,1 @@
+{"decision_id": "m01_T1", "topic_key": "Chọn backend cho Aurora", "category": "technical", "status": "decided", "final_option": "Supabase", "supersedes": ["Firebase"], "valid_from": "2026-10-05", "evidence_utterance_ids": ["U002", "U006", "U010"], "approved_by": "PM", "flags": [], "meeting_id": "m01"}

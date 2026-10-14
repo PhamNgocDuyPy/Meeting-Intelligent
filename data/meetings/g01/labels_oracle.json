@@ -1,0 +1,71 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Chọn công cụ CI/CD",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "GitHub Actions"
+        },
+        {
+          "option_id": "B",
+          "label": "Jenkins"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất GitHub Actions"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "oppose",
+      "quote": "Mình lo về GitHub Actions"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "Jenkins có vẻ hợp hơn"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "ủng hộ Jenkins"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "reverse",
+      "quote": "bỏ GitHub Actions"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "Chốt Jenkins"
+    },
+    {
+      "utterance_id": "U006",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "ghi nhận Jenkins"
+    }
+  ],
+  "items": []
+}

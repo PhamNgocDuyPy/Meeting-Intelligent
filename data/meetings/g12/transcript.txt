@@ -1,0 +1,9 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: hai chủ đề đan xen: một chốt (phản đối đã được giải quyết), một chưa chốt
+[00:01:04] Hà: Hôm nay hai việc: chọn công cụ ci/cd và phong cách minh họa onboarding.
+[00:01:20] Quân: Về chọn công cụ ci/cd, mình đề xuất Jenkins.
+[00:01:57] Lan: Về phong cách minh họa onboarding, mình đề xuất minh họa phẳng.
+[00:02:28] Minh: Với chọn công cụ ci/cd, mình không đồng ý Jenkins, rủi ro lớn.
+[00:03:24] Quân: Mình hiểu, nhưng chốt Jenkins nhé.
+[00:04:33] Minh: Về phong cách minh họa onboarding, minh họa phẳng nghe được đó.
+[00:05:15] Minh: Ok, mình vẫn lo nhưng sẽ làm theo.
+[00:06:04] Hà: Còn phong cách minh họa onboarding thì mình ghi nhận, chưa chốt.

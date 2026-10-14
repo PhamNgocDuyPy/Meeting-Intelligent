@@ -1,0 +1,49 @@
+{
+  "difficulty": "Cần cân bằng giữa hiệu suất và tính nhất quán dữ liệu, tránh rủi ro chọn sai DB gây ảnh hưởng đến hệ thống giao dịch.",
+  "topics": [
+    {
+      "keywords": [
+        "MongoDB",
+        "MySQL",
+        "PostgreSQL"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "PostgreSQL"
+      ],
+      "not_final_keywords": [
+        "MongoDB",
+        "MySQL"
+      ],
+      "superseded_keywords": [
+        "MongoDB"
+      ],
+      "is_conditional": false
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "DB staging"
+      ],
+      "assignee": "Tuấn",
+      "deadline": "2025-09-26"
+    },
+    {
+      "keywords": [
+        "test plan"
+      ],
+      "assignee": "Mai",
+      "deadline": null
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "ACID compliance",
+        "migration risk"
+      ]
+    }
+  ]
+}

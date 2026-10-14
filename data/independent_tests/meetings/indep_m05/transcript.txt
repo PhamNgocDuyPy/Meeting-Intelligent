@@ -1,0 +1,18 @@
+[09:00:00] Việt: Xin chào大家, chúng ta bắt đầu cuộc họp release cho MVP.
+[09:00:12] Dũng: Cảm ơn Việt, hôm nay chúng ta sẽ xác định ngày phát hành và phạm vi tính năng.
+[09:00:25] Nga: Tôi đã chuẩn bị bản tóm tắt yêu cầu từ khách hàng.
+[09:00:38] Việt: Theo kế hoạch ban đầu, chúng ta dự định ra mắt vào ngày 20/10 với cả hai tính năng thanh toán QR và trả góp.
+[09:00:50] Dũng: Tuy nhiên, sau khi đánh giá độ phức tạp, tính năng trả góp còn nhiều việc cần làm, nguy cơ trễ hạn cao.
+[09:01:05] Nga: Khách hàng cũng mong muốn có sớm thanh toán QR để thử nghiệm thị trường.
+[09:01:18] Việt: Vậy chúng ta có thể cân nhắc phát hành MVP chỉ với thanh toán QR vào ngày 25/10, hoãn trả góp sang Phase 2.
+[09:01:32] Dũng: Đồng ý, ngày 25/10 là khả thi nếu chúng ta tập trung hoàn thiện module QR và kiểm thử.
+[09:01:45] Nga: Tôi sẽ cập nhật tài liệu yêu cầu và gửi lại cho đội dev trước ngày 23/10.
+[09:02:00] Việt: Dũng, bạn chịu trách nhiệm cập nhật roadmap và thông báo nội bộ về thay đổi này.
+[09:02:12] Dũng: Vâng, tôi sẽ hoàn thiện roadmap mới và gửi tới tất cả thành viên trước ngày 20/10.
+[09:02:25] Nga: Tôi sẽ liên hệ với khách hàng để thông báo về kế hoạch phát hành mới và tính năng QR trước ngày 22/10.
+[09:02:38] Việt: Còn vấn đề về rủi ro, Dũng có thể chỉ ra những điểm cần lưu ý khi triển khai QR không?
+[09:02:50] Dũng: Chủ yếu là bảo mật giao dịch và tích hợp với cổng thanh toán, tôi sẽ lên kế hoạch kiểm thử bảo mật.
+[09:03:05] Nga: Tôi cũng sẽ chuẩn bị câu hỏi thường gặp để hỗ trợ khách hàng sau khi ra mắt.
+[09:03:20] Việt: Tốt, nếu không có gì khác, chúng ta kết thúc cuộc họp. Cảm ơn mọi người.
+[09:03:30] Dũng: Cảm ơn Việt.
+[09:03:35] Nga: Cảm ơn équipe.

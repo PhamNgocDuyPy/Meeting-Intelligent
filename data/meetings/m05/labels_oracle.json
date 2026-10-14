@@ -1,0 +1,18 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Chọn cổng thanh toán", "category": "budget",
+     "options": [{"option_id": "S", "label": "Stripe"}, {"option_id": "D", "label": "Cổng nội địa"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U002", "topic_id": "T1", "option_id": "S", "stance": "propose", "quote": "mình đề xuất Stripe"},
+    {"utterance_id": "U003", "topic_id": "T1", "option_id": "D", "stance": "propose", "quote": "cổng nội địa quen thuộc hơn với họ"},
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "S", "stance": "info", "quote": "Phí Stripe cho thẻ quốc tế khá cao"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "S", "stance": "support", "quote": "mình nghiêng về Stripe"},
+    {"utterance_id": "U006", "topic_id": "T1", "option_id": "S", "stance": "conclude", "conditional": true,
+     "condition_text": "Phúc xác nhận phí giao dịch tổng cộng dưới 2%", "quote": "chốt Stripe"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Liên hệ Stripe xác nhận phí giao dịch", "utterance_ids": ["U009"],
+     "quote": "liên hệ Stripe", "assignee": "Phúc", "assignee_basis": "self_accepted", "deadline_text": "trong tuần này"}
+  ]
+}

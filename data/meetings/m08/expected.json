@@ -1,0 +1,10 @@
+{
+  "difficulty": "khó: hai chủ đề đan xen, một chốt một hoãn",
+  "topics": [
+    {"keywords": ["hosting", "aws"], "status": "decided", "final_option_keywords": ["aws"], "not_final_keywords": ["gcp"], "superseded_keywords": ["gcp"]},
+    {"keywords": ["monitoring", "grafana", "datadog"], "status": ["open", "leaning"], "not_final_keywords": ["grafana"]}
+  ],
+  "tasks": [
+    {"keywords": ["báo giá datadog", "datadog"], "assignee": "Trang", "deadline": "2026-10-23"}
+  ]
+}

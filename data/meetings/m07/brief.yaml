@@ -1,0 +1,7 @@
+id: m07
+title: Họp báo cáo cuối tháng Helios
+date: "2026-10-15"
+project: helios
+purpose: Thống nhất định dạng báo cáo cuối tháng và việc xuất file tự động
+agenda: ["Định dạng báo cáo", "Xuất file tự động"]
+attendees: [ha, quan, nam, trang]

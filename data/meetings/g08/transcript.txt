@@ -1,0 +1,5 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: hai phương án, hoãn sang họp sau
+[00:00:25] Hà: Mình bàn chọn thư viện biểu đồ.
+[00:01:22] Trang: Mình đề xuất Chart.js.
+[00:02:22] Nam: Mình lại thấy ECharts hợp hơn.
+[00:03:29] Hà: Chưa đủ thông tin để quyết, để họp sau mình quyết nhé.

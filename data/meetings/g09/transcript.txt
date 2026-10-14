@@ -1,0 +1,6 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: phản đối sau khi chốt, chưa ai giải quyết
+[00:01:22] Hà: Mình cần chốt chọn cơ sở dữ liệu.
+[00:02:10] Minh: Mình đề xuất MySQL.
+[00:02:55] Minh: Vậy chốt MySQL.
+[00:04:05] Quân: Mình không đồng ý, MySQL rủi ro lớn lắm.
+[00:04:30] Hà: Ghi nhận, mình sẽ quay lại sau.

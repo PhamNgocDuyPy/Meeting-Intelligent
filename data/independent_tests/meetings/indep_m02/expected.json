@@ -1,0 +1,45 @@
+{
+  "difficulty": "Xác định gói tài trợ phù hợp trong khi chờ phê duyệt ngân sách, rủi ro nếu hạn mức không được chấp nhận.",
+  "topics": [
+    {
+      "keywords": [
+        "gói Kim cương",
+        "gói tài trợ 200 triệu"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "gói Kim cương"
+      ],
+      "not_final_keywords": [
+        "gói Bạc",
+        "gói Vàng"
+      ],
+      "superseded_keywords": [],
+      "is_conditional": true
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "chuẩn bị đề xuất sponsorship cho BGD"
+      ],
+      "assignee": "Long",
+      "deadline": "2025-09-30"
+    },
+    {
+      "keywords": [
+        "viết bản tin nội bộ về tình trạng tài trợ"
+      ],
+      "assignee": "Trang",
+      "deadline": "2025-09-30"
+    }
+  ],
+  "items": [
+    {
+      "kind": "request",
+      "keywords": [
+        "phê duyệt hạn mức ngân sách từ BGD"
+      ]
+    }
+  ]
+}

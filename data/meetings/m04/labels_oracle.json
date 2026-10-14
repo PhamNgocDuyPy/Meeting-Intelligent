@@ -1,0 +1,20 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Cách xử lý cache màn báo cáo", "category": "technical",
+     "options": [{"option_id": "M", "label": "Cache trong bộ nhớ"}, {"option_id": "R", "label": "Redis"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U002", "topic_id": "T1", "option_id": "M", "stance": "propose", "quote": "đề xuất cache trong bộ nhớ của server"},
+    {"utterance_id": "U003", "topic_id": "T1", "option_id": "M", "stance": "oppose", "quote": "mỗi lần deploy là mất sạch"},
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "R", "stance": "support", "quote": "Mình nghiêng về Redis nhưng chưa chắc"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "R", "stance": "oppose", "quote": "mình hơi ngại"},
+    {"utterance_id": "U006", "topic_id": "T1", "option_id": "R", "stance": "support", "quote": "Nếu có Redis thì mình cũng chịu"},
+    {"utterance_id": "U007", "topic_id": "T1", "option_id": "R", "stance": "support", "quote": "Mình thì thích Redis hơn"},
+    {"utterance_id": "U008", "topic_id": "T1", "option_id": "R", "stance": "conclude", "quote": "Thôi làm Redis đi cho nhanh"},
+    {"utterance_id": "U009", "topic_id": "T1", "option_id": null, "stance": "defer", "quote": "mình quyết sau nhé"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Xem chi phí Redis và gửi mọi người", "utterance_ids": ["U010"],
+     "quote": "xem chi phí Redis và gửi mọi người", "assignee": "Quân", "assignee_basis": "self_accepted", "deadline_text": null}
+  ]
+}

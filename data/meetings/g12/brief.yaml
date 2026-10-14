@@ -1,0 +1,7 @@
+id: g12
+title: "Họp hai chủ đề đan xen"
+date: "2026-11-23"
+project: helios
+purpose: "Bàn hai chủ đề"
+agenda: ["Chọn công cụ CI/CD", "Phong cách minh họa onboarding"]
+attendees: ["quan", "ha", "nam", "minh", "trang", "lan"]

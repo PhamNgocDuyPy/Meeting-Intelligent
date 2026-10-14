@@ -1,0 +1,20 @@
+{
+  "indep_m01/brief.yaml": "94b48e5b3ae02cb988b0157d5bf6df4d494622ba73b260807df14c086e9b4645",
+  "indep_m01/expected.json": "6f5defc202dd8211436ce8059e25884aa91e235dad24d81f3cbe5584bc4ef696",
+  "indep_m01/transcript.txt": "ed6aea059d361c907724c4a200dcad4c19f13edd4fd43b4235a6e7dc7f4e5ef0",
+  "indep_m02/brief.yaml": "9d63a16b03b67656d5ca5c8ad009194f2ddb8a7455cab571ad40e373a686aeef",
+  "indep_m02/expected.json": "57af6d6fbbe2ca383bac06b6caac07f130171363b83453332d773855479dd885",
+  "indep_m02/transcript.txt": "f6ec66d6dcfc0a59795c7900c41e0f4bcbe9b8ed4fb8e77f4516819022487fcc",
+  "indep_m03/brief.yaml": "b7ce519b05963c1145e4df3a00490de68f460cb413980998126259f1034c0bbb",
+  "indep_m03/expected.json": "e389606d59633029a53dbf0f6209b74cd9ff41b857fd4440fb638d6e1f00a27c",
+  "indep_m03/transcript.txt": "327466ed6ddea1f5a09149949b201c95d81c6cfd89ce136ca14f9065669fc25e",
+  "indep_m04/brief.yaml": "591c754e7ce93850c528a1609d83527b629a288d81be1a3b32592941f3936eaa",
+  "indep_m04/expected.json": "0b2a9f596fcf0658b6fffb1e73000d49b790c7f427df9cf37d80f7cf8846af19",
+  "indep_m04/transcript.txt": "b29ec5a30ee19aaaf39adf10f7712a1f9346d86127cf1277a9084b11573cd8fe",
+  "indep_m05/brief.yaml": "83bfae25a55e358a94284e6eb33c8a57e4fd1068bd98d0ee3a00bce345fd5d2d",
+  "indep_m05/expected.json": "402e8c7a38b563bed3208d0d79ca81520090e716b0d19988cc29dcdf9a10d5ef",
+  "indep_m05/transcript.txt": "4873e4963dea48015f4bcb2eb800a8d6c92c07cfaea0c79d9dd4fd4b352e1db2",
+  "indep_m06/brief.yaml": "71c2b45d80d2f9d8e7bd26f17982013434ca58150af362f516dc4d40516fc2d9",
+  "indep_m06/expected.json": "1654a4603023f70c06d0c0761c3ff95c589c9f55359681dcb697bb5075d2ca4a",
+  "indep_m06/transcript.txt": "705e5e363abe36ae09e6d064f62d19427ea446029266e29f0493a08a1f8f36b6"
+}

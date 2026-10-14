@@ -1,0 +1,86 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Chọn công cụ CI/CD",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "GitHub Actions"
+        },
+        {
+          "option_id": "B",
+          "label": "Jenkins"
+        }
+      ]
+    },
+    {
+      "topic_id": "T2",
+      "title": "Phong cách minh họa onboarding",
+      "category": "design",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "minh họa phẳng"
+        },
+        {
+          "option_id": "B",
+          "label": "ảnh chụp thật"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "đề xuất Jenkins"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T2",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất minh họa phẳng"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "oppose",
+      "quote": "không đồng ý Jenkins"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "chốt Jenkins"
+    },
+    {
+      "utterance_id": "U006",
+      "topic_id": "T2",
+      "option_id": "A",
+      "stance": "support",
+      "quote": "minh họa phẳng nghe được"
+    },
+    {
+      "utterance_id": "U007",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "sẽ làm theo"
+    },
+    {
+      "utterance_id": "U008",
+      "topic_id": "T2",
+      "option_id": null,
+      "stance": "info",
+      "quote": "chưa chốt"
+    }
+  ],
+  "items": []
+}

@@ -1,0 +1,54 @@
+{
+  "difficulty": "Khó do cần phản ứng nhanh với sự cố sản xuất; quyết định rollback khẩn cấp và phân công điều tra.",
+  "adjudication_note": "Gold bổ sung viết sau dựa trên transcript, tách task ra khỏi topic đúng schema của hệ thống.",
+  "topics": [
+    {
+      "keywords": [
+        "rollback",
+        "v1.3",
+        "phiên bản",
+        "hệ thống"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "rollback",
+        "v1.3"
+      ],
+      "not_final_keywords": [
+        "v1.4"
+      ],
+      "superseded_keywords": []
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "giám sát metrics",
+        "metrics",
+        "Grafana"
+      ],
+      "assignee": "Quang",
+      "deadline": null
+    },
+    {
+      "keywords": [
+        "trích xuất log",
+        "phân tích",
+        "root cause"
+      ],
+      "assignee": "Thành",
+      "deadline": "2026-10-21"
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "tràn bộ nhớ",
+        "memory leak",
+        "v1.4",
+        "restart liên tục"
+      ]
+    }
+  ]
+}

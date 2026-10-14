@@ -1,0 +1,14 @@
+# Dữ liệu giả lập. Ca khó: PM "chốt" trước nhưng không có thẩm quyền release; Head of Product vào sau và quyết định cuối.
+[00:00:10] Hà: Mình cần chốt ngày release bản 1.0 của Aurora. Trang cho mọi người biết tình hình test.
+[00:00:40] Trang: Còn hai lỗi mức cao ở luồng thanh toán, mình ước tính cần thêm ba ngày để sửa và test lại.
+[00:01:30] Minh: Vậy lùi release sang thứ Tư 21/10 cho an toàn.
+[00:02:10] Hà: Mình đồng ý, thứ Tư 21/10 hợp lý. Chốt thứ Tư 21/10 nhé.
+[00:02:50] Vy: Khoan, chiến dịch quảng cáo đã đặt lịch chạy từ thứ Hai 19/10 rồi, đổi lịch thì mất phí.
+[00:03:40] Hà: Cái đó anh Huy quyết, mình chỉ là PM.
+[00:04:10] Huy: Mình vừa vào. Nếu lùi release thì mất phí quảng cáo, mình không chấp nhận chuyện đó.
+[00:05:00] Trang: Vậy bản 1.0 vẫn release thứ Hai nhưng tắt tính năng thanh toán bằng feature flag, mình test xong thanh toán rồi bật sau.
+[00:05:50] Minh: Làm được, feature flag có sẵn rồi.
+[00:06:20] Huy: Ok. Quyết định cuối: release thứ Hai 19/10, thanh toán tắt bằng feature flag, bật sau khi Trang test xong.
+[00:07:00] Hà: Ghi nhận. Trang test lại thanh toán và báo trước thứ Sáu 23/10.
+[00:07:20] Trang: Ok mình nhận.
+[00:07:40] Hà: Cảm ơn mọi người.

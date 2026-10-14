@@ -1,0 +1,17 @@
+[09:00:00] Hoàng: Cùng nhau bắt đầu cuộc họp kỹ thuật hôm nay, mục tiêu là quyết định công nghệ CSDL cho dự án mới.
+[09:00:30] Sơn: Theo mình, MongoDB là lựa chọn tốt vì schema linh hoạt, dễ mở rộng và phù hợp với dữ liệu semi-structured của chúng ta.
+[09:01:00] Tuấn: Tuy nhiên MongoDB không đảm bảo đầy đủ ACID, đặc biệt là khi cần giao dịch tài chính, chúng ta có thể gặp rủi ro về nhất quán dữ liệu.
+[09:01:30] Tuấn: Nh đề xuất chuyển sang MySQL, vì nó hỗ trợ ACID mạnh mẽ và đã được team dùng lâu năm.
+[09:02:00] Bình: MySQL thì ok về tính ổn định, nhưng nếu chúng ta cần scale writes cao thì có thể gặp bottleneck.
+[09:02:30] Mai: Từ góc độ QA, việc viết test cho MySQL cũng đơn giản hơn so với MongoDB vì có nhiều công cụ kiểm tra dữ liệu nhất quán.
+[09:03:00] Hoàng: Cả hai bên đều có điểm mạnh, nhưng chúng ta cũng cần xem xét khả năng mở rộng và hỗ trợ JSON nếu cần.
+[09:03:30] Sơn: MongoDB có thể mở rộng dễ dàng qua sharding, nhưng trade-off là mất ACID.
+[09:04:00] Tuấn: MySQL cũng có thể mở rộng qua read replica, nhưng write scaling vẫn hạn chế.
+[09:04:30] Hoàng: Sau khi nghe các ý kiến, mình nghĩ PostgreSQL là sự cân bằng tốt: hỗ trợ ACID đầy đủ, có thể mở rộng, và hỗ trợ JSONB cho dữ liệu semi-structured.
+[09:05:00] Sơn: Đúng, PostgreSQL cũng có hiệu suất tốt cho cả OLTP và OLAP.
+[09:05:30] Tuấn: Tôi đồng ý, PostgreSQL sẽ giảm thiểu rủi ro về dữ liệu mà vẫn đáp ứng nhu cầu mở rộng.
+[09:06:00] Hoàng: Vậy chúng ta chốt PostgreSQL làm CSDL chính. Tuấn, bạn chịu trách nhiệm dựng môi trường staging trước thứ Sáu nhé.
+[09:06:30] Tuấn: Được, tôi sẽ hoàn thành DB staging vào ngày 26/09.
+[09:07:00] Mai: Và tôi sẽ viết test plan cho việc migrate dữ liệu và kiểm tra chức năng sau khi staging xong.
+[09:07:30] Bình: Tôi sẽ hỗ trợ về sidecar và cấu hình backup trên staging environment.
+[09:08:00] Hoàng: Cảm ơn mọi người, họp kết thúc ở đây. Nhớ cập nhật tiến độ vào công việc chung.

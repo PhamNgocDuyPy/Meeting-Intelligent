@@ -1,0 +1,53 @@
+{
+  "difficulty": "Phân biệt việc gán task và chỉ góp ý UI; bẫy là hệ thống có thể nhầm tưởng Linh cũng nhận việc code.",
+  "adjudication_note": "Gold bổ sung viết sau dựa trên transcript, tách task ra khỏi topic đúng schema của hệ thống.",
+  "topics": [
+    {
+      "keywords": [
+        "giao diện",
+        "UI",
+        "góp ý UI",
+        "cải thiện màu sắc"
+      ],
+      "status": [
+        "open",
+        "leaning"
+      ],
+      "final_option_keywords": [
+        "sprint sau",
+        "ghi lại để làm sprint sau"
+      ],
+      "not_final_keywords": [],
+      "superseded_keywords": []
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "fix bug payment gateway",
+        "payment gateway",
+        "thanh toán thẻ quốc tế"
+      ],
+      "assignee": "Thắng",
+      "deadline": "2026-10-18"
+    }
+  ],
+  "forbidden_tasks": [
+    {
+      "keywords": [
+        "Linh code",
+        "Linh fix"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "lỗi timeout",
+        "payment gateway",
+        "bug urgent"
+      ]
+    }
+  ]
+}

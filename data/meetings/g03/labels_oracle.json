@@ -1,0 +1,64 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Quy ước đặt tên nhánh git",
+      "category": "process",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "feature/tên-việc"
+        },
+        {
+          "option_id": "B",
+          "label": "tên-người/tên-việc"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "đề xuất tên-người/tên-việc"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "muốn feature/tên-việc"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "support",
+      "quote": "feature/tên-việc ok"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "support",
+      "quote": "chọn feature/tên-việc"
+    },
+    {
+      "utterance_id": "U006",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "support",
+      "quote": "theo feature/tên-việc"
+    },
+    {
+      "utterance_id": "U007",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "conclude",
+      "quote": "thống nhất feature/tên-việc"
+    }
+  ],
+  "items": []
+}

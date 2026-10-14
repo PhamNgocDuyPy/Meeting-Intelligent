@@ -1,0 +1,27 @@
+[
+  {
+    "noise_count": 0,
+    "recall_3": 0.331,
+    "recall_30": 1.0
+  },
+  {
+    "noise_count": 20,
+    "recall_3": 0.254,
+    "recall_30": 0.958
+  },
+  {
+    "noise_count": 50,
+    "recall_3": 0.188,
+    "recall_30": 0.631
+  },
+  {
+    "noise_count": 100,
+    "recall_3": 0.229,
+    "recall_30": 0.388
+  },
+  {
+    "noise_count": 200,
+    "recall_3": 0.198,
+    "recall_30": 0.321
+  }
+]

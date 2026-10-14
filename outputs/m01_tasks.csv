@@ -1,0 +1,5 @@
+title,assignee,deadline_date,deadline_text,evidence_ids,quote,flags
+Dựng môi trường staging trên Supabase,Quân,2026-10-09,thứ Sáu,U012 U013,dựng môi trường staging trên Supabase,
+Cập nhật tài liệu API theo backend mới,Nam,,,U014 U015,cập nhật tài liệu API,deadline_unknown
+Viết test plan cho phần auth,Trang,,,U016,viết test plan cho phần auth,deadline_unknown
+Nhắn anh Phúc về ngân sách gói Pro,Minh,,,U018,nhắn anh Phúc,deadline_unknown

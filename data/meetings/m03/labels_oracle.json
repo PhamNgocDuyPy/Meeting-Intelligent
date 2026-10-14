@@ -1,0 +1,16 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Màu chủ đạo của app", "category": "design",
+     "options": [{"option_id": "G", "label": "Xanh lá"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U002", "topic_id": "T1", "option_id": "G", "stance": "propose", "quote": "đề xuất xanh lá làm màu chủ đạo"},
+    {"utterance_id": "U003", "topic_id": "T1", "option_id": "G", "stance": "support", "quote": "Xanh lá nghe được đó"},
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "G", "stance": "support", "quote": "mình thấy ổn"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "G", "stance": "support", "quote": "Mình cũng thấy vậy"},
+    {"utterance_id": "U007", "topic_id": "T1", "option_id": "G", "stance": "support", "quote": "Vậy là hợp lý rồi"},
+    {"utterance_id": "U008", "topic_id": "T1", "option_id": "G", "stance": "support", "quote": "Nghe ổn đó"},
+    {"utterance_id": "U008", "topic_id": "T1", "option_id": null, "stance": "defer", "quote": "Để mình cân nhắc thêm rồi báo lại"}
+  ],
+  "items": []
+}

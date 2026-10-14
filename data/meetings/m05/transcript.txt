@@ -1,0 +1,11 @@
+# Dữ liệu giả lập. Ca khó: người có thẩm quyền "chốt" nhưng kèm điều kiện chưa xảy ra.
+[00:00:10] Hà: Chủ đề hôm nay là chọn cổng thanh toán cho Aurora: Stripe hay cổng nội địa.
+[00:00:40] Minh: Stripe tích hợp dễ hơn nhiều, tài liệu tốt, mình đề xuất Stripe.
+[00:01:30] Vy: Khách mình chủ yếu trong nước, cổng nội địa quen thuộc hơn với họ.
+[00:02:20] Phúc: Phí Stripe cho thẻ quốc tế khá cao, tính ra cao hơn cổng nội địa khoảng 0.8 điểm phần trăm.
+[00:03:10] Huy: Mình cân nhắc cả hai. Mục tiêu là ra mắt nhanh nên mình nghiêng về Stripe.
+[00:04:00] Huy: Ok, chốt Stripe, với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%.
+[00:04:30] Phúc: Mình cần hỏi lại bên Stripe, chưa có số chính thức.
+[00:05:10] Hà: Vậy tạm ghi là Stripe, chờ Phúc xác nhận phí.
+[00:05:40] Phúc: Mình sẽ liên hệ Stripe, có số trong tuần này.
+[00:06:10] Hà: Cảm ơn mọi người.

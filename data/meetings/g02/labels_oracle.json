@@ -1,0 +1,57 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Phong cách minh họa onboarding",
+      "category": "design",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "minh họa phẳng"
+        },
+        {
+          "option_id": "B",
+          "label": "ảnh chụp thật"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất minh họa phẳng"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "ảnh chụp thật ổn hơn"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "ảnh chụp thật cũng được"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "chốt ảnh chụp thật"
+    },
+    {
+      "utterance_id": "U006",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "đồng ý ảnh chụp thật"
+    }
+  ],
+  "items": []
+}

@@ -1,0 +1,21 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Ngày release Aurora 1.0", "category": "release",
+     "options": [{"option_id": "W", "label": "Release thứ Tư 21/10"},
+                 {"option_id": "M", "label": "Release thứ Hai 19/10 (tắt thanh toán bằng feature flag)"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U003", "topic_id": "T1", "option_id": "W", "stance": "propose", "quote": "lùi release sang thứ Tư 21/10"},
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "W", "stance": "conclude", "quote": "Chốt thứ Tư 21/10 nhé"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "W", "stance": "oppose", "quote": "đổi lịch thì mất phí"},
+    {"utterance_id": "U007", "topic_id": "T1", "option_id": "W", "stance": "oppose", "quote": "mình không chấp nhận chuyện đó"},
+    {"utterance_id": "U008", "topic_id": "T1", "option_id": "M", "stance": "propose", "quote": "vẫn release thứ Hai nhưng tắt tính năng thanh toán bằng feature flag"},
+    {"utterance_id": "U009", "topic_id": "T1", "option_id": "M", "stance": "support", "quote": "Làm được, feature flag có sẵn rồi"},
+    {"utterance_id": "U010", "topic_id": "T1", "option_id": "W", "stance": "reverse", "quote": "release thứ Hai 19/10"},
+    {"utterance_id": "U010", "topic_id": "T1", "option_id": "M", "stance": "conclude", "quote": "Quyết định cuối: release thứ Hai 19/10"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Test lại thanh toán và báo kết quả", "utterance_ids": ["U011", "U012"],
+     "quote": "Trang test lại thanh toán và báo trước thứ Sáu 23/10", "assignee": "Trang", "assignee_basis": "assigned", "deadline_text": "thứ Sáu 23/10"}
+  ]
+}

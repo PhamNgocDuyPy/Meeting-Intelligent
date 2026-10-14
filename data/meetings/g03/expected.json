@@ -1,0 +1,20 @@
+{
+  "topics": [
+    {
+      "keywords": [
+        "feature/tên-việc",
+        "tên-người/tên-việc"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "feature/tên-việc"
+      ],
+      "superseded_keywords": [
+        "tên-người/tên-việc"
+      ]
+    }
+  ],
+  "tasks": [],
+  "items": [],
+  "difficulty": "quy trình: đồng thuận đủ số người (kiểu consensus)"
+}

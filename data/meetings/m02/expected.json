@@ -1,0 +1,16 @@
+{
+  "difficulty": "dễ: việc có người nhận và hạn rõ",
+  "topics": [
+    {"keywords": ["demo"], "status": "decided", "final_option_keywords": ["15/10"]}
+  ],
+  "tasks": [
+    {"keywords": ["bộ lọc", "chi nhánh"], "assignee": "Quân", "deadline": "2026-10-08"},
+    {"keywords": ["thiết kế biểu đồ"], "assignee": "Nam", "deadline": "2026-10-09"},
+    {"keywords": ["tài liệu hướng dẫn"], "assignee": "Đạt", "deadline": null}
+  ],
+  "optional_tasks": [{"keywords": ["trùng mã", "vận hành"]}],
+  "items": [
+    {"kind": "issue", "keywords": ["trùng mã"]},
+    {"kind": "feedback", "keywords": ["dữ liệu mẫu"]}
+  ]
+}

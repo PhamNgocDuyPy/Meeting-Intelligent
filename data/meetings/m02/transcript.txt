@@ -1,0 +1,19 @@
+# Dữ liệu giả lập. Ca dễ: việc có người nhận + hạn rõ, chốt bởi PM.
+[00:00:10] Hà: Tuần này Helios có hai việc chính: chốt ngày demo cho khách và phân việc cho báo cáo doanh thu.
+[00:00:40] Quân: Báo cáo doanh thu mình làm xong phần API rồi, còn thiếu phần lọc theo chi nhánh.
+[00:01:20] Nam: Phần giao diện biểu đồ mình đang làm dở, tuần này kịp.
+[00:02:00] Hà: Vậy demo cho khách mình đề xuất thứ Năm tuần sau, 15/10.
+[00:02:30] Quân: Thứ Năm tuần sau được, kịp để mình test.
+[00:03:00] Nam: Mình cũng ổn với 15/10.
+[00:03:20] Hà: Ok, chốt demo ngày 15/10.
+[00:03:50] Hà: Quân hoàn thành bộ lọc theo chi nhánh trước ngày mai nhé.
+[00:04:10] Quân: Ok, mai mình xong.
+[00:04:30] Hà: Nam gửi bản thiết kế biểu đồ cho mình trước thứ Sáu này.
+[00:04:50] Nam: Mình nhận, thứ Sáu gửi.
+[00:05:20] Đạt: Em có thể viết tài liệu hướng dẫn sử dụng, em tự làm nhé, em gửi chị tuần sau.
+[00:05:50] Hà: Được, em làm đi.
+[00:06:10] Quân: Có một vướng mắc: dữ liệu chi nhánh Đà Nẵng bị trùng mã, đang làm sai số liệu.
+[00:06:40] Hà: Mình sẽ hỏi bên vận hành về vụ trùng mã.
+[00:07:00] Nam: Góp ý nhỏ: bản demo nên có dữ liệu mẫu thật gần với khách để họ dễ hình dung.
+[00:07:30] Hà: Hay, mình ghi nhận.
+[00:07:50] Hà: Cảm ơn mọi người.

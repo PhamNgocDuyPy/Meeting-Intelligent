@@ -1,0 +1,35 @@
+{
+  "topics": [],
+  "tasks": [
+    {
+      "keywords": [
+        "đăng nhập"
+      ],
+      "assignee": "Quân",
+      "deadline": "2026-11-18"
+    },
+    {
+      "keywords": [
+        "tài liệu"
+      ],
+      "assignee": "Nam",
+      "deadline": null
+    },
+    {
+      "keywords": [
+        "kiểm thử tự động"
+      ],
+      "assignee": null,
+      "deadline": null
+    },
+    {
+      "keywords": [
+        "test case"
+      ],
+      "assignee": "Trang",
+      "deadline": null
+    }
+  ],
+  "items": [],
+  "difficulty": "đủ loại việc: giao+hạn, tự nhận, chỉ nhắc tên, giao không hạn"
+}

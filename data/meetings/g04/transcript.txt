@@ -1,0 +1,6 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: chỉ 2/6 người ủng hộ -> chưa đủ đồng thuận
+[00:01:10] Hà: Mình bàn chuyện giờ họp daily.
+[00:02:14] Quân: Mình đề xuất 9 giờ sáng.
+[00:03:14] Nam: 9 giờ sáng ok.
+[00:04:23] Quân: Vậy chốt 9 giờ sáng nhé.
+[00:05:29] Hà: Mình chưa có ý kiến, để mình nghĩ thêm.

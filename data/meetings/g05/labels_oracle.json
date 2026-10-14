@@ -1,0 +1,50 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Chọn dịch vụ gửi email",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "SendGrid"
+        },
+        {
+          "option_id": "B",
+          "label": "Amazon SES"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất SendGrid"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "support",
+      "quote": "nghiêng về Amazon SES"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "làm Amazon SES đi"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "info",
+      "quote": "ghi nhận ý kiến"
+    }
+  ],
+  "items": []
+}

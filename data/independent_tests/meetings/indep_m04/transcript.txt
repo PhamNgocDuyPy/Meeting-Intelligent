@@ -1,0 +1,18 @@
+[09:00:00] Viết: Xin chào mọi người, chúng ta bắt đầu cuộc họp về dự án Mobile tuần này.
+[09:00:12] Huy: Theo tôi, màn hình onboarding có thể bị bỏ để tiết kiệm thời gian phát triển.
+[09:00:25] An: Nếu bỏ onboarding, chúng ta sẽ mất cơ hội hướng dẫn người dùng mới về tính năng chính.
+[09:00:38] Viết: Huy, tôi là người có thẩm quyền cuối cùng về product scope, và tôi quyết định giữ lại màn hình onboarding.
+[09:00:52] Huy: Tôi hiểu, nhưng tôi lo rằng nó sẽ làm gia tăng lượng công việc thiết kế.
+[09:01:05] An: Thực tế, chúng ta có thể đơn giản hoá nội dung onboarding mà không cần bỏ hoàn toàn.
+[09:01:18] Viết: Đúng, chúng ta sẽ tối ưu nội dung, nhưng không loại bỏ màn hình.
+[09:01:30] Huy: Vậy tôi sẽ cập nhật lại thiết kế dựa trên phản hồi này.
+[09:01:42] An: Tôi sẽ viết các test case cho màn hình onboarding để đảm bảo chất lượng.
+[09:01:55] Viết: Tôi sẽ cập nhật tài liệu scope và gửi cho mọi người trước 17:00 hôm nay.
+[09:02:10] Huy: Có cần thiết kế thêm bất kỳ màn hình nào khác không?
+[09:02:22] An: Hiện tại chỉ cần tập trung vào onboarding và màn hình chính.
+[09:02:35] Viết: Đúng, sau khi onboarding ổn định, chúng ta sẽ xét tới các màn hình phụ.
+[09:02:48] Huy: Tôi sẽ gửi bản thiết kế onboarding lên Figma vào sáng mai.
+[09:03:00] An: Tôi sẽ kiểm tra và đưa ra phản hồi trong ngày mai.
+[09:03:12] Viết: Cảm ơn mọi người, họp kết thúc ở đây.
+[09:03:20] Huy: Tạm biệt.
+[09:03:25] An: Tạm biệt.

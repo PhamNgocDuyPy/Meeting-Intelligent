@@ -1,0 +1,45 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Gói hạ tầng tháng tới",
+      "category": "budget",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "gói Standard"
+        },
+        {
+          "option_id": "B",
+          "label": "gói Premium"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "đề xuất gói Premium"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "conclude",
+      "quote": "chốt gói Premium",
+      "conditional": true,
+      "condition_text": "bên đối tác xác nhận điều kiện hợp đồng"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "info",
+      "quote": "chờ đối tác xác nhận"
+    }
+  ],
+  "items": []
+}

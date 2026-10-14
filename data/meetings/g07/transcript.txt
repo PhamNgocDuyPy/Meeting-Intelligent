@@ -1,0 +1,6 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: kết luận bị rút lại, chưa có kết luận mới
+[00:00:43] Hà: Mình bàn hình thức khuyến mãi tháng 11.
+[00:01:31] Nam: Mình đề xuất giảm giá phần trăm.
+[00:01:49] Hà: Ok, chốt giảm giá phần trăm.
+[00:02:44] Nam: Nhưng mình vừa nhận được thông tin mới từ khách, có thể ảnh hưởng.
+[00:03:11] Hà: Khoan, hủy giảm giá phần trăm đi, mình chưa chắc, để xem lại.

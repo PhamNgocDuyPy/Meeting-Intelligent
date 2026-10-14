@@ -1,0 +1,9 @@
+{
+  "difficulty": "khó: người nói không có thẩm quyền + hoãn",
+  "topics": [
+    {"keywords": ["cache", "redis"], "status": ["leaning", "open"]}
+  ],
+  "tasks": [
+    {"keywords": ["chi phí redis", "chi phí"], "assignee": "Quân", "deadline": null}
+  ]
+}

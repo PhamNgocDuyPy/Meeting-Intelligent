@@ -1,0 +1,58 @@
+[
+  {
+    "name": "m05: Điều kiện bên thứ ba",
+    "is_real_condition": true,
+    "p_old": 0.94,
+    "p_new": 0.93,
+    "old_flagged": true,
+    "new_flagged": true
+  },
+  {
+    "name": "g06: Điều kiện kết quả kiểm thử",
+    "is_real_condition": true,
+    "p_old": 0.95,
+    "p_new": 0.93,
+    "old_flagged": true,
+    "new_flagged": true
+  },
+  {
+    "name": "Điều kiện ngầm 1: Tùy thuộc kết quả",
+    "is_real_condition": true,
+    "p_old": 0.96,
+    "p_new": 0.93,
+    "old_flagged": true,
+    "new_flagged": true
+  },
+  {
+    "name": "Điều kiện ngầm 2: Để xem phản hồi",
+    "is_real_condition": true,
+    "p_old": 0.88,
+    "p_new": 0.57,
+    "old_flagged": true,
+    "new_flagged": true
+  },
+  {
+    "name": "m06: Bật tính năng sau khi release (Feature flag)",
+    "is_real_condition": false,
+    "p_old": 0.37,
+    "p_new": 0.23,
+    "old_flagged": false,
+    "new_flagged": false
+  },
+  {
+    "name": "Câu cửa miệng: Nếu được thì làm luôn",
+    "is_real_condition": false,
+    "p_old": 0.66,
+    "p_new": 0.21,
+    "old_flagged": true,
+    "new_flagged": false
+  },
+  {
+    "name": "g12: Miễn cưỡng đồng ý (Vẫn lo nhưng làm theo)",
+    "is_real_condition": false,
+    "p_old": 0.14,
+    "p_new": 0.21,
+    "old_flagged": false,
+    "new_flagged": false
+  }
+]

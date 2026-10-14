@@ -1,0 +1,7 @@
+id: m04
+title: Họp kỹ thuật - cache màn báo cáo Helios
+date: "2026-10-09"
+project: helios
+purpose: Chọn hướng xử lý màn báo cáo chậm (cache)
+agenda: ["Phương án cache"]
+attendees: [ha, quan, nam, trang, dat, minh]

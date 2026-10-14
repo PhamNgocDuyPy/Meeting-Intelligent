@@ -1,0 +1,15 @@
+id: indep_m01
+title: Họp lựa chọn CSDL cho dự án mới
+date: '2026-10-15'
+project: nova
+purpose: Quyết định công nghệ CSDL cho dự án mới
+agenda:
+- Đánh giá MongoDB vs MySQL
+- Chốt CSDL chính
+- Phân công dựng DB staging
+attendees:
+- hoang
+- son
+- tuan
+- binh
+- mai

@@ -1,0 +1,1051 @@
+{
+  "metadata": {
+    "model_extractor": "gemini-3.1-flash-lite",
+    "model_generator": "nvidia/nemotron-3-super-120b-a12b",
+    "judge": "jev-1.13-free",
+    "date": "2026-10-14",
+    "meetings_count": 6
+  },
+  "baseline_gemini_none": {
+    "indep_m01": {
+      "score": {
+        "meeting_id": "indep_m01",
+        "difficulty": "Cần cân bằng giữa hiệu suất và tính nhất quán dữ liệu, tránh rủi ro chọn sai DB gây ảnh hưởng đến hệ thống giao dịch.",
+        "topics": [
+          {
+            "keywords": [
+              "MongoDB",
+              "MySQL",
+              "PostgreSQL"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": true,
+            "actual": "decided",
+            "final_option": "PostgreSQL",
+            "superseded": [
+              "MongoDB",
+              "MySQL"
+            ],
+            "superseded_ok": true
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "DB staging"
+            ],
+            "expected_assignee": "Tuấn",
+            "expected_deadline": "2025-09-26",
+            "found": false
+          },
+          {
+            "keywords": [
+              "test plan"
+            ],
+            "expected_assignee": "Mai",
+            "expected_deadline": null,
+            "found": true,
+            "actual_assignee": "Mai",
+            "actual_deadline": null,
+            "assignee_ok": true,
+            "deadline_ok": true
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "ACID compliance",
+              "migration risk"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 0,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 2,
+        "problems": [
+          "Thiếu việc ['DB staging']",
+          "Thiếu mục issue ['ACID compliance', 'migration risk']"
+        ],
+        "labels_total": 9,
+        "labels_dropped": 0,
+        "items_total": 3,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 3,
+      "review_queue_len": 4,
+      "elapsed": 0.05
+    },
+    "indep_m02": {
+      "score": {
+        "meeting_id": "indep_m02",
+        "difficulty": "Xác định gói tài trợ phù hợp trong khi chờ phê duyệt ngân sách, rủi ro nếu hạn mức không được chấp nhận.",
+        "topics": [
+          {
+            "keywords": [
+              "gói Kim cương",
+              "gói tài trợ 200 triệu"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "leaning",
+            "final_option": null,
+            "superseded": []
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "chuẩn bị đề xuất sponsorship cho BGD"
+            ],
+            "expected_assignee": "Long",
+            "expected_deadline": "2025-09-30",
+            "found": false
+          },
+          {
+            "keywords": [
+              "viết bản tin nội bộ về tình trạng tài trợ"
+            ],
+            "expected_assignee": "Trang",
+            "expected_deadline": "2025-09-30",
+            "found": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "request",
+            "keywords": [
+              "phê duyệt hạn mức ngân sách từ BGD"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 1,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 2,
+        "problems": [
+          "Bỏ sót quyết định ['gói Kim cương', 'gói tài trợ 200 triệu'] (hệ thống: leaning)",
+          "Thiếu việc ['chuẩn bị đề xuất sponsorship cho BGD']",
+          "Thiếu việc ['viết bản tin nội bộ về tình trạng tài trợ']",
+          "Thiếu mục request ['phê duyệt hạn mức ngân sách từ BGD']"
+        ],
+        "labels_total": 4,
+        "labels_dropped": 0,
+        "items_total": 2,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 2,
+      "review_queue_len": 3,
+      "elapsed": 0.06
+    },
+    "indep_m03": {
+      "score": {
+        "meeting_id": "indep_m03",
+        "difficulty": "Phân biệt việc gán task và chỉ góp ý UI; bẫy là hệ thống có thể nhầm tưởng Linh cũng nhận việc code.",
+        "topics": [
+          {
+            "keywords": [
+              "UI",
+              "góp ý giao diện",
+              "đề xuất giao diện"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "open",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "bug payment gateway",
+              "giao việc fix bug",
+              "task payment gateway"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "open",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "deadline 15h mai",
+              "thời hạn fix bug",
+              "15h ngày mai"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "fix bug payment gateway",
+              "payment gateway bug"
+            ],
+            "expected_assignee": "Thắng",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Thắng",
+            "actual_deadline": "2026-10-18",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "Linh được gán nhầm việc code payment gateway"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 3,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 0,
+        "problems": [
+          "Bỏ sót quyết định ['UI', 'góp ý giao diện', 'đề xuất giao diện'] (hệ thống: open)",
+          "Bỏ sót quyết định ['bug payment gateway', 'giao việc fix bug', 'task payment gateway'] (hệ thống: open)",
+          "Thiếu chủ đề ['deadline 15h mai', 'thời hạn fix bug', '15h ngày mai']",
+          "Thiếu mục issue ['Linh được gán nhầm việc code payment gateway']"
+        ],
+        "labels_total": 2,
+        "labels_dropped": 0,
+        "items_total": 2,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 2,
+      "items_found": 2,
+      "review_queue_len": 4,
+      "elapsed": 0.02
+    },
+    "indep_m04": {
+      "score": {
+        "meeting_id": "indep_m04",
+        "difficulty": "Độ khó trung bình, bẫy là thành viên thiết kế tự ý thay đổi scope mà không có thẩm quyền.",
+        "topics": [
+          {
+            "keywords": [
+              "màn hình onboarding",
+              "bỏ onboarding",
+              "giữ onboarding"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "decided",
+            "final_option": "Giữ lại màn onboarding",
+            "superseded": [
+              "Loại bỏ màn onboarding"
+            ]
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "cập nhật thiết kế onboarding"
+            ],
+            "expected_assignee": "Huy",
+            "expected_deadline": "2025-09-27",
+            "found": false
+          },
+          {
+            "keywords": [
+              "viết test case onboarding"
+            ],
+            "expected_assignee": "An",
+            "expected_deadline": "2025-09-27",
+            "found": false
+          },
+          {
+            "keywords": [
+              "cập nhật tài liệu scope"
+            ],
+            "expected_assignee": "Viết",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Viết",
+            "actual_deadline": "2026-10-18",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "nội dung onboarding cần được đơn giản hoá"
+            ],
+            "found": false
+          },
+          {
+            "kind": "request",
+            "keywords": [
+              "thời gianReview thiết kế onboarding"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 1,
+        "conservative_misses": 0,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 3,
+        "problems": [
+          "LỖI NGHIÊM TRỌNG: chốt “Giữ lại màn onboarding” cho ['màn hình onboarding', 'bỏ onboarding', 'giữ onboarding']",
+          "Thiếu việc ['cập nhật thiết kế onboarding']",
+          "Thiếu việc ['viết test case onboarding']",
+          "Thiếu mục issue ['nội dung onboarding cần được đơn giản hoá']",
+          "Thiếu mục request ['thời gianReview thiết kế onboarding']"
+        ],
+        "labels_total": 4,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 5,
+      "review_queue_len": 6,
+      "elapsed": 0.05
+    },
+    "indep_m05": {
+      "score": {
+        "meeting_id": "indep_m05",
+        "difficulty": "Xác định范围 MVP khi cân bằng giữa yêu cầu khách hàng và khả năng thực hiện, tránh過度承諾导致延期。",
+        "topics": [
+          {
+            "keywords": [
+              "release date",
+              "MVP scope",
+              "QR payment",
+              "25/10"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "leaning",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "installment feature",
+              "Phase 2",
+              "defer"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "update roadmap"
+            ],
+            "expected_assignee": "Dũng",
+            "expected_deadline": "2024-10-20",
+            "found": false
+          },
+          {
+            "keywords": [
+              "inform customer"
+            ],
+            "expected_assignee": "Nga",
+            "expected_deadline": "2024-10-22",
+            "found": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "security risk QR payment"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 2,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 5,
+        "problems": [
+          "Bỏ sót quyết định ['release date', 'MVP scope', 'QR payment', '25/10'] (hệ thống: leaning)",
+          "Thiếu chủ đề ['installment feature', 'Phase 2', 'defer']",
+          "Thiếu việc ['update roadmap']",
+          "Thiếu việc ['inform customer']",
+          "Thiếu mục issue ['security risk QR payment']"
+        ],
+        "labels_total": 5,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 2,
+      "items_found": 5,
+      "review_queue_len": 7,
+      "elapsed": 0.05
+    },
+    "indep_m06": {
+      "score": {
+        "meeting_id": "indep_m06",
+        "difficulty": "Khó do cần cân bằng giữa tính năng mới và ổn định hệ thống; bẫy là áp lực giữ v1.4 gây nguy cơ downtime lâu dài.",
+        "topics": [
+          {
+            "keywords": [
+              "rollback",
+              "v1.3",
+              "quyết định"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": true,
+            "actual": "decided",
+            "final_option": "Rollback về v1.3",
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "giám sát metrics",
+              "Grafana",
+              "cảnh báo memory"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          },
+          {
+            "keywords": [
+              "trích xuất log",
+              "heap dump",
+              "phân tích root cause"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "giám sát metrics",
+              "Grafana"
+            ],
+            "expected_assignee": "Quang",
+            "expected_deadline": null,
+            "found": true,
+            "actual_assignee": "Quang",
+            "actual_deadline": null,
+            "assignee_ok": true,
+            "deadline_ok": true
+          },
+          {
+            "keywords": [
+              "trích xuất log",
+              "phân tích root cause"
+            ],
+            "expected_assignee": "Thành",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Thành",
+            "actual_deadline": "2026-10-21",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "tràn bộ nhớ",
+              "v1.4"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 2,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 3,
+        "problems": [
+          "Thiếu chủ đề ['giám sát metrics', 'Grafana', 'cảnh báo memory']",
+          "Thiếu chủ đề ['trích xuất log', 'heap dump', 'phân tích root cause']",
+          "Thiếu mục issue ['tràn bộ nhớ', 'v1.4']"
+        ],
+        "labels_total": 3,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 5,
+      "review_queue_len": 6,
+      "elapsed": 0.01
+    }
+  },
+  "gemini_jev_advisory": {
+    "indep_m01": {
+      "score": {
+        "meeting_id": "indep_m01",
+        "difficulty": "Cần cân bằng giữa hiệu suất và tính nhất quán dữ liệu, tránh rủi ro chọn sai DB gây ảnh hưởng đến hệ thống giao dịch.",
+        "topics": [
+          {
+            "keywords": [
+              "MongoDB",
+              "MySQL",
+              "PostgreSQL"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": true,
+            "actual": "decided",
+            "final_option": "PostgreSQL",
+            "superseded": [
+              "MongoDB",
+              "MySQL"
+            ],
+            "superseded_ok": true
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "DB staging"
+            ],
+            "expected_assignee": "Tuấn",
+            "expected_deadline": "2025-09-26",
+            "found": false
+          },
+          {
+            "keywords": [
+              "test plan"
+            ],
+            "expected_assignee": "Mai",
+            "expected_deadline": null,
+            "found": true,
+            "actual_assignee": "Mai",
+            "actual_deadline": null,
+            "assignee_ok": true,
+            "deadline_ok": true
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "ACID compliance",
+              "migration risk"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 0,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 2,
+        "problems": [
+          "Thiếu việc ['DB staging']",
+          "Thiếu mục issue ['ACID compliance', 'migration risk']"
+        ],
+        "labels_total": 9,
+        "labels_dropped": 0,
+        "items_total": 3,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 3,
+      "review_queue_len": 4,
+      "elapsed": 3.41
+    },
+    "indep_m02": {
+      "score": {
+        "meeting_id": "indep_m02",
+        "difficulty": "Xác định gói tài trợ phù hợp trong khi chờ phê duyệt ngân sách, rủi ro nếu hạn mức không được chấp nhận.",
+        "topics": [
+          {
+            "keywords": [
+              "gói Kim cương",
+              "gói tài trợ 200 triệu"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "leaning",
+            "final_option": null,
+            "superseded": []
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "chuẩn bị đề xuất sponsorship cho BGD"
+            ],
+            "expected_assignee": "Long",
+            "expected_deadline": "2025-09-30",
+            "found": false
+          },
+          {
+            "keywords": [
+              "viết bản tin nội bộ về tình trạng tài trợ"
+            ],
+            "expected_assignee": "Trang",
+            "expected_deadline": "2025-09-30",
+            "found": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "request",
+            "keywords": [
+              "phê duyệt hạn mức ngân sách từ BGD"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 1,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 2,
+        "problems": [
+          "Bỏ sót quyết định ['gói Kim cương', 'gói tài trợ 200 triệu'] (hệ thống: leaning)",
+          "Thiếu việc ['chuẩn bị đề xuất sponsorship cho BGD']",
+          "Thiếu việc ['viết bản tin nội bộ về tình trạng tài trợ']",
+          "Thiếu mục request ['phê duyệt hạn mức ngân sách từ BGD']"
+        ],
+        "labels_total": 4,
+        "labels_dropped": 0,
+        "items_total": 2,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 2,
+      "review_queue_len": 3,
+      "elapsed": 2.51
+    },
+    "indep_m03": {
+      "score": {
+        "meeting_id": "indep_m03",
+        "difficulty": "Phân biệt việc gán task và chỉ góp ý UI; bẫy là hệ thống có thể nhầm tưởng Linh cũng nhận việc code.",
+        "topics": [
+          {
+            "keywords": [
+              "UI",
+              "góp ý giao diện",
+              "đề xuất giao diện"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "open",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "bug payment gateway",
+              "giao việc fix bug",
+              "task payment gateway"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "open",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "deadline 15h mai",
+              "thời hạn fix bug",
+              "15h ngày mai"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "fix bug payment gateway",
+              "payment gateway bug"
+            ],
+            "expected_assignee": "Thắng",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Thắng",
+            "actual_deadline": "2026-10-18",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "Linh được gán nhầm việc code payment gateway"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 3,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 0,
+        "problems": [
+          "Bỏ sót quyết định ['UI', 'góp ý giao diện', 'đề xuất giao diện'] (hệ thống: open)",
+          "Bỏ sót quyết định ['bug payment gateway', 'giao việc fix bug', 'task payment gateway'] (hệ thống: open)",
+          "Thiếu chủ đề ['deadline 15h mai', 'thời hạn fix bug', '15h ngày mai']",
+          "Thiếu mục issue ['Linh được gán nhầm việc code payment gateway']"
+        ],
+        "labels_total": 2,
+        "labels_dropped": 0,
+        "items_total": 2,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 2,
+      "items_found": 2,
+      "review_queue_len": 4,
+      "elapsed": 1.28
+    },
+    "indep_m04": {
+      "score": {
+        "meeting_id": "indep_m04",
+        "difficulty": "Độ khó trung bình, bẫy là thành viên thiết kế tự ý thay đổi scope mà không có thẩm quyền.",
+        "topics": [
+          {
+            "keywords": [
+              "màn hình onboarding",
+              "bỏ onboarding",
+              "giữ onboarding"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "decided",
+            "final_option": "Giữ lại màn onboarding",
+            "superseded": [
+              "Loại bỏ màn onboarding"
+            ]
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "cập nhật thiết kế onboarding"
+            ],
+            "expected_assignee": "Huy",
+            "expected_deadline": "2025-09-27",
+            "found": false
+          },
+          {
+            "keywords": [
+              "viết test case onboarding"
+            ],
+            "expected_assignee": "An",
+            "expected_deadline": "2025-09-27",
+            "found": false
+          },
+          {
+            "keywords": [
+              "cập nhật tài liệu scope"
+            ],
+            "expected_assignee": "Viết",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Viết",
+            "actual_deadline": "2026-10-18",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "nội dung onboarding cần được đơn giản hoá"
+            ],
+            "found": false
+          },
+          {
+            "kind": "request",
+            "keywords": [
+              "thời gianReview thiết kế onboarding"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 1,
+        "conservative_misses": 0,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 3,
+        "problems": [
+          "LỖI NGHIÊM TRỌNG: chốt “Giữ lại màn onboarding” cho ['màn hình onboarding', 'bỏ onboarding', 'giữ onboarding']",
+          "Thiếu việc ['cập nhật thiết kế onboarding']",
+          "Thiếu việc ['viết test case onboarding']",
+          "Thiếu mục issue ['nội dung onboarding cần được đơn giản hoá']",
+          "Thiếu mục request ['thời gianReview thiết kế onboarding']"
+        ],
+        "labels_total": 4,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 5,
+      "review_queue_len": 6,
+      "elapsed": 4.73
+    },
+    "indep_m05": {
+      "score": {
+        "meeting_id": "indep_m05",
+        "difficulty": "Xác định范围 MVP khi cân bằng giữa yêu cầu khách hàng và khả năng thực hiện, tránh過度承諾导致延期。",
+        "topics": [
+          {
+            "keywords": [
+              "release date",
+              "MVP scope",
+              "QR payment",
+              "25/10"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "leaning",
+            "final_option": null,
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "installment feature",
+              "Phase 2",
+              "defer"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "update roadmap"
+            ],
+            "expected_assignee": "Dũng",
+            "expected_deadline": "2024-10-20",
+            "found": false
+          },
+          {
+            "keywords": [
+              "inform customer"
+            ],
+            "expected_assignee": "Nga",
+            "expected_deadline": "2024-10-22",
+            "found": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "security risk QR payment"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 2,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 5,
+        "problems": [
+          "Bỏ sót quyết định ['release date', 'MVP scope', 'QR payment', '25/10'] (hệ thống: leaning)",
+          "Thiếu chủ đề ['installment feature', 'Phase 2', 'defer']",
+          "Thiếu việc ['update roadmap']",
+          "Thiếu việc ['inform customer']",
+          "Thiếu mục issue ['security risk QR payment']"
+        ],
+        "labels_total": 5,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 2,
+      "items_found": 5,
+      "review_queue_len": 7,
+      "elapsed": 6.19
+    },
+    "indep_m06": {
+      "score": {
+        "meeting_id": "indep_m06",
+        "difficulty": "Khó do cần cân bằng giữa tính năng mới và ổn định hệ thống; bẫy là áp lực giữ v1.4 gây nguy cơ downtime lâu dài.",
+        "topics": [
+          {
+            "keywords": [
+              "rollback",
+              "v1.3",
+              "quyết định"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": true,
+            "actual": "decided",
+            "final_option": "Rollback về v1.3",
+            "superseded": []
+          },
+          {
+            "keywords": [
+              "giám sát metrics",
+              "Grafana",
+              "cảnh báo memory"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          },
+          {
+            "keywords": [
+              "trích xuất log",
+              "heap dump",
+              "phân tích root cause"
+            ],
+            "expected": [
+              "decided"
+            ],
+            "ok": false,
+            "actual": "không tìm thấy chủ đề"
+          }
+        ],
+        "tasks": [
+          {
+            "keywords": [
+              "giám sát metrics",
+              "Grafana"
+            ],
+            "expected_assignee": "Quang",
+            "expected_deadline": null,
+            "found": true,
+            "actual_assignee": "Quang",
+            "actual_deadline": null,
+            "assignee_ok": true,
+            "deadline_ok": true
+          },
+          {
+            "keywords": [
+              "trích xuất log",
+              "phân tích root cause"
+            ],
+            "expected_assignee": "Thành",
+            "expected_deadline": "2025-09-26",
+            "found": true,
+            "actual_assignee": "Thành",
+            "actual_deadline": "2026-10-21",
+            "assignee_ok": true,
+            "deadline_ok": false
+          }
+        ],
+        "items": [
+          {
+            "kind": "issue",
+            "keywords": [
+              "tràn bộ nhớ",
+              "v1.4"
+            ],
+            "found": false
+          }
+        ],
+        "critical_errors": 0,
+        "conservative_misses": 2,
+        "fabricated_assignee": 0,
+        "fabricated_deadline": 0,
+        "forbidden_hits": 0,
+        "extra_tasks": 3,
+        "problems": [
+          "Thiếu chủ đề ['giám sát metrics', 'Grafana', 'cảnh báo memory']",
+          "Thiếu chủ đề ['trích xuất log', 'heap dump', 'phân tích root cause']",
+          "Thiếu mục issue ['tràn bộ nhớ', 'v1.4']"
+        ],
+        "labels_total": 3,
+        "labels_dropped": 0,
+        "items_total": 5,
+        "items_dropped": 0,
+        "pass": false
+      },
+      "topics_found": 1,
+      "items_found": 5,
+      "review_queue_len": 6,
+      "elapsed": 4.55
+    }
+  }
+}

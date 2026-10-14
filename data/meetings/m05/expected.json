@@ -1,0 +1,9 @@
+{
+  "difficulty": "khó: chốt có điều kiện chưa xảy ra",
+  "topics": [
+    {"keywords": ["stripe", "cổng thanh toán"], "status": ["leaning", "open"]}
+  ],
+  "tasks": [
+    {"keywords": ["liên hệ stripe", "stripe"], "assignee": "Phúc", "deadline": null}
+  ]
+}

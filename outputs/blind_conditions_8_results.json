@@ -1,0 +1,90 @@
+[
+  {
+    "id": "C1",
+    "cand": "Stripe",
+    "text": "[00:05:00] Huy: Chốt Stripe, nhưng phải đợi pháp chế ký xong hợp đồng đã.",
+    "must_flag": true,
+    "note": "Phụ thuộc ký hợp đồng pháp chế",
+    "jev_p": 0.96,
+    "jev_flagged": true,
+    "gem_p": 1.0,
+    "gem_flagged": true
+  },
+  {
+    "id": "C2",
+    "cand": "gói Pro",
+    "text": "[00:06:15] Phúc: Ok thống nhất dùng gói Pro, miễn là Finance duyệt ngân sách trước thứ Sáu.",
+    "must_flag": true,
+    "note": "Phụ thuộc Finance duyệt ngân sách",
+    "jev_p": 0.94,
+    "jev_flagged": true,
+    "gem_p": 1.0,
+    "gem_flagged": true
+  },
+  {
+    "id": "C3",
+    "cand": "Supabase",
+    "text": "[00:08:30] Minh: Quyết định giữ Supabase, trừ khi bên bảo mật không cho lưu dữ liệu ở nước ngoài.",
+    "must_flag": true,
+    "note": "Điều kiện phủ quyết từ bảo mật",
+    "jev_p": 0.87,
+    "jev_flagged": true,
+    "gem_p": 1.0,
+    "gem_flagged": true
+  },
+  {
+    "id": "C4",
+    "cand": "thứ Hai",
+    "text": "[00:10:00] Huy: Chốt release thứ Hai, còn nếu QA tìm ra lỗi mức cao thì dời lại.",
+    "must_flag": true,
+    "note": "Điều kiện phụ thuộc kết quả QA",
+    "jev_p": 0.73,
+    "jev_flagged": true,
+    "gem_p": 0.95,
+    "gem_flagged": true
+  },
+  {
+    "id": "C5",
+    "cand": "Supabase",
+    "text": "[00:04:20] Minh: Chốt Supabase, tiện thì mình cũng chuyển luôn dữ liệu cũ sang tuần này.",
+    "must_flag": false,
+    "note": "Việc tiện thể làm kèm sau khi chốt",
+    "jev_p": 0.24,
+    "jev_flagged": false,
+    "gem_p": 0.95,
+    "gem_flagged": false
+  },
+  {
+    "id": "C6",
+    "cand": "thứ Hai",
+    "text": "[00:09:40] Huy: Quyết định release thứ Hai; sau release Trang sẽ bật tính năng chat dần theo tỷ lệ.",
+    "must_flag": false,
+    "note": "Kế hoạch bật tính năng sau khi release",
+    "jev_p": 0.22,
+    "jev_flagged": false,
+    "gem_p": 0.0,
+    "gem_flagged": false
+  },
+  {
+    "id": "C7",
+    "cand": "Playwright",
+    "text": "[00:07:10] Nam: Thống nhất dùng Playwright, ai rảnh thì viết thêm test cho giỏ hàng.",
+    "must_flag": false,
+    "note": "Gợi ý làm thêm tự nguyện",
+    "jev_p": 0.25,
+    "jev_flagged": false,
+    "gem_p": 0.0,
+    "gem_flagged": false
+  },
+  {
+    "id": "C8",
+    "cand": "gói Standard",
+    "text": "[00:11:00] Hà: Chốt gói Standard, sau này cần thì nâng cấp.",
+    "must_flag": false,
+    "note": "Dự định tương lai xa",
+    "jev_p": 0.18,
+    "jev_flagged": false,
+    "gem_p": 0.95,
+    "gem_flagged": false
+  }
+]

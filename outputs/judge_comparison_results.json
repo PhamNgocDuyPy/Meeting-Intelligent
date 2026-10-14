@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Gemini + Không bộ chấm (Baseline)",
+    "backend": "gemini",
+    "judge": "none",
+    "judge_mode": "downgrade",
+    "pass_rate": 0.9,
+    "critical_errors": 0,
+    "conservative_misses": 0,
+    "duration_s": 0.4548451900482178,
+    "downgrades": []
+  },
+  {
+    "label": "Gemini + Jev Judge (Chế độ tự hạ cấp)",
+    "backend": "gemini",
+    "judge": "jev",
+    "judge_mode": "downgrade",
+    "pass_rate": 0.85,
+    "critical_errors": 0,
+    "conservative_misses": 1,
+    "duration_s": 0.43423032760620117,
+    "downgrades": [
+      [
+        "g12",
+        "Bỏ sót quyết định ['GitHub Actions', 'Jenkins'] (hệ thống: leaning)"
+      ]
+    ]
+  },
+  {
+    "label": "Gemini + Jev Judge (Chế độ cảnh báo)",
+    "backend": "gemini",
+    "judge": "jev",
+    "judge_mode": "advisory",
+    "pass_rate": 0.9,
+    "critical_errors": 0,
+    "conservative_misses": 0,
+    "duration_s": 0.43151187896728516,
+    "downgrades": []
+  },
+  {
+    "label": "Gemini + Gemini Judge (Chế độ tự hạ cấp)",
+    "backend": "gemini",
+    "judge": "gemini",
+    "judge_mode": "downgrade",
+    "pass_rate": 0.9,
+    "critical_errors": 0,
+    "conservative_misses": 0,
+    "duration_s": 0.40252017974853516,
+    "downgrades": []
+  },
+  {
+    "label": "Gemini + Gemini Judge (Chế độ cảnh báo)",
+    "backend": "gemini",
+    "judge": "gemini",
+    "judge_mode": "advisory",
+    "pass_rate": 0.9,
+    "critical_errors": 0,
+    "conservative_misses": 0,
+    "duration_s": 0.4020671844482422,
+    "downgrades": []
+  }
+]

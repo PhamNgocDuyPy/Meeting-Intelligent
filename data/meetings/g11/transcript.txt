@@ -1,0 +1,6 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: hạn tương đối: ngày mai/thứ Sáu suy được; cuối tháng/tuần sau thì không
+[00:00:29] Hà: Nam gửi báo cáo cho mình trước ngày mai.
+[00:01:10] Nam: Ok.
+[00:01:36] Hà: Minh hoàn thành phần giao diện trước thứ Sáu.
+[00:02:33] Hà: Trang test xong cuối tháng nhé.
+[00:03:16] Hà: Minh chuẩn bị bản demo tuần sau.

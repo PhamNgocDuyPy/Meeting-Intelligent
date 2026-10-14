@@ -1,0 +1,18 @@
+{
+  "difficulty": "core: ý kiến đổi giữa họp (A->B)",
+  "topics": [
+    {"keywords": ["firebase", "supabase", "backend"], "status": "decided",
+     "final_option_keywords": ["supabase"], "not_final_keywords": ["firebase"], "superseded_keywords": ["firebase"]}
+  ],
+  "tasks": [
+    {"keywords": ["staging"], "assignee": "Quân", "deadline": "2026-10-09"},
+    {"keywords": ["tài liệu api", "api"], "assignee": "Nam", "deadline": null},
+    {"keywords": ["test plan"], "assignee": "Trang", "deadline": null},
+    {"keywords": ["nhắn anh phúc", "phúc"], "assignee": "Minh", "deadline": null}
+  ],
+  "optional_tasks": [{"keywords": ["xem lại phạm vi"]}],
+  "items": [
+    {"kind": "issue", "keywords": ["ngân sách", "gói pro"]},
+    {"kind": "request", "keywords": ["apple"]}
+  ]
+}

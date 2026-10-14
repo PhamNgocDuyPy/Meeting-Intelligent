@@ -1,0 +1,12 @@
+id: indep_m06
+title: Họp khẩn cấp xử lý sự cố tràn bộ nhớ release v1.4
+date: '2026-10-20'
+project: nova
+purpose: Xử lý sự cố tràn bộ nhớ và rollback phiên bản
+agenda:
+- Rollback về bản v1.3
+- Phân công theo dõi metrics và điều tra root-cause
+attendees:
+- bach
+- quang
+- thanh

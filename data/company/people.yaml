@@ -1,0 +1,33 @@
+# Danh bạ công ty giả "Lumi Tech" (dữ liệu tổng hợp, không có người thật).
+# roles ở đây là vai trò TOÀN CÔNG TY. Vai trò theo dự án nằm trong projects/<dự án>/members.yaml.
+people:
+  - {id: ha,       name: Hà,    aliases: ["chị Hà"],  title: Project Manager,       roles: []}
+  - {id: minh,     name: Minh,  aliases: ["anh Minh"], title: Senior Engineer,      roles: []}
+  - {id: quan,     name: Quân,  aliases: ["anh Quân"], title: Backend Developer,    roles: []}
+  - {id: nam,      name: Nam,   aliases: [],            title: Frontend Developer,   roles: []}
+  - {id: lan,      name: Lan,   aliases: ["chị Lan"],  title: Design Lead,          roles: [design_lead]}
+  - {id: trang,    name: Trang, aliases: [],            title: QA Engineer,          roles: []}
+  - {id: huy,      name: Huy,   aliases: ["anh Huy"],  title: Head of Product,      roles: [head_of_product]}
+  - {id: phuc,     name: Phúc,  aliases: ["anh Phúc"], title: Finance Manager,      roles: [finance]}
+  - {id: vy,       name: Vy,    aliases: [],            title: Marketing Lead,       roles: [marketing]}
+  - {id: dat,      name: Đạt,   aliases: [],            title: Thực tập sinh,        roles: [intern]}
+
+  # Thành viên bổ sung cho bộ 6 cuộc họp tổng hợp độc lập (đóng băng trước khi chạy)
+  - {id: hoang,    name: Hoàng, aliases: ["anh Hoàng"], title: Tech Lead,           roles: [tech_lead]}
+  - {id: son,      name: Sơn,   aliases: ["anh Sơn"],   title: Senior Developer,    roles: []}
+  - {id: tuan,     name: Tuấn,  aliases: ["anh Tuấn"],  title: Backend Developer,   roles: []}
+  - {id: binh,     name: Bình,  aliases: ["anh Bình"],  title: DevOps Engineer,     roles: []}
+  - {id: mai,      name: Mai,   aliases: ["chị Mai"],   title: QA Engineer,         roles: []}
+  - {id: huong,    name: Hương, aliases: ["chị Hương"], title: Marketing Director,  roles: [marketing, head_of_product]}
+  - {id: long,     name: Long,  aliases: ["anh Long"],  title: Media Specialist,    roles: []}
+  - {id: dung,     name: Dũng,  aliases: ["anh Dũng"],  title: Tech Lead,           roles: [tech_lead]}
+  - {id: thang,    name: Thắng, aliases: ["anh Thắng"], title: Developer,           roles: []}
+  - {id: linh,     name: Linh,  aliases: ["chị Linh"],  title: UI Designer,         roles: [designer]}
+  - {id: viet_pm,  name: Viết,  aliases: ["anh Viết"],  title: Project Manager,     roles: [pm]}
+  - {id: an,       name: An,    aliases: [],            title: QA / Tester,         roles: []}
+  - {id: huy_des,  name: Huy,   aliases: ["Huy Design"], title: UI/UX Designer,     roles: [designer]}
+  - {id: viet_ho,  name: Việt,  aliases: ["anh Việt"],  title: Head of Product,     roles: [head_of_product, pm]}
+  - {id: nga,      name: Nga,   aliases: ["chị Nga"],   title: Business Analyst,    roles: []}
+  - {id: bach,     name: Bách,  aliases: ["anh Bách"],  title: CTO,                 roles: [tech_lead, head_of_product]}
+  - {id: quang,    name: Quang, aliases: ["anh Quang"], title: SRE Engineer,        roles: []}
+  - {id: thanh,    name: Thành, aliases: ["anh Thành"], title: Backend Developer,   roles: []}

@@ -1,0 +1,18 @@
+[09:00:00] Dũng: Chào mọi người, bắt đầu sprint planning hôm nay.
+[09:00:12] Thắng: Chào Dũng, chào Linh.
+[09:00:20] Linh: Chào cả hai.
+[09:00:30] Dũng: Hôm nay chúng ta có một bug urgent ở payment gateway cần fix ngay.
+[09:00:45] Thắng: Bug đó là gì ạ?
+[09:00:55] Dũng: Khi thanh toán thẻ quốc tế, giao diện hiển thị lỗi timeout sau 30 giây.
+[09:01:10] Linh: Mình thấy giao diện thanh toán hơi cũ, có thể cải thiện màu sắc và nút thanh toán.
+[09:01:25] Dũng: Linh, ý kiến UI tốt, chúng ta sẽ ghi lại để làm trong sprint sau.
+[09:01:40] Thắng: Mình sẽ übernehmen việc fix bug payment gateway.
+[09:01:55] Dũng: Tuyệt vời, Thắng. Hạn chế là phải hoàn thành trước 15h ngày mai.
+[09:02:10] Thắng: Được ạ, mình sẽ cố gắng xong trước deadline.
+[09:02:20] Linh: Mình chỉ góp ý về UI, không nhận việc code nào cả.
+[09:02:35] Dũng: Đúng rồi, Linh chỉ chịu trách nhiệm về đề xuất UI, không có task code.
+[09:02:50] Thắng: Nếu cần hỗ trợ về API thanh toán, mình sẽ gọi Linh.
+[09:03:05] Linh: Ok, mình sẵn sàng tư vấn về giao diện nếu cần.
+[09:03:20] Dũng: Cuối cùng, chúng ta cập nhật task board: Thắng – fix bug payment gateway, deadline 2025-09-26.
+[09:03:35] Thắng: Cảm ơn Dũng.
+[09:03:45] Linh: Chúc cả team thành công.

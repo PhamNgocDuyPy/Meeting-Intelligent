@@ -1,0 +1,7 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: A đổi thành B, người có thẩm quyền chốt
+[00:01:12] Hà: Hôm nay mình cần chốt: chọn công cụ ci/cd.
+[00:01:37] Minh: Ban đầu mình đề xuất GitHub Actions, quen tay và triển khai nhanh.
+[00:02:18] Trang: Mình lo về GitHub Actions, rủi ro và chi phí dài hạn cao hơn dự kiến. Jenkins có vẻ hợp hơn.
+[00:03:19] Nam: Mình ủng hộ Jenkins, dễ kiểm soát hơn.
+[00:03:57] Minh: Ok, mình đổi ý. Chốt Jenkins, bỏ GitHub Actions.
+[00:04:48] Hà: Đồng ý, ghi nhận Jenkins.

@@ -1,0 +1,77 @@
+{
+  "difficulty": "Khó do cần cân bằng giữa tính năng mới và ổn định hệ thống; bẫy là áp lực giữ v1.4 gây nguy cơ downtime lâu dài.",
+  "topics": [
+    {
+      "keywords": [
+        "rollback",
+        "v1.3",
+        "quyết định"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "rollback về v1.3"
+      ],
+      "not_final_keywords": [
+        "patch v1.4",
+        "hotfix ngay"
+      ],
+      "superseded_keywords": [],
+      "is_conditional": false
+    },
+    {
+      "keywords": [
+        "giám sát metrics",
+        "Grafana",
+        "cảnh báo memory"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "giám sát sau rollback"
+      ],
+      "not_final_keywords": [],
+      "superseded_keywords": [],
+      "is_conditional": false
+    },
+    {
+      "keywords": [
+        "trích xuất log",
+        "heap dump",
+        "phân tích root cause"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "trích xuất log và phân tích trước 10h"
+      ],
+      "not_final_keywords": [],
+      "superseded_keywords": [],
+      "is_conditional": false
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "giám sát metrics",
+        "Grafana"
+      ],
+      "assignee": "Quang",
+      "deadline": null
+    },
+    {
+      "keywords": [
+        "trích xuất log",
+        "phân tích root cause"
+      ],
+      "assignee": "Thành",
+      "deadline": "2025-09-26"
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "tràn bộ nhớ",
+        "v1.4"
+      ]
+    }
+  ]
+}

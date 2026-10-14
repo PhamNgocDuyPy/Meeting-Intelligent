@@ -1,0 +1,67 @@
+{
+  "difficulty": "Xác định范围 MVP khi cân bằng giữa yêu cầu khách hàng và khả năng thực hiện, tránh過度承諾导致延期。",
+  "topics": [
+    {
+      "keywords": [
+        "release date",
+        "MVP scope",
+        "QR payment",
+        "25/10"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "25/10",
+        "QR payment"
+      ],
+      "not_final_keywords": [
+        "installment feature in MVP",
+        "20/10 release"
+      ],
+      "superseded_keywords": [],
+      "is_conditional": false
+    },
+    {
+      "keywords": [
+        "installment feature",
+        "Phase 2",
+        "defer"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "installment feature",
+        "Phase 2"
+      ],
+      "not_final_keywords": [
+        "installment feature in MVP"
+      ],
+      "superseded_keywords": [
+        "installment feature in MVP"
+      ],
+      "is_conditional": false
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "update roadmap"
+      ],
+      "assignee": "Dũng",
+      "deadline": "2024-10-20"
+    },
+    {
+      "keywords": [
+        "inform customer"
+      ],
+      "assignee": "Nga",
+      "deadline": "2024-10-22"
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "security risk QR payment"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "topics": [
+    {
+      "keywords": [
+        "GitHub Actions",
+        "Jenkins"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "Jenkins"
+      ]
+    },
+    {
+      "keywords": [
+        "minh họa phẳng",
+        "ảnh chụp thật"
+      ],
+      "status": [
+        "leaning",
+        "open"
+      ],
+      "not_final_keywords": [
+        "minh họa phẳng",
+        "ảnh chụp thật"
+      ]
+    }
+  ],
+  "tasks": [],
+  "items": [],
+  "difficulty": "hai chủ đề đan xen: một chốt (phản đối đã được giải quyết), một chưa chốt"
+}

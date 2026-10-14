@@ -1,0 +1,7 @@
+id: g10
+title: "Họp phân việc sprint"
+date: "2026-11-09"
+project: aurora
+purpose: "Phân việc cho sprint"
+agenda: ["Phân việc"]
+attendees: ["ha", "quan", "nam", "trang", "dat"]

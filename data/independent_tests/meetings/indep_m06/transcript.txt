@@ -1,0 +1,18 @@
+[09:00:00] Bách: Team ạ, hệ thống vừa bị tràn bộ nhớ sau khi deploy v1.4, chúng ta cần phản ứng ngay.
+[09:00:12] Quang: Mình thấy metrics CPU và memory đã vượt ngưỡng cảnh báo, pod restart liên tục.
+[09:00:25] Thành: Logs показывают spike trong bộ nhớ heap của service order-processing.
+[09:00:38] Bách: Theo mình, chúng ta nên rollback ngay về v1.3 để ổn định hệ thống.
+[09:00:50] Quang: Rollback sẽ làm mất một số tính năng mới trong v1.4, nhưng ổn định là ưu tiên hàng đầu.
+[09:01:02] Thành: Nếu rollback, mình có thể bắt đầu trích xuất log từ các pod hiện tại để tìm root cause.
+[09:01:15] Bách: Quyết định rollback ngay, Quang bạn chịu trách nhiệm giám sát metrics sau rollback, Thành bạn trích xuất log và phân tích trước 10h sáng mai.
+[09:01:30] Quang: Được, mình sẽ mở dashboard Grafana và thiết lập cảnh báo nếu memory vượt 80% sau rollback.
+[09:01:45] Thành: Mình sẽ dùng kubectl logs và lưu vào folder /tmp/logs_v1.4, sau đó chạy script phân tích heap dump.
+[09:02:00] Bách: Sau khi rollback xong, chúng ta sẽ họp lại lúc 14h để đánh giá ổn định và quyết định kế hoạch hotfix.
+[09:02:12] Quang: Mình sẽ cập nhật metrics mỗi 5 phút và báo cáo bất kỳ bất thường nào.
+[09:02:25] Thành: Mình sẽ hoàn thành trích xuất log trước 09:30 và bắt đầu phân tích, mục tiêu có kết quả trước 10h.
+[09:02:40] Bách: Cảm ơn hai anh, mọi người tập trung vào nhiệm vụ của mình, chúng ta sẽ vượt qua sự cố này.
+[09:03:00] Quang: Có thể mình cũng kiểm tra lại các cấu hình resource limits trong deployment v1.3 để tránh tái phát.
+[09:03:15] Thành: Đồng thời mình sẽ kiểm tra xem có bất kỳ thay đổi nào trong dependency mới của v1.4 gây rò rỉ bộ nhớ.
+[09:03:30] Bách: Được, mọi người làm việc nhanh chóng, chúng ta sẽ báo cáo tiến độ mỗi giờ.
+[09:03:45] Quang: Mình sẽ bắt đầu giám sát ngay sau khi rollback hoàn tất.
+[09:04:00] Thành: Mình sẽ bắt đầu trích xuất log ngay sau khi nhận được lệnh.

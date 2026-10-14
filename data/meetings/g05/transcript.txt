@@ -1,0 +1,6 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: người nói là khách, không nhận diện được thẩm quyền
+[00:00:55] Hà: Hôm nay có khách bên đối tác tham gia, mình bàn chọn dịch vụ gửi email.
+[00:01:45] Minh: Mình đề xuất SendGrid.
+[00:02:42] Quân: Mình thì nghiêng về Amazon SES, nhưng cần xem thêm.
+[00:03:08] Khách 1: Thôi làm Amazon SES đi cho nhanh.
+[00:03:54] Hà: Ok, ghi nhận ý kiến của bên mình.

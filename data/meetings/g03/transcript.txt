@@ -1,0 +1,8 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: quy trình: đồng thuận đủ số người (kiểu consensus)
+[00:00:52] Hà: Mình cần cả nhóm thống nhất: quy ước đặt tên nhánh git.
+[00:01:08] Quân: Mình đề xuất tên-người/tên-việc.
+[00:02:07] Minh: Mình thì muốn feature/tên-việc, hợp lý hơn với cả nhóm.
+[00:02:43] Trang: feature/tên-việc ok với mình.
+[00:03:02] Nam: Mình cũng chọn feature/tên-việc.
+[00:03:47] Quân: Ok, mình theo feature/tên-việc.
+[00:04:34] Minh: Vậy thống nhất feature/tên-việc nhé.

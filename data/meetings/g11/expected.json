@@ -1,0 +1,36 @@
+{
+  "topics": [],
+  "tasks": [
+    {
+      "keywords": [
+        "gửi báo cáo"
+      ],
+      "assignee": "Nam",
+      "deadline": "2026-11-17"
+    },
+    {
+      "keywords": [
+        "phần giao diện"
+      ],
+      "assignee": "Minh",
+      "deadline": "2026-11-20"
+    },
+    {
+      "keywords": [
+        "test toàn bộ",
+        "test xong"
+      ],
+      "assignee": "Trang",
+      "deadline": null
+    },
+    {
+      "keywords": [
+        "bản demo"
+      ],
+      "assignee": "Minh",
+      "deadline": null
+    }
+  ],
+  "items": [],
+  "difficulty": "hạn tương đối: ngày mai/thứ Sáu suy được; cuối tháng/tuần sau thì không"
+}

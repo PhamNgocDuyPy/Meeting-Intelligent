@@ -1,0 +1,43 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Chọn thư viện biểu đồ",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "Chart.js"
+        },
+        {
+          "option_id": "B",
+          "label": "ECharts"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất Chart.js"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "B",
+      "stance": "propose",
+      "quote": "ECharts hợp hơn"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "defer",
+      "quote": "để họp sau mình quyết"
+    }
+  ],
+  "items": []
+}

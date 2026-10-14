@@ -1,0 +1,15 @@
+# Dữ liệu giả lập. Ca khó: hai chủ đề đan xen (hosting, monitoring); hosting chốt bởi tech lead, monitoring bị hoãn.
+[00:00:15] Hà: Hôm nay hai việc: chọn nhà cung cấp hosting và chọn công cụ monitoring.
+[00:00:40] Minh: Hosting mình đề xuất AWS, đội mình quen rồi.
+[00:01:10] Quân: Monitoring thì mình thích Grafana, tự host được, miễn phí.
+[00:01:50] Phúc: Hosting thì GCP có credit cho startup, bên mình xin được tầm hai trăm triệu.
+[00:02:30] Minh: Credit GCP chỉ dùng được một năm, sau đó giá cao hơn AWS.
+[00:03:05] Trang: Monitoring Datadog dễ dùng hơn nhưng tính phí theo host.
+[00:03:50] Quân: Grafana cần người cấu hình, mình sẽ tốn công, nhưng chấp nhận được.
+[00:04:30] Phúc: Quay lại hosting, nếu tính một năm thì GCP rẻ hơn thật.
+[00:05:10] Minh: Tính dài hạn ba năm thì AWS rẻ hơn, và đội mình đã có chứng chỉ AWS.
+[00:06:00] Hà: Hosting thì Minh là tech lead, Minh quyết nhé.
+[00:06:20] Minh: Ok, chốt AWS cho hosting.
+[00:06:50] Hà: Monitoring thì chưa đủ thông tin về chi phí Datadog, để tuần sau xem lại nhé.
+[00:07:20] Trang: Ok, mình sẽ lấy báo giá Datadog trước thứ Sáu tuần sau.
+[00:07:40] Hà: Cảm ơn mọi người.

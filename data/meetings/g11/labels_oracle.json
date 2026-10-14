@@ -1,0 +1,51 @@
+{
+  "topics": [],
+  "labels": [],
+  "items": [
+    {
+      "kind": "task",
+      "title": "Gửi báo cáo",
+      "utterance_ids": [
+        "U001",
+        "U002"
+      ],
+      "quote": "gửi báo cáo",
+      "assignee": "Nam",
+      "assignee_basis": "assigned",
+      "deadline_text": "ngày mai"
+    },
+    {
+      "kind": "task",
+      "title": "Hoàn thành phần giao diện",
+      "utterance_ids": [
+        "U003"
+      ],
+      "quote": "hoàn thành phần giao diện",
+      "assignee": "Minh",
+      "assignee_basis": "assigned",
+      "deadline_text": "thứ Sáu"
+    },
+    {
+      "kind": "task",
+      "title": "Test toàn bộ",
+      "utterance_ids": [
+        "U004"
+      ],
+      "quote": "test xong",
+      "assignee": "Trang",
+      "assignee_basis": "assigned",
+      "deadline_text": "cuối tháng"
+    },
+    {
+      "kind": "task",
+      "title": "Chuẩn bị bản demo",
+      "utterance_ids": [
+        "U005"
+      ],
+      "quote": "chuẩn bị bản demo",
+      "assignee": "Minh",
+      "assignee_basis": "assigned",
+      "deadline_text": "tuần sau"
+    }
+  ]
+}

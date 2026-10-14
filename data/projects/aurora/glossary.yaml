@@ -1,0 +1,5 @@
+terms:
+  staging: môi trường chạy thử trước khi lên production
+  feature flag: công tắc bật/tắt tính năng mà không cần phát hành lại
+  AA: mức tương phản đạt chuẩn WCAG AA
+  go-live: ngày đưa hệ thống vào chạy thật

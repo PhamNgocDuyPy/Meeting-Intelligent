@@ -1,0 +1,39 @@
+{
+  "corpus_size": 212,
+  "query": "Họp kỹ thuật chọn backend Aurora Chốt hướng backend cho Aurora để kịp sprint 7 Chọn nền tảng backend Phân việc dựng môi trường",
+  "duration_s": 0.39189839363098145,
+  "top3_precision": 1.0,
+  "top10_recall": 1.0,
+  "top5": [
+    {
+      "rank": 1,
+      "p": 0.9,
+      "is_distractor": false,
+      "heading": "Ai được chốt quyết định"
+    },
+    {
+      "rank": 2,
+      "p": 0.86,
+      "is_distractor": false,
+      "heading": "Một việc hợp lệ"
+    },
+    {
+      "rank": 3,
+      "p": 0.76,
+      "is_distractor": false,
+      "heading": "Ghi nhận quyết định"
+    },
+    {
+      "rank": 4,
+      "p": 0.61,
+      "is_distractor": false,
+      "heading": "Hạ tầng"
+    },
+    {
+      "rank": 5,
+      "p": 0.42,
+      "is_distractor": false,
+      "heading": "Quyết định theo đồng thuận"
+    }
+  ]
+}

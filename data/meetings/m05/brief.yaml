@@ -1,0 +1,7 @@
+id: m05
+title: Họp chọn cổng thanh toán Aurora
+date: "2026-10-13"
+project: aurora
+purpose: Chọn cổng thanh toán cho bản 1.0 Aurora
+agenda: ["Stripe hay cổng nội địa", "Phí giao dịch"]
+attendees: [ha, minh, vy, phuc, huy]

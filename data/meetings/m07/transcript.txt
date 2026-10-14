@@ -1,0 +1,12 @@
+# Dữ liệu giả lập. Ca mơ hồ (dự kiến hệ thống dễ sai): tham chiếu "như đợt trước", "cứ thế đi", việc chỉ bị nhắc tên, hạn mơ hồ.
+[00:00:10] Hà: Ok mọi người, hôm nay nói về cái báo cáo cuối tháng của Helios.
+[00:00:35] Quân: Cái format đó mình thấy nên như đợt trước đi.
+[00:01:10] Nam: Đợt trước là bản nào, bản PDF hay bản Excel?
+[00:01:40] Quân: Thì cái bản mà anh Huy duyệt hồi tháng Chín ấy.
+[00:02:20] Nam: À bản đó. Nhưng khách bên đối tác lại đòi bản mới có biểu đồ.
+[00:03:05] Trang: Biểu đồ thì phải xem lại, mình chưa thấy yêu cầu bằng văn bản.
+[00:03:50] Hà: Ừ vậy cứ thế đi, mình đi tiếp.
+[00:04:30] Hà: Còn việc xuất file báo cáo tự động, chắc Nam làm được nhỉ.
+[00:05:00] Nam: Mình đang kẹt sprint, để xem.
+[00:05:40] Quân: Xuất file thì cần xong trước cuối tháng, không thì không kịp cho khách.
+[00:06:20] Hà: Ok. Ghi nhận, họp tiếp tuần sau.

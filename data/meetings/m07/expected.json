@@ -1,0 +1,12 @@
+{
+  "difficulty": "mơ hồ: tham chiếu không rõ, việc chỉ bị nhắc tên, hạn mơ hồ",
+  "topics": [
+    {"keywords": ["báo cáo", "format", "định dạng", "biểu đồ"], "status": ["open", "leaning"]}
+  ],
+  "tasks": [
+    {"keywords": ["xuất file", "xuất"], "assignee": null, "deadline": null}
+  ],
+  "items": [
+    {"kind": "open_question", "keywords": ["biểu đồ", "bản nào", "format"]}
+  ]
+}

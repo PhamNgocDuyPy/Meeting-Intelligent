@@ -1,0 +1,58 @@
+{
+  "difficulty": "Độ khó trung bình, bẫy là thành viên thiết kế tự ý thay đổi scope mà không có thẩm quyền.",
+  "topics": [
+    {
+      "keywords": [
+        "màn hình onboarding",
+        "bỏ onboarding",
+        "giữ onboarding"
+      ],
+      "status": "decided",
+      "final_option_keywords": [
+        "giữ onboarding"
+      ],
+      "not_final_keywords": [
+        "bỏ onboarding"
+      ],
+      "superseded_keywords": [],
+      "is_conditional": false
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": [
+        "cập nhật thiết kế onboarding"
+      ],
+      "assignee": "Huy",
+      "deadline": "2025-09-27"
+    },
+    {
+      "keywords": [
+        "viết test case onboarding"
+      ],
+      "assignee": "An",
+      "deadline": "2025-09-27"
+    },
+    {
+      "keywords": [
+        "cập nhật tài liệu scope"
+      ],
+      "assignee": "Viết",
+      "deadline": "2025-09-26"
+    }
+  ],
+  "items": [
+    {
+      "kind": "issue",
+      "keywords": [
+        "nội dung onboarding cần được đơn giản hoá"
+      ]
+    },
+    {
+      "kind": "request",
+      "keywords": [
+        "thời gianReview thiết kế onboarding"
+      ]
+    }
+  ]
+}

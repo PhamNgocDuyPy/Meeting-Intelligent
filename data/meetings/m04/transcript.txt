@@ -1,0 +1,12 @@
+# Dữ liệu giả lập. Ca khó: "thôi làm Redis đi" nói bởi thực tập sinh (không có thẩm quyền), PM hoãn lại.
+[00:00:20] Hà: Vấn đề hôm nay là cache cho màn báo cáo của Helios đang chậm, mình cần chọn hướng xử lý.
+[00:00:50] Nam: Mình đề xuất cache trong bộ nhớ của server, đơn giản, không cần thêm hạ tầng.
+[00:01:40] Trang: Cache trong bộ nhớ thì mỗi lần deploy là mất sạch, QA test sẽ khó lặp lại.
+[00:02:30] Quân: Mình nghiêng về Redis nhưng chưa chắc, phải xem chi phí hạ tầng đã.
+[00:03:20] Minh: Redis thì thêm một thành phần phải vận hành, mình hơi ngại.
+[00:04:10] Nam: Nếu có Redis thì mình cũng chịu, miễn có người lo vận hành.
+[00:05:00] Trang: Mình thì thích Redis hơn vì dễ test.
+[00:05:50] Đạt: Thôi làm Redis đi cho nhanh, bàn mãi mất thời gian.
+[00:06:10] Hà: Ừm, cái này anh Quân xem lại chi phí rồi mình quyết sau nhé.
+[00:06:40] Quân: Ok, mình sẽ xem chi phí Redis và gửi mọi người.
+[00:07:00] Hà: Cảm ơn mọi người.

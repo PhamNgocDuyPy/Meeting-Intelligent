@@ -1,0 +1,422 @@
+[
+  {
+    "id": "c01",
+    "text": "Nếu báo giá từ bên CMC xuống dưới 150 triệu, chúng ta sẽ ký hợp đồng tuần tới.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Quyết định phụ thuộc vào mức giá chưa được xác định."
+  },
+  {
+    "id": "c02",
+    "text": "Chúng ta chỉ có thể mua thêm license nếu quỹ IT tháng này còn dư 20 triệu.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Việc mua hàng còn chờ điều kiện ngân sách."
+  },
+  {
+    "id": "c03",
+    "text": "Nếu kế toán xác nhận số dư dự phòng đủ, chúng ta sẽ tiến hành mở rộng team.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Phê duyệt mở rộng team phụ thuộc vào kết quả kế toán."
+  },
+  {
+    "id": "c04",
+    "text": "Chờ xem kết quả đàm phán giảm giá với NCC mới, nếu đạt 10% thì chúng ta sẽ đặt hàng.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Đặt hàng còn chờ kết quả đàm phán giá cả."
+  },
+  {
+    "id": "c05",
+    "text": "Nếu chi phí hosting không vượt quá 5 triệu/tháng, chúng ta sẽ giữ gói hiện tại.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Quyết định giữ gói phụ thuộc vào mức chi phí hosting."
+  },
+  {
+    "id": "c06",
+    "text": "Nếu quỹ marketing Q3 được phê duyệt, chúng ta sẽ chạy campaign Facebook mới.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Chạy campaign mới phụ thuộc vào phê duyệt quỹ."
+  },
+  {
+    "id": "c07",
+    "text": "Nếu không có chi phí bất ngờ từ dự án cũ, chúng ta có thể đầu tư vào công cụ tự động hóa.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Đầu tư mới còn chờ đảm bảo không có chi phí bất ngờ."
+  },
+  {
+    "id": "c08",
+    "text": "Nếu bảng lương tháng này còn đủ, chúng ta sẽ thưởng thêm cho team sale.",
+    "is_conditional": true,
+    "category": "budget",
+    "rationale": "Thưởng phụ thuộc vào khả năng trả lương hiện tại."
+  },
+  {
+    "id": "c09",
+    "text": "Nếu chị Linh từ phòng Pháp lý gật đầu bản hợp đồng, chúng ta sẽ gửi cho khách hàng ký.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Việc gửi hợp đồng chờ sự đồng ý của phòng Pháp lý."
+  },
+  {
+    "id": "c10",
+    "text": "Chúng ta sẽ triển khai tính năng mới chỉ khi BOD duyệt đề án ngân sách.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Triển khai tính năng phụ thuộc vào phê duyệt của BOD."
+  },
+  {
+    "id": "c11",
+    "text": "Nếu trưởng phòng IT cho phép, chúng ta sẽ nâng cấp server vào cuối tuần.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Nâng cấp server còn chờ sự cho phép của trưởng phòng IT."
+  },
+  {
+    "id": "c12",
+    "text": "Nếu khách hàng xác nhận yêu cầu thay đổi trước thứ Ba, chúng ta sẽ điều chỉnh kế hoạch.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Điều chỉnh kế hoạch phụ thuộc vào xác nhận của khách hàng."
+  },
+  {
+    "id": "c13",
+    "text": "Chúng ta sẽ chỉ bắt đầu đào tạo sau khi HVPT phê duyệt nội dung khóa học.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Đào tạo chờ phê duyệt nội dung từ HVPT."
+  },
+  {
+    "id": "c14",
+    "text": "Nếu ban giám đốc đồng ý với kế hoạch mở chi nhánh, chúng ta sẽ bắt đầu tìm địa điểm.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Mở chi nhánh phụ thuộc vào sự đồng ý của ban giám đốc."
+  },
+  {
+    "id": "c15",
+    "text": "Nếu bộ phận QC chấp nhận mẫu sản phẩm, chúng ta sẽ đưa vào líneas sản xuất.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Việc sản xuất phụ thuộc vào chấp nhận mẫu từ QC."
+  },
+  {
+    "id": "c16",
+    "text": "Chúng ta sẽ chỉ ra mắt sản phẩm mới khi zespół Marketing hoàn thành teaser và được PGD ký tên.",
+    "is_conditional": true,
+    "category": "approval",
+    "rationale": "Ra mắt sản phẩm phụ thuộc vào hoàn thành teaser và sự ký tên của PGD."
+  },
+  {
+    "id": "c17",
+    "text": "Nếu test tải trang dưới 500ms trên môi trường staging, chúng ta sẽ đẩy lên production.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Đẩy lên production phụ thuộc vào kết quả test hiệu năng."
+  },
+  {
+    "id": "c18",
+    "text": "Nếu bên thứ ba mở API truy cập dữ liệu real-time, chúng ta sẽ tích hợp vào dashboard.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Tích hợp API phụ thuộc vào việc bên thứ ba mở dịch vụ."
+  },
+  {
+    "id": "c19",
+    "text": "Nếu thử nghiệm PoC với công cụ AI mới đạt độ chính xác >90%, chúng ta sẽcân nhắc mua license.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Mua license phụ thuộc vào kết quả PoC đạt tiêu chuẩn."
+  },
+  {
+    "id": "c20",
+    "text": "Nếu không phát hiện lỗi bảo mật trong quét mã nguồn tuần này, chúng ta sẽ triển khai bản vá.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Triển khai bản vá phụ thuộc vào kết quả quét bảo mật."
+  },
+  {
+    "id": "c21",
+    "text": "Nếu đội dev hoàn thành module thanh toán trước thứ Sáu, chúng ta sẽ bắt đầu UAT.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Bắt đầu UAT phụ thuộc vào thời gian hoàn thành module."
+  },
+  {
+    "id": "c22",
+    "text": "Nếu kiểm tra interoperability với hệ thống legacy thành công, chúng ta sẽ lên kế hoạch di chuyển dữ liệu.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Kế hoạch di chuyển phụ thuộc vào kết quả kiểm tra interoperability."
+  },
+  {
+    "id": "c23",
+    "text": "Nếu thử nghiệm áp lực mạng đạt tiêu chuẩn, chúng ta sẽ mở rộng bandwidth cho chi nhánh mới.",
+    "is_conditional": true,
+    "category": "technical",
+    "rationale": "Mở rộng bandwidth phụ thuộc vào kết quả thử nghiệm áp lực mạng."
+  },
+  {
+    "id": "c24",
+    "text": "Nếu shipment từ Hà Nội đến HCM đến trước 9h sáng mai, chúng ta sẽ bắt đầu phân phối ngay.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Phân phối phụ thuộc vào thời gian tới của hàng hóa."
+  },
+  {
+    "id": "c25",
+    "text": "Chúng ta sẽ lên kế hoạch quảng cáo sau khi nhận được phản hồi từ fokus group vào thứ Tư.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Kế hoạch quảng cáo chờ phản hồi từ fokus group."
+  },
+  {
+    "id": "c26",
+    "text": "Nếu buổi họp với nhà đầu tư kết thúc trước 11h, chúng ta sẽ có thời gian chỉnh sửa slide.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Thời gian chỉnh sửa phụ thuộc vào thời điểm kết thúc họp."
+  },
+  {
+    "id": "c27",
+    "text": "Chúng ta sẽ chỉ triển khai bản vá vào cuối tuần nếu không có sự cố sản xuất nào xảy ra.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Triển khai bản vá phụ thuộc vào отсутствие sự cố sản xuất."
+  },
+  {
+    "id": "c28",
+    "text": "Nếu lượng đơn đặt hàng trong flash sale vượt 500 đơn, chúng ta sẽ mở thêm ca làm việc.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Mở thêm ca phụ thuộc vào số lượng đơn đặt hàng."
+  },
+  {
+    "id": "c29",
+    "text": "Chúng ta sẽ cân nhắc mở rộng team hỗ trợ nếu số ticket hỗ trợ trung bình mỗi ngày vượt 150.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Mở rộng팀 phụ thuộc vào mức độ tải ticket hỗ trợ."
+  },
+  {
+    "id": "c30",
+    "text": "Nếu thời tiết tốt vào cuối tuần, chúng ta sẽ tổ chức team building ngoài trời.",
+    "is_conditional": true,
+    "category": "timing",
+    "rationale": "Team building ngoài trời phụ thuộc vào điều kiện thời tiết."
+  },
+  {
+    "id": "u01",
+    "text": "Chúng tôi đã chốt chọn NCC An Phát làm nhà cung cấp chính cho dự án ERP.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Quyết định đã được chốt definitively, không còn phụ thuộc."
+  },
+  {
+    "id": "u02",
+    "text": "Kế hoạch di chuyển dữ liệu lên AWS sẽ diễn ra vào ngày 20/10, không thể hoãn lại.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Ngày di chuyển đã được xác định firmly."
+  },
+  {
+    "id": "u03",
+    "text": "Ban giám đốc đã phê duyệt ngân sách quảng cáo Q4 với mức 500 triệu đồng.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Ngân sách quảng cáo đã được phê duyệt cụ thể."
+  },
+  {
+    "id": "u04",
+    "text": "Chúng tôi đã quyết định áp dụng phương pháp Scrum cho tất cả dự án nội bộ từ tháng tới.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Áp dụng Scrum đã được quyết định và sẽ bắt đầu."
+  },
+  {
+    "id": "u05",
+    "text": "Đội kinh doanh đã ký hợp đồng với khách hàng BIDV, giá trị 2 triệu USD.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Hợp đồng đã được ký, giá trị cố định."
+  },
+  {
+    "id": "u06",
+    "text": "Công ty sẽ tặng thêm 1 ngày nghỉ lễ cho tất cả nhân viên vào ngày 30/4.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Ngày nghỉ đã được xác định trước."
+  },
+  {
+    "id": "u07",
+    "text": "Chúng tôi đã quyết định ngừng sử dụng phần mềm XYZ và chuyển sang ABC từ ngày 1/12.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Chuyển phần mềm đã được quyết định cụ thể ngày."
+  },
+  {
+    "id": "u08",
+    "text": "Kết quả kiểm tra chất lượng tháng 9 đạt 99,8%, vượt tiêu chuẩn nội bộ.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Kết quả kiểm tra là sự kiện đã xảy ra, không còn điều kiện."
+  },
+  {
+    "id": "u09",
+    "text": "Chúng tôi sẽ tổ chức workshop đào tạo về bảo mật thông tin vào ngày 15/11.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Ngày workshop đã được định sẵn."
+  },
+  {
+    "id": "u10",
+    "text": "Đội IT đã hoàn thành bản vá khẩn cấp và đã triển khai lên toàn bộ hệ thống.",
+    "is_conditional": false,
+    "category": "definitive",
+    "rationale": "Bản vá đã được hoàn thành và triển khai."
+  },
+  {
+    "id": "u11",
+    "text": "Tuấn sẽ viết tài liệu kỹ thuật và gửi trước 17h mai.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Nhiệm vụ được giao cụ thể với thời hạn."
+  },
+  {
+    "id": "u12",
+    "text": "Mai phụ trách przygotować prezentację cho buổi pitch với khách hàng sáng nay.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Mai được giao nhiệm vụ làm presentation."
+  },
+  {
+    "id": "u13",
+    "text": "Linh sẽ lên kế hoạch nội dung cho chiến dịch email marketing tuần tới.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Linh được giao nhiệm vụ lên kế hoạch nội dung."
+  },
+  {
+    "id": "u14",
+    "text": "Hai sẽ điều phối với đội logistics để xác nhận lịch giao hàng cho đơn hàng #4521.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Hai được giao nhiệm vụ điều phối logistics."
+  },
+  {
+    "id": "u15",
+    "text": "Trọng sẽ kiểm tra lại script tự động hóa và báo cáo kết quả trước cuối ngày.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Trọng được giao kiểm tra script và báo cáo."
+  },
+  {
+    "id": "u16",
+    "text": "Ngọc sẽ liên hệ với bộ phận tài chính để lấy báo cáo chi phí tháng 9.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Ngọc được giao lấy báo cáo chi phí từ tài chính."
+  },
+  {
+    "id": "u17",
+    "text": "Anh sẽ cập nhật lại danh sách khách hàng tiềm năng trong CRM trước 12h.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Anh được giao cập nhật danh sách khách hàng trong CRM."
+  },
+  {
+    "id": "u18",
+    "text": "Thảo sẽ điều phối buổi họp interno với phòng kế hoạch vào thứ Hai 10h.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Thảo được giao điều phối buổi họp interno."
+  },
+  {
+    "id": "u19",
+    "text": "Phúc sẽ kiểm tra lại bản thiết kế UI/UX và gửi phản hồi cho thiết kế trước 16h.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Phúc được giao kiểm tra thiết kế và gửi phản hồi."
+  },
+  {
+    "id": "u20",
+    "text": "Lan sẽ chuẩn bị mẫu hợp đồng để gửi cho pháp lýReview vào ngày mai.",
+    "is_conditional": false,
+    "category": "task_assignment",
+    "rationale": "Lan được giao chuẩn bị mẫu hợp đồng để review."
+  },
+  {
+    "id": "u21",
+    "text": "Đã chốt chọn NCC An Phát, nếu có lỗi thì gọi họ bảo hành theo hợp đồng.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Câu có 'nếu' nhưng chỉ mô tả xử lý sau khi đã chốt NCC."
+  },
+  {
+    "id": "u22",
+    "text": "Chúng tôi đã quyết định di chuyển lên AWS, nếu quá trình migration gặp sự cố, chúng ta sẽ rollback về hệ thống cũ.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Quyết định di chuyển đã chốt; 'nếu' chỉ đề cập đến kế hoạch dự phòng."
+  },
+  {
+    "id": "u23",
+    "text": "Kế hoạch ra mắt sản phẩm mới đã được phê duyệt, nếu phản hồi từ khách hàng tiêu cực, chúng ta sẽ điều chỉnh chiến dịch quảng cáo.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Ra mắt sản phẩm đã được phê duyệt; 'nếu' chỉ là biện pháp xử lý phản hồi."
+  },
+  {
+    "id": "u24",
+    "text": "Đã approval ngân sách cho dự án AI, nếu kết quả PoC không đạt KPI, chúng ta sẽ dừng đầu tư thêm.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Ngân sách đã được approval; 'nếu' mô tả hành động nếu PoC không đạt."
+  },
+  {
+    "id": "u25",
+    "text": "Chúng tôi đã ký hợp đồng với nhà cung cấp logistics, nếu giao hàng trễ hơn 2 ngày, chúng ta sẽ áp dụng phạt theo điều khoản.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Hợp đồng đã ký; 'nếu' chỉ là điều khoản phạt trong hợp đồng."
+  },
+  {
+    "id": "u26",
+    "text": "Đã chốt sử dụng framework React cho dự án web, nếu phát hiện vấn đề hiệu năng, chúng ta sẽ tối ưu mã nguồn trước khi ra mắt.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Quyết định sử dụng React đã chốt; 'nếu' chỉ là biện pháp cải thiện."
+  },
+  {
+    "id": "u27",
+    "text": "Ban giám đốc đã đồng ý mở chi nhánh mới ở Đà Nẵng, nếu thuê không được địa điểm thích hợp, chúng ta sẽ xem xét lại khu vực.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Quyết định mở chi nhánh đã được PGD同意; 'nếu' chỉ là phương án dự phòng."
+  },
+  {
+    "id": "u28",
+    "text": "Đã quyết định áp dụng chính sách làm việc từ xa 2 ngày/tuần, nếu sản lượng giảm dưới 80% mục tiêu, chúng ta sẽ xem xét lại chính sách.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Chính sách làm việc từ xa đã được áp dụng; 'nếu' chỉ là điều kiện xem xét lại."
+  },
+  {
+    "id": "u29",
+    "text": "Chúng tôi đã triển khai bản vá bảo mật, nếu vẫn còn lỗ hổng được phát hiện, chúng ta sẽ lên kế hoạch vá thêm.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Bản vá đã được triển khai; 'nếu' chỉ là bước xử lý nếu còn lỗ hổng."
+  },
+  {
+    "id": "u30",
+    "text": "Đã chốt ngân sách marketing Q4, nếu chi phí quảng cáo vượt ngân sách, chúng ta sẽตัด giảm các kênh meno hiệu quả.",
+    "is_conditional": false,
+    "category": "hard_negative",
+    "rationale": "Ngân sách marketing đã chốt; 'nếu' chỉ là biện pháp điều chỉnh nếu vượt ngân sách."
+  }
+]

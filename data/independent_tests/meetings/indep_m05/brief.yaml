@@ -1,0 +1,12 @@
+id: indep_m05
+title: Họp chốt phạm vi tính năng MVP
+date: '2026-10-19'
+project: nova
+purpose: Chốt tính năng release MVP và hoãn tính năng trả góp
+agenda:
+- Cắt giảm tính năng trả góp sang Phase 2
+- Chốt thanh toán QR cho MVP
+attendees:
+- viet_ho
+- dung
+- nga

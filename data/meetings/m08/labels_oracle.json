@@ -1,0 +1,24 @@
+{
+  "topics": [
+    {"topic_id": "T1", "title": "Chọn nhà cung cấp hosting", "category": "technical",
+     "options": [{"option_id": "AWS", "label": "AWS"}, {"option_id": "GCP", "label": "GCP"}]},
+    {"topic_id": "T2", "title": "Chọn công cụ monitoring", "category": "technical",
+     "options": [{"option_id": "G", "label": "Grafana"}, {"option_id": "D", "label": "Datadog"}]}
+  ],
+  "labels": [
+    {"utterance_id": "U002", "topic_id": "T1", "option_id": "AWS", "stance": "propose", "quote": "mình đề xuất AWS"},
+    {"utterance_id": "U003", "topic_id": "T2", "option_id": "G", "stance": "propose", "quote": "mình thích Grafana"},
+    {"utterance_id": "U004", "topic_id": "T1", "option_id": "GCP", "stance": "propose", "quote": "GCP có credit cho startup"},
+    {"utterance_id": "U005", "topic_id": "T1", "option_id": "GCP", "stance": "oppose", "quote": "Credit GCP chỉ dùng được một năm"},
+    {"utterance_id": "U006", "topic_id": "T2", "option_id": "D", "stance": "propose", "quote": "Datadog dễ dùng hơn"},
+    {"utterance_id": "U007", "topic_id": "T2", "option_id": "G", "stance": "support", "quote": "chấp nhận được"},
+    {"utterance_id": "U008", "topic_id": "T1", "option_id": "GCP", "stance": "support", "quote": "GCP rẻ hơn thật"},
+    {"utterance_id": "U009", "topic_id": "T1", "option_id": "AWS", "stance": "support", "quote": "AWS rẻ hơn"},
+    {"utterance_id": "U011", "topic_id": "T1", "option_id": "AWS", "stance": "conclude", "quote": "chốt AWS cho hosting"},
+    {"utterance_id": "U012", "topic_id": "T2", "option_id": null, "stance": "defer", "quote": "để tuần sau xem lại nhé"}
+  ],
+  "items": [
+    {"kind": "task", "title": "Lấy báo giá Datadog", "utterance_ids": ["U013"],
+     "quote": "lấy báo giá Datadog", "assignee": "Trang", "assignee_basis": "self_accepted", "deadline_text": "thứ Sáu tuần sau"}
+  ]
+}

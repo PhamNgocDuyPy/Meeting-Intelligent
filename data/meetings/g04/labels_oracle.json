@@ -1,0 +1,50 @@
+{
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Giờ họp daily",
+      "category": "process",
+      "options": [
+        {
+          "option_id": "A",
+          "label": "9 giờ sáng"
+        },
+        {
+          "option_id": "B",
+          "label": "4 giờ chiều"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "propose",
+      "quote": "đề xuất 9 giờ sáng"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "support",
+      "quote": "9 giờ sáng ok"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "T1",
+      "option_id": "A",
+      "stance": "conclude",
+      "quote": "chốt 9 giờ sáng"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "T1",
+      "option_id": null,
+      "stance": "info",
+      "quote": "chưa có ý kiến"
+    }
+  ],
+  "items": []
+}

@@ -1,0 +1,5 @@
+# Dữ liệu tổng hợp (scripts/gen_synthetic.py). Kịch bản: chốt có điều kiện chưa xảy ra
+[00:00:27] Hà: Mình cần quyết định: gói hạ tầng tháng tới.
+[00:00:55] Minh: Mình đề xuất gói Premium.
+[00:01:46] Huy: Ok, chốt gói Premium, nhưng chỉ khi bên đối tác xác nhận được điều kiện hợp đồng.
+[00:02:21] Hà: Vậy tạm ghi là chờ đối tác xác nhận.

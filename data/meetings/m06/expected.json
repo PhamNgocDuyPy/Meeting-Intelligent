@@ -1,0 +1,10 @@
+{
+  "difficulty": "khó: đổi ý + người chốt trước không có thẩm quyền",
+  "topics": [
+    {"keywords": ["release", "ngày release"], "status": "decided",
+     "final_option_keywords": ["19/10", "thứ hai"], "not_final_keywords": ["21/10", "thứ tư"], "superseded_keywords": ["21/10", "thứ tư"]}
+  ],
+  "tasks": [
+    {"keywords": ["test lại thanh toán", "thanh toán"], "assignee": "Trang", "deadline": "2026-10-23"}
+  ]
+}

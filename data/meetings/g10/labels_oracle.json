@@ -1,0 +1,52 @@
+{
+  "topics": [],
+  "labels": [],
+  "items": [
+    {
+      "kind": "task",
+      "title": "Làm phần đăng nhập",
+      "utterance_ids": [
+        "U001",
+        "U002"
+      ],
+      "quote": "làm phần đăng nhập",
+      "assignee": "Quân",
+      "assignee_basis": "assigned",
+      "deadline_text": "ngày 18/11"
+    },
+    {
+      "kind": "task",
+      "title": "Viết tài liệu phần giao diện",
+      "utterance_ids": [
+        "U003"
+      ],
+      "quote": "viết tài liệu cho phần giao diện",
+      "assignee": "Nam",
+      "assignee_basis": "self_accepted",
+      "deadline_text": null
+    },
+    {
+      "kind": "task",
+      "title": "Phần kiểm thử tự động",
+      "utterance_ids": [
+        "U004",
+        "U005"
+      ],
+      "quote": "kiểm thử tự động",
+      "assignee": null,
+      "assignee_basis": "mentioned_only",
+      "deadline_text": null
+    },
+    {
+      "kind": "task",
+      "title": "Cập nhật test case luồng thanh toán",
+      "utterance_ids": [
+        "U006"
+      ],
+      "quote": "cập nhật test case",
+      "assignee": "Trang",
+      "assignee_basis": "assigned",
+      "deadline_text": null
+    }
+  ]
+}
