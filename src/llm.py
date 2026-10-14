@@ -72,7 +72,7 @@ def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
     key = os.environ.get("NVIDIA_API_KEY")
     if not key:
         raise LLMError("Thiếu NVIDIA_API_KEY để gọi fallback mô hình.")
-    model = os.environ.get("NVIDIA_MODEL", "nvidia/nemotron-4-340b-instruct")
+    model = os.environ.get("NVIDIA_MODEL", "nvidia/nemotron-3.5-lightning-30b-a3b")
     url = "https://integrate.api.nvidia.com/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {key}",
