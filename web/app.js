@@ -32,11 +32,33 @@ let state = {
   reviews: {}, // item_id -> 'approved' | 'rejected' | 'edited'
 };
 
+function getAccessCode() {
+  const el = document.getElementById("access-code-input");
+  return el ? el.value.trim() : (localStorage.getItem("meeting_intel_access_code") || "");
+}
+
+function getAuthHeaders(extraHeaders = {}) {
+  const code = getAccessCode();
+  const headers = { ...extraHeaders };
+  if (code) {
+    headers["X-Access-Code"] = code;
+  }
+  return headers;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
 
 async function initApp() {
+  const codeInput = document.getElementById("access-code-input");
+  if (codeInput) {
+    codeInput.value = localStorage.getItem("meeting_intel_access_code") || "";
+    codeInput.addEventListener("input", (e) => {
+      localStorage.setItem("meeting_intel_access_code", e.target.value.trim());
+    });
+  }
+
   setupEventListeners();
   await fetchMeetingList();
   if (state.meetings.length > 0) {
@@ -123,6 +145,12 @@ function setupEventListeners() {
     });
   }
 
+  const inpTranscript = document.getElementById("inp-transcript");
+  if (inpTranscript) {
+    inpTranscript.addEventListener("input", () => updateSpeakerRolesList());
+    inpTranscript.addEventListener("change", () => updateSpeakerRolesList());
+  }
+
   if (inpFile) {
     inpFile.addEventListener("change", (e) => {
       const file = e.target.files[0];
@@ -130,17 +158,23 @@ function setupEventListeners() {
       const reader = new FileReader();
       reader.onload = (ev) => {
         document.getElementById("inp-transcript").value = ev.target.result;
+        updateSpeakerRolesList();
         showToast(`Đã nạp file ${file.name}`);
       };
       reader.readAsText(file, "UTF-8");
     });
   }
 
+  if (btnOpenModal) {
+    btnOpenModal.addEventListener("click", () => {
+      uploadModal.classList.remove("hidden");
+      updateSpeakerRolesList();
+    });
+  }
+
   if (btnSubmitUpload) {
     btnSubmitUpload.addEventListener("click", async () => {
       const title = document.getElementById("inp-title").value.trim() || "Cuộc họp mới";
-      const mode = selMode.value;
-      const leader = document.getElementById("inp-leader").value.trim();
       const transcript = document.getElementById("inp-transcript").value.trim();
 
       if (!transcript) {
@@ -148,17 +182,30 @@ function setupEventListeners() {
         return;
       }
 
+      // Thu thập vai trò của từng người nói (chỉ dùng cho lần chạy này, không ghi file)
+      const roles = {};
+      document.querySelectorAll(".speaker-role-select").forEach(sel => {
+        roles[sel.dataset.speaker] = sel.value;
+      });
+
       btnSubmitUpload.disabled = true;
       btnSubmitUpload.textContent = "đang phân tích...";
 
       try {
         const res = await fetch("/api/upload", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, mode, leader, transcript })
+          headers: getAuthHeaders({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ title, transcript, roles, access_code: getAccessCode() })
         });
-        const data = await res.json();
 
+        if (res.status === 401) {
+          showToast("Mã truy cập không hợp lệ (401). Vui lòng nhập đúng ACCESS_CODE trên thanh tiêu đề.");
+          btnSubmitUpload.disabled = false;
+          btnSubmitUpload.textContent = "phân tích ngay";
+          return;
+        }
+
+        const data = await res.json();
         if (data.error) {
           showToast("Lỗi: " + data.error);
           btnSubmitUpload.disabled = false;
@@ -189,6 +236,55 @@ function setupEventListeners() {
   }
 }
 
+function extractSpeakers(text) {
+  const lines = text.split("\n");
+  const speakers = new Set();
+  const pattern = /^(?:\[[\d:.]+\]\s*)?([A-ZÀ-Ỵa-zà-ỹ0-9_.\- ]+?)\s*[:：]/;
+  for (const line of lines) {
+    const match = line.trim().match(pattern);
+    if (match && match[1]) {
+      const name = match[1].trim();
+      if (name && name.length <= 40 && !name.toLowerCase().startsWith("http")) {
+        speakers.add(name);
+      }
+    }
+  }
+  return Array.from(speakers);
+}
+
+function updateSpeakerRolesList() {
+  const transcriptEl = document.getElementById("inp-transcript");
+  const listEl = document.getElementById("speaker-roles-list");
+  if (!transcriptEl || !listEl) return;
+  const speakers = extractSpeakers(transcriptEl.value);
+  if (!speakers.length) {
+    listEl.innerHTML = `<span class="roles-empty-hint">Nhập hoặc dán transcript ở trên để tự động nhận diện người nói...</span>`;
+    return;
+  }
+  // Giữ lại vai trò đã chọn trước đó nếu có
+  const prev = {};
+  listEl.querySelectorAll(".speaker-role-select").forEach(sel => {
+    prev[sel.dataset.speaker] = sel.value;
+  });
+
+  listEl.innerHTML = speakers.map(spk => {
+    const cur = prev[spk] || "member";
+    return `
+      <div class="speaker-role-row">
+        <span class="speaker-name">${escapeHtml(spk)}</span>
+        <select class="speaker-role-select" data-speaker="${escapeHtml(spk)}">
+          <option value="member" ${cur === "member" ? "selected" : ""}>Thành viên (mặc định - không quyền chốt)</option>
+          <option value="pm" ${cur === "pm" ? "selected" : ""}>PM (Quản lý sản phẩm - chốt Scope)</option>
+          <option value="tech_lead" ${cur === "tech_lead" ? "selected" : ""}>Tech Lead (Trưởng nhóm kỹ thuật - chốt Technical)</option>
+          <option value="design_lead" ${cur === "design_lead" ? "selected" : ""}>Design Lead (Trưởng nhóm thiết kế - chốt Design)</option>
+          <option value="head_of_product" ${cur === "head_of_product" ? "selected" : ""}>Head of Product (GĐ sản phẩm - chốt Scope/Design/Release/Budget)</option>
+          <option value="finance" ${cur === "finance" ? "selected" : ""}>Tài chính (chốt Budget)</option>
+        </select>
+      </div>
+    `;
+  }).join("");
+}
+
 async function fetchMeetingList() {
   try {
     const res = await fetch("/api/meetings");
@@ -209,14 +305,28 @@ async function fetchMeetingList() {
 async function loadMeeting(mid) {
   state.currentMeetingId = mid;
   const select = document.getElementById("meeting-select");
-  select.value = mid;
+  if (select) select.value = mid;
 
   document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">đang tải lời thoại ${mid}...</div>`;
   document.getElementById("inspector-content").innerHTML = `<div class="loading-state">đang phân tích dữ liệu cuộc họp...</div>`;
 
   try {
-    const res = await fetch(`/api/meeting/${mid}?oracle=1&judge=jev`);
+    const res = await fetch(`/api/meeting/${mid}?oracle=1&judge=jev`, {
+      headers: getAuthHeaders()
+    });
+
+    if (res.status === 401) {
+      showToast("Yêu cầu mã truy cập hợp lệ (401). Vui lòng nhập ACCESS_CODE.");
+      document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">Vui lòng nhập đúng ACCESS_CODE trên thanh điều khiển để xem cuộc họp.</div>`;
+      document.getElementById("inspector-content").innerHTML = `<div class="loading-state">Chưa được cấp quyền truy cập (401 Unauthorized).</div>`;
+      return;
+    }
+
     const data = await res.json();
+    if (data.error) {
+      showToast("Lỗi: " + data.error);
+      return;
+    }
     state.meetingData = data;
 
     renderTranscript();
@@ -642,13 +752,20 @@ async function exportData(format) {
   try {
     const res = await fetch("/api/export", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({
         meeting_id: state.currentMeetingId,
         format: format,
-        approved_ids: Object.keys(state.reviews).filter(k => state.reviews[k] === "approved")
+        approved_ids: Object.keys(state.reviews).filter(k => state.reviews[k] === "approved"),
+        access_code: getAccessCode()
       })
     });
+
+    if (res.status === 401) {
+      showToast("Yêu cầu mã truy cập hợp lệ để xuất dữ liệu (401).");
+      return;
+    }
+
     const text = await res.text();
 
     if (format === "markdown") {

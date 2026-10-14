@@ -77,6 +77,8 @@ def _judge_jev(state: TopicState, utts: list[Utterance], ctx: ContextPack) -> Ju
 
     resp = call_jev(state_text, questions)
     answers = resp.get("answers", resp)
+    if not answers:
+        return None
 
     def _parse(qid: str, threshold: float = 0.5) -> JudgeAnswer:
         q = answers.get(qid, {})
@@ -110,6 +112,8 @@ def judge_task_assignee(backend: str, item_title: str, assignee: str, cited_text
         try:
             resp = call_jev(state_text, {"assigned": {"type": "noul", "instructions": question_text + " Trả lời có/không."}})
             answers = resp.get("answers", resp)
+            if not answers:
+                return 1.0, "keep"
             q = answers.get("assigned", {})
             p = q.get("noul", q.get("probability", 0.5))
         except Exception:

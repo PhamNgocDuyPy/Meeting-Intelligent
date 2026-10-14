@@ -104,7 +104,8 @@ class ContextPack:
         return "\n".join(lines)
 
 
-def load_context(root: Path, meeting_dir: Path, use_jev_rerank: bool = False) -> ContextPack:
+def load_context(root: Path, meeting_dir: Path, use_jev_rerank: bool = False,
+                 custom_roles: Optional[dict[str, str]] = None) -> ContextPack:
     root = Path(root)
     brief = _yaml(meeting_dir / "brief.yaml", {})
     people = {p["id"]: p for p in _yaml(root / "data/company/people.yaml", {}).get("people", [])}
@@ -121,7 +122,24 @@ def load_context(root: Path, meeting_dir: Path, use_jev_rerank: bool = False) ->
     custom_mode = brief.get("mode")
     leader_name = brief.get("leader")
 
-    if custom_mode == "consensus":
+    if custom_roles is not None:
+        # Chế độ gán vai trò trực tiếp trong bộ nhớ cho lần chạy này (không ghi file)
+        # Giữ nguyên bảng thẩm quyền chuẩn của công ty (decision_rights.yaml)
+        all_speakers = list(dict.fromkeys(list(brief.get("attendees", [])) + list(custom_roles.keys())))
+        for name in all_speakers:
+            s_name = str(name).strip()
+            role = custom_roles.get(s_name, custom_roles.get(norm_plain(s_name), "member"))
+            roles = [role] if role else ["member"]
+            entry = {
+                "id": norm_plain(s_name),
+                "name": s_name,
+                "title": f"Vai trò: {role}",
+                "roles": roles,
+                "known": (role != "member")
+            }
+            index[norm_plain(s_name)] = entry
+            attendees.append(entry)
+    elif custom_mode == "consensus":
         # Chế độ họp đồng thuận: Mọi người tham gia đều được công nhận và có quyền biểu quyết
         rights = {cat: {"mode": "consensus"} for cat in ["scope", "technical", "design", "budget", "release", "process", "other"]}
         for ref in brief.get("attendees", []):

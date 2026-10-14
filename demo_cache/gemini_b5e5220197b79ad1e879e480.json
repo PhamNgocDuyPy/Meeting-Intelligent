@@ -1,0 +1,1 @@
+{"conditional": {"answer": true, "p": 1.0, "why": "Phát biểu chứa cấu trúc 'Nếu... thì...', trong đó việc bắt đầu phân phối (quyết định) phụ thuộc hoàn toàn vào điều kiện tiên quyết là 'shipment từ Hà Nội đến HCM đến trước 9h sáng mai'. Nếu điều kiện này chưa xảy ra, quyết định chưa thể có hiệu lực thực thi."}}

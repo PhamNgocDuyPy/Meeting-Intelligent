@@ -19,6 +19,7 @@ from pydantic import BaseModel, ValidationError
 
 T = TypeVar("T", bound=BaseModel)
 CACHE_DIR = Path(__file__).resolve().parent.parent / "outputs" / "cache"
+DEMO_CACHE_DIR = Path(__file__).resolve().parent.parent / "demo_cache"
 
 
 class LLMError(RuntimeError):
@@ -70,7 +71,7 @@ def _post_with_retry(url: str, headers: dict, payload: dict, tries: int = 5, tim
 def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
-        raise LLMError("Thiếu GEMINI_API_KEY (đặt trong .env hoặc biến môi trường).")
+        raise LLMError("Thiếu GEMINI_API_KEY. Để phân tích transcript mới, vui lòng cung cấp GEMINI_API_KEY trong biến môi trường hoặc .env; hoặc chọn các cuộc họp mẫu đã có sẵn trong demo_cache.")
     model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     payload = {
@@ -85,35 +86,32 @@ def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
         raise LLMError(f"Phản hồi Gemini không hợp lệ: {str(data)[:300]}")
 
 
-def _jev_config() -> tuple[str, str, str]:
+def _jev_config() -> tuple[str | None, str | None, str]:
     """Trả về (base_url, api_key, model) cho Jev/OpenCode."""
     base = os.environ.get("JEV_BASE_URL")
     key = os.environ.get("OPENCODE_API_KEY") or os.environ.get("JEV_API_KEY")
     model = os.environ.get("JEV_MODEL", "jev-1.13-free")
-    if not (base and key):
-        raise LLMError("Thiếu JEV_BASE_URL / OPENCODE_API_KEY (đặt trong .env hoặc biến môi trường).")
-    return base.rstrip("/"), key, model
+    return (base.rstrip("/") if base else None), key, model
 
 
 def call_jev(state: str, questions: dict, use_cache: bool = True) -> dict:
     """Gọi Jev qua OpenCode /systemone endpoint.
-
-    Args:
-        state: văn bản ngữ cảnh (transcript, đoạn policy, v.v.)
-        questions: dict câu hỏi, mỗi key là question_id, value là dict với
-                   type ("noul"|"choice"|"score"), instructions, và criteria (tuỳ type).
-    Returns:
-        dict kết quả gốc từ Jev (chứa key cho mỗi question_id).
-    """
-    base, key, model = _jev_config()
-
-    # Cache theo nội dung câu hỏi
+    Đọc từ demo_cache hoặc outputs/cache trước khi gọi API bên ngoài."""
+    model = os.environ.get("JEV_MODEL", "jev-1.13-free")
     cache_key = hashlib.sha256(json.dumps({"model": model, "state": state, "questions": questions},
                                           ensure_ascii=False).encode()).hexdigest()[:24]
+    demo_cache_file = DEMO_CACHE_DIR / f"jev_{cache_key}.json"
     cache_file = CACHE_DIR / f"jev_{cache_key}.json"
-    if use_cache and cache_file.exists():
-        return json.loads(cache_file.read_text(encoding="utf-8"))
 
+    if use_cache:
+        target = demo_cache_file if demo_cache_file.exists() else (cache_file if cache_file.exists() else None)
+        if target:
+            return json.loads(target.read_text(encoding="utf-8"))
+
+    base, key, model = _jev_config()
+    if not (base and key):
+        # Thiếu khóa Jev: trả về rỗng để bộ chấm bỏ qua êm thuận, không làm hỏng pipeline
+        return {"answers": {}}
     payload = {"model": model, "state": state, "questions": questions}
     data = _post_with_retry(base, {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, payload)
 
@@ -186,10 +184,13 @@ def generate_json(backend: str, system: str, user: str, model_cls: Type[T], repa
         raise LLMError(f"Backend không hỗ trợ: {backend}")
     model_id = os.environ.get("GEMINI_MODEL" if backend == "gemini" else "JEV_MODEL", "")
     key = hashlib.sha256(json.dumps([backend, model_id, system, user], ensure_ascii=False).encode()).hexdigest()[:24]
+    demo_cache_file = DEMO_CACHE_DIR / f"{backend}_{key}.json"
     cache_file = CACHE_DIR / f"{backend}_{key}.json"
-    if use_cache and cache_file.exists():
-        raw_data = json.loads(cache_file.read_text(encoding="utf-8"))
-        return raw_data if model_cls is dict else model_cls.model_validate(raw_data)
+    if use_cache:
+        target = demo_cache_file if demo_cache_file.exists() else (cache_file if cache_file.exists() else None)
+        if target:
+            raw_data = json.loads(target.read_text(encoding="utf-8"))
+            return raw_data if model_cls is dict else model_cls.model_validate(raw_data)
 
     prompt, last_err = user, None
     for _ in range(repairs + 1):

@@ -46,13 +46,16 @@ def main() -> int:
     c.add_argument("a")
     c.add_argument("b")
     u = sub.add_parser("ui")
-    u.add_argument("--port", type=int, default=8080)
-    u.add_argument("--host", default="127.0.0.1")
+    u.add_argument("--port", type=int, default=None, help="Cổng chạy server (mặc định đọc PORT từ môi trường, hoặc 8080)")
+    u.add_argument("--host", default="127.0.0.1", help="Địa chỉ host (mặc định 127.0.0.1 hoặc HOST từ môi trường)")
     a = ap.parse_args()
 
     if a.cmd == "ui":
+        import os
         from src.server import run_server
-        run_server(port=a.port, host=a.host)
+        port = a.port if a.port is not None else int(os.environ.get("PORT", 8080))
+        host = os.environ.get("HOST", a.host)
+        run_server(port=port, host=host)
         return 0
     elif a.cmd == "list":
         print("\n".join(list_meetings()))

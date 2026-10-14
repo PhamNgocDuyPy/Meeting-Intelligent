@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- TOP BANNER: AN TOÀN DỮ LIỆU & BẢN QUYỀN -->
+  <div class="safety-banner">
+    <span class="safety-icon">🔒</span>
+    <span><strong>Chỉ dùng dữ liệu giả hoặc ẩn danh:</strong> Vui lòng không tải lên thông tin mật của doanh nghiệp. Bản demo trực tuyến tự động làm mới định kỳ.</span>
+  </div>
+
   <!-- TOPBAR / HEADER (MONKEYTYPE STYLE) -->
   <header class="topbar">
     <div class="brand">
@@ -29,6 +35,11 @@
       <span class="search-icon">🔍</span>
       <input type="text" id="search-input" placeholder="tra cứu từ khóa hoặc diễn biến... (Ctrl+K)" autocomplete="off" spellcheck="false">
       <span class="search-kbd">/</span>
+    </div>
+
+    <div class="access-code-wrap" title="Nhập mã ACCESS_CODE để chạy phân tích trực tuyến">
+      <span class="access-icon">🔑</span>
+      <input type="password" id="access-code-input" class="mono-input" placeholder="ACCESS_CODE..." autocomplete="off">
     </div>
 
     <div class="telemetry-pill" id="telemetry-pill" title="Hệ thống phân xử tất định kết hợp Jev System 1">
@@ -147,8 +158,18 @@
               <input type="file" id="inp-file" accept=".txt" style="display: none;">
             </label>
           </div>
-          <textarea id="inp-transcript" class="form-textarea" rows="9" placeholder="Tuấn: Ban đầu mình đề xuất dùng Redis.&#10;Hùng: Nhưng Redis tốn RAM, mình thấy Memcached nhẹ hơn.&#10;Tuấn: Ok, đổi ý. Chốt Memcached, bỏ Redis.&#10;Hùng: Nhất trí."></textarea>
+          <textarea id="inp-transcript" class="form-textarea" rows="8" placeholder="Tuấn: Ban đầu mình đề xuất dùng Redis.&#10;Hùng: Nhưng Redis tốn RAM, mình thấy Memcached nhẹ hơn.&#10;Tuấn: Ok, đổi ý. Chốt Memcached, bỏ Redis.&#10;Hùng: Nhất trí."></textarea>
           <span class="form-hint">hỗ trợ cả mốc giờ [00:01:23] lẫn không có mốc giờ. Tên người nói tự động nhận diện.</span>
+        </div>
+
+        <div class="form-group" id="speaker-roles-group">
+          <label class="form-label">vai trò người nói (chọn vai trò theo decision_rights.yaml):</label>
+          <div class="roles-tip">
+            <span>⚠️ <strong>Lưu ý thẩm quyền:</strong> Người chưa rõ vai trò (mặc định "thành viên") sẽ <em>không có thẩm quyền chốt</em> các chủ đề quan trọng (phạm vi, kỹ thuật, thiết kế...). Khi người này kết luận, quyết định sẽ được hệ thống xếp vào "Nghiêng về" để bảo đảm an toàn. Vai trò chỉ áp dụng cho lần chạy này, không ghi vào file. LLM không tham gia gán vai trò.</span>
+          </div>
+          <div id="speaker-roles-list" class="speaker-roles-list">
+            <span class="roles-empty-hint">Nhập hoặc dán transcript ở trên để tự động nhận diện người nói...</span>
+          </div>
         </div>
       </div>
 

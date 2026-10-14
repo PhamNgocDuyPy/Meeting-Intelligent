@@ -1,0 +1,1 @@
+{"conditional": {"answer": true, "p": 0.95, "why": "Việc chốt release vào thứ Hai không phải là quyết định tuyệt đối mà phụ thuộc vào điều kiện tiên quyết là 'QA không tìm ra lỗi mức cao'. Nếu điều kiện này xảy ra, quyết định sẽ bị dời lại."}}

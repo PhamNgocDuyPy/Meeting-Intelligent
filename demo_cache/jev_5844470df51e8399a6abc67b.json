@@ -1,0 +1,1 @@
+{"model": "jev-1.13-free", "answers": {"explicit_conclusion": {"type": "noul", "noul": 0.7}, "objection_remaining": {"type": "noul", "noul": 0.08}, "reversed_later": {"type": "noul", "noul": 0.09}, "conditional": {"type": "noul", "noul": 0.96}, "authority_ok": {"type": "noul", "noul": 0.89}}, "usage": {"input_tokens": 701, "output_tokens": 95}}

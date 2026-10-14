@@ -265,3 +265,68 @@ def test_custom_adhoc_consensus_meeting():
     assert states[0].status == "decided"
     assert states[0].final_option == "X"
 
+
+def test_stranger_leaning_vs_pm_decided():
+    """Kiểm tra quy tắc thẩm quyền (authority check):
+    - Người lạ (hoặc thành viên mặc định) chốt chủ đề phạm vi -> hạ cấp về 'Nghiêng về' (leaning).
+    - Cùng transcript đó với người đó được chọn vai trò PM -> chốt thành công 'Đã chốt' (decided).
+    """
+    from src.context import ContextPack
+    from src.rules import evaluate_all
+    from src.schema import Label, TopicDef, OptionDef
+
+    utts = {
+        "U001": Utterance(id="U001", idx=1, speaker="Người Lạ", text="Về phạm vi MVP, tôi chốt ta chỉ làm tính năng đăng nhập bằng email trước.")
+    }
+    brief = {
+        "id": "test_auth", "title": "Họp phạm vi MVP", "date": "2026-10-14",
+        "attendees": ["Người Lạ"]
+    }
+    # Category "scope" yêu cầu vai trò [pm, head_of_product] theo decision_rights.yaml
+    rights = {"scope": {"mode": "authority", "roles": ["pm", "head_of_product"]}}
+
+    topic = TopicDef(topic_id="T_SCOPE", title="Phạm vi MVP", category="scope",
+                     options=[OptionDef(option_id="O1", label="Chỉ làm đăng nhập email")])
+    labels = [
+        Label(utterance_id="U001", topic_id="T_SCOPE", option_id="O1", stance="conclude",
+              quote="tôi chốt ta chỉ làm tính năng đăng nhập bằng email trước")
+    ]
+
+    # Ca 1: Người lạ chưa rõ vai trò (mặc định là member) chốt chủ đề
+    ctx_stranger = ContextPack(
+        meeting=brief,
+        attendees=[{"id": "nguoi_la", "name": "Người Lạ", "title": "Thành viên", "roles": ["member"], "known": False}],
+        rights=rights, glossary={}, carryover=[], policy_snippets=[],
+        _index={"nguoi la": {"id": "nguoi_la", "name": "Người Lạ", "roles": ["member"]}}
+    )
+    states_stranger = evaluate_all([topic], labels, utts, ctx_stranger)
+    assert states_stranger[0].status == "leaning"
+    assert states_stranger[0].status_vi == "Nghiêng về"
+    assert states_stranger[0].needs_confirmation is True
+
+    # Ca 2: Cùng transcript đó, người đó được chọn vai trò PM (in-memory)
+    ctx_pm = ContextPack(
+        meeting=brief,
+        attendees=[{"id": "nguoi_la", "name": "Người Lạ", "title": "PM", "roles": ["pm"], "known": True}],
+        rights=rights, glossary={}, carryover=[], policy_snippets=[],
+        _index={"nguoi la": {"id": "nguoi_la", "name": "Người Lạ", "roles": ["pm"]}}
+    )
+    states_pm = evaluate_all([topic], labels, utts, ctx_pm)
+    assert states_pm[0].status == "decided"
+    assert states_pm[0].status_vi == "Đã chốt"
+    assert states_pm[0].final_option == "Chỉ làm đăng nhập email"
+
+
+def test_load_context_custom_roles_in_memory():
+    """Kiểm tra load_context với custom_roles:
+    - roles được nạp đúng vào index và attendees.
+    - Không ghi hoặc thay đổi bất kỳ file nào trên đĩa.
+    """
+    from src.context import load_context
+    ctx_member = load_context(ROOT, ROOT / "data/meetings/m01", custom_roles={"Người Lạ": "member"})
+    assert ctx_member.has_authority("Người Lạ", "scope") is False
+
+    ctx_pm = load_context(ROOT, ROOT / "data/meetings/m01", custom_roles={"Người Lạ": "pm"})
+    assert ctx_pm.has_authority("Người Lạ", "scope") is True
+
+

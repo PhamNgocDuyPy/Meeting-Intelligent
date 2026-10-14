@@ -1,0 +1,1 @@
+{"conditional": {"answer": true, "p": 0.95, "why": "Phát biểu thiết lập một điều kiện tiên quyết cụ thể (thời gian tải trang dưới 500ms trên môi trường staging) làm căn cứ để thực hiện hành động tiếp theo. Quyết định đẩy lên production chưa thể có hiệu lực nếu kết quả kiểm thử chưa đạt ngưỡng này."}}

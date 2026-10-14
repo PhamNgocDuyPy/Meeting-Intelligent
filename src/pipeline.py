@@ -24,12 +24,13 @@ def list_meetings() -> list[str]:
 def run_meeting_dir(meeting_dir: Path, backend: str = "gemini", judge: str = "none",
                     judge_mode: str = "downgrade",
                     labeler_out: Optional[LabelerOutput] = None, ctx: Optional[ContextPack] = None,
-                    transcript_text: Optional[str] = None) -> MeetingResult:
+                    transcript_text: Optional[str] = None,
+                    custom_roles: Optional[dict[str, str]] = None) -> MeetingResult:
     meeting_dir = Path(meeting_dir)
     raw = transcript_text if transcript_text is not None else (meeting_dir / "transcript.txt").read_text(encoding="utf-8")
     utts = parse_transcript(raw)
     by_id = {u.id: u for u in utts}
-    ctx = ctx or load_context(ROOT, meeting_dir)
+    ctx = ctx or load_context(ROOT, meeting_dir, custom_roles=custom_roles)
 
     out = labeler_out if labeler_out is not None else label_transcript(backend, ctx, utts)
     labels, rep = validate_labels(out, by_id)
@@ -49,11 +50,12 @@ def run_meeting_dir(meeting_dir: Path, backend: str = "gemini", judge: str = "no
             if t.status in ("decided", "leaning") and any(e.stance == "conclude" for e in t.timeline):
                 try:
                     verdict = judge_topic(judge, t, utts, ctx)
-                    dg = apply_judge(t, verdict, mode=judge_mode)
-                    if dg and dg.get("mode") == "downgrade":
-                        rep.downgrades.append({"item": t.title, "field": "status", "value": "decided", "reason": ",".join(dg["reasons"])})
-                    elif dg and dg.get("mode") == "advisory":
-                        rep.downgrades.append({"item": t.title, "field": "status_flag", "value": "advisory_flag", "reason": ",".join(dg["reasons"])})
+                    if verdict is not None:
+                        dg = apply_judge(t, verdict, mode=judge_mode)
+                        if dg and dg.get("mode") == "downgrade":
+                            rep.downgrades.append({"item": t.title, "field": "status", "value": "decided", "reason": ",".join(dg["reasons"])})
+                        elif dg and dg.get("mode") == "advisory":
+                            rep.downgrades.append({"item": t.title, "field": "status_flag", "value": "advisory_flag", "reason": ",".join(dg["reasons"])})
                 except Exception as e:  # bộ chấm lỗi không được làm hỏng kết quả luật
                     t.flags.append(f"judge_error:{type(e).__name__}")
 
@@ -82,10 +84,11 @@ def run_meeting_dir(meeting_dir: Path, backend: str = "gemini", judge: str = "no
 
 
 def run_meeting(meeting_id: str, backend: str = "gemini", judge: str = "none",
-                judge_mode: str = "downgrade", oracle: bool = False) -> MeetingResult:
+                judge_mode: str = "downgrade", oracle: bool = False,
+                custom_roles: Optional[dict[str, str]] = None) -> MeetingResult:
     d = MEETINGS / meeting_id
     lo = None
     if oracle:
         lo = LabelerOutput.model_validate(json.loads((d / "labels_oracle.json").read_text(encoding="utf-8")))
         backend = "oracle"
-    return run_meeting_dir(d, backend=backend, judge=judge, judge_mode=judge_mode, labeler_out=lo)
+    return run_meeting_dir(d, backend=backend, judge=judge, judge_mode=judge_mode, labeler_out=lo, custom_roles=custom_roles)
