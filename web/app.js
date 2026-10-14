@@ -33,8 +33,18 @@ let state = {
 };
 
 function getAccessCode() {
-  const el = document.getElementById("access-code-input");
-  return el ? el.value.trim() : (localStorage.getItem("meeting_intel_access_code") || "");
+  const modalEl = document.getElementById("inp-modal-access-code");
+  const headerEl = document.getElementById("access-code-input");
+  return (modalEl && modalEl.value.trim()) || (headerEl && headerEl.value.trim()) || (localStorage.getItem("meeting_intel_access_code") || "");
+}
+
+function setAccessCode(val) {
+  const trimmed = (val || "").trim();
+  localStorage.setItem("meeting_intel_access_code", trimmed);
+  const headerEl = document.getElementById("access-code-input");
+  const modalEl = document.getElementById("inp-modal-access-code");
+  if (headerEl && headerEl.value !== trimmed) headerEl.value = trimmed;
+  if (modalEl && modalEl.value !== trimmed) modalEl.value = trimmed;
 }
 
 function getAuthHeaders(extraHeaders = {}) {
@@ -51,12 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function initApp() {
-  const codeInput = document.getElementById("access-code-input");
-  if (codeInput) {
-    codeInput.value = localStorage.getItem("meeting_intel_access_code") || "";
-    codeInput.addEventListener("input", (e) => {
-      localStorage.setItem("meeting_intel_access_code", e.target.value.trim());
-    });
+  const savedCode = localStorage.getItem("meeting_intel_access_code") || "";
+  const headerEl = document.getElementById("access-code-input");
+  const modalEl = document.getElementById("inp-modal-access-code");
+  if (headerEl) {
+    headerEl.value = savedCode;
+    headerEl.addEventListener("input", (e) => setAccessCode(e.target.value));
+  }
+  if (modalEl) {
+    modalEl.value = savedCode;
+    modalEl.addEventListener("input", (e) => setAccessCode(e.target.value));
   }
 
   setupEventListeners();
@@ -199,7 +213,12 @@ function setupEventListeners() {
         });
 
         if (res.status === 401) {
-          showToast("Mã truy cập không hợp lệ (401). Vui lòng nhập đúng ACCESS_CODE trên thanh tiêu đề.");
+          showToast("Mã truy cập không hợp lệ (401). Vui lòng nhập đúng ACCESS_CODE.");
+          const modalEl = document.getElementById("inp-modal-access-code");
+          if (modalEl) {
+            modalEl.focus();
+            modalEl.style.borderColor = "#ef4444";
+          }
           btnSubmitUpload.disabled = false;
           btnSubmitUpload.textContent = "phân tích ngay";
           return;

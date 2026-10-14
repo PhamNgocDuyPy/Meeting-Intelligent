@@ -37,23 +37,43 @@ git push -u origin release
    * **Plan Type:** `Free`
 
 ### Bước 3: Thiết lập Biến Môi Trường (Environment Variables)
-Trong tab **Environment**, thiết lập các biến sau:
-* `PYTHON_VERSION`: `3.11.0` (hoặc `3.10.x` trở lên)
-* `ACCESS_CODE`: *(Mã truy cập bí mật dành riêng cho Giám khảo, ví dụ: `MeetingIntel2026`)*
-* `GEMINI_API_KEY`: *(Khóa Gemini API dành riêng cho bản demo trực tuyến)*
-* `GEMINI_MODEL`: `gemini-3.1-flash-lite`
-* `DAILY_RUN_LIMIT`: `100`
-* `RATE_LIMIT_PER_MINUTE`: `30`
+
+Trong tab **Environment** trên Render, bạn thiết lập các biến sau:
+
+| Biến môi trường (Key) | Giá trị mẫu (Value) | Tính chất | Ý nghĩa kỹ thuật |
+|---|---|:---:|---|
+| `PYTHON_VERSION` | `3.11.0` | **Bắt buộc** | Đảm bảo Render dùng đúng runtime Python tương thích |
+| `ACCESS_CODE` | `MeetingIntel2026` *(tự chọn)* | **Khuyến nghị** | Mã bảo vệ, chỉ cấp cho Giám khảo qua form nộp bài để ngăn spam quota |
+| `GEMINI_API_KEY` | *(Khóa Gemini của bạn)* | **Cần thiết** | Dùng khi người dùng tải lên transcript mới cần gọi LLM ngoài cache |
+| `GEMINI_MODEL` | `gemini-3.1-flash-lite` | Mặc định | Mô hình LLM chính thức của pipeline |
+| `DAILY_RUN_LIMIT` | `100` | Mặc định | Khóa trần số lượt gọi LLM mới mỗi ngày (chống cạn kiệt tài khoản) |
+| `RATE_LIMIT_PER_MINUTE` | `30` | Mặc định | Chặn địa chỉ IP gửi request dồn dập |
+| `JEV_BASE_URL` | `https://opencode.ai/inference/v1/systemone` | Tùy chọn | Endpoint Jev System One (nếu có dùng Jev) |
+| `OPENCODE_API_KEY` | *(Khóa OpenCode nếu có)* | Tùy chọn | Nếu để trống, server tự động bỏ qua Jev mà không gây lỗi |
+| `JEV_MODEL` | `jev-1.13-free` | Tùy chọn | Mô hình Jev kiểm tra an toàn |
+| `NVIDIA_API_KEY` | *(Khóa NVIDIA nếu có)* | Tùy chọn | Chỉ dùng trong các thí nghiệm sinh dữ liệu ngoài tập với Nemotron |
+
+---
 
 ### Bước 4: Thiết lập Health Check
-* Trong phần **Advanced Settings** -> **Health Check Path**: Điền `/healthz`.
-* Render sẽ tự động thăm dò endpoint này để xác nhận dịch vụ đã sẵn sàng nhận kết nối.
+* Trong mục **Advanced Settings** -> **Health Check Path**: Điền `/healthz`.
+* Render sẽ tự động thăm dò endpoint này để xác nhận dịch vụ đã khởi động xong trước khi định tuyến người dùng.
 
-### Bước 5: Kiểm thử sau khi triển khai (Smoke Test)
-1. Mở URL Render trong cửa sổ ẩn danh (Incognito), chờ ~1 phút nếu máy chủ đang thức dậy.
-2. Kiểm tra cuộc họp mẫu (ví dụ `m01`, `g10`): Chọn và xem kết quả — dữ liệu phải nạp tức thì từ `demo_cache/` mà không cần tiêu tốn quota Gemini.
-3. Kiểm tra bảo vệ mật mã: Thử phân tích transcript mới mà không nhập mã truy cập -> máy chủ phải từ chối (401 Unauthorized).
-4. Nhập mã `ACCESS_CODE` hợp lệ -> nạp transcript mới và xác nhận kết quả trả về chính xác.
+---
+
+### Bước 5: Hướng Dẫn Trải Nghiệm & Kiểm Thử Bản Live (User & Evaluator Flow)
+
+> [!IMPORTANT]
+> **Quy trình hoạt động của `ACCESS_CODE` (Không có tường chặn login bên ngoài):**
+> 1. **Mở trang web tự do:** Bất kỳ ai có đường link Render đều mở được trang chủ ngay lập tức. Không có màn hình đăng nhập bắt chặn bên ngoài.
+> 2. **Xem 26 cuộc họp mẫu (Không cần mã):** Chọn bất kỳ ca nào từ `m01` đến `m08`, `g01`–`g12`, hay `indep_m01`–`indep_m06`. Hệ thống nạp tức thì từ `demo_cache/` (~50ms) **mà không đòi hỏi nhập mã hay tiêu tốn hạn mức API**.
+> 3. **Phân tích transcript mới (Cần nhập mã):** Khi bấm nút **"+ nạp transcript"** để dán nội dung mới, người dùng nhập `ACCESS_CODE` vào ô khóa (có thể nhập ở góc trên thanh Header hoặc nhập trực tiếp ngay trong cửa sổ popup Nạp Transcript). Mã được trình duyệt tự động lưu cho các lần sau.
+
+#### Các bước kiểm tra nhanh sau deploy:
+1. Mở URL Render trong cửa sổ ẩn danh (Incognito), chờ ~1 phút nếu máy chủ đang khởi động lần đầu (Cold start).
+2. Kiểm tra cuộc họp mẫu (ví dụ `m01`, `g10`): Chọn và xem kết quả — dữ liệu phải nạp tức thì từ `demo_cache/`.
+3. Kiểm tra bảo vệ mật mã: Bấm **"+ nạp transcript"**, xóa trắng ô `ACCESS_CODE` và bấm **"phân tích ngay"** -> Hệ thống phải báo lỗi yêu cầu mã (`401 Unauthorized`) và viền đỏ ô nhập mã.
+4. Điền mã `ACCESS_CODE` đúng -> bấm **"phân tích ngay"** -> Hệ thống bóc tách thành công và chuyển ngay sang giao diện duyệt.
 5. Kiểm tra log của Render: Đảm bảo không có dòng nào in khóa API hoặc nội dung transcript ra màn hình console.
 
 ### Bước 6: Khóa Auto-Deploy
