@@ -90,7 +90,13 @@ def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
     }
     data = _post_with_retry(url, headers, payload)
     try:
-        return data["choices"][0]["message"]["content"]
+        msg = data["choices"][0]["message"]
+        content = msg.get("content")
+        if not content and msg.get("reasoning_content"):
+            content = msg.get("reasoning_content")
+        if content is None:
+            raise LLMError(f"Phản hồi NVIDIA không có nội dung: {str(data)[:300]}")
+        return content
     except (KeyError, IndexError):
         raise LLMError(f"Phản hồi NVIDIA không hợp lệ: {str(data)[:300]}")
 

@@ -51,7 +51,7 @@ Trong tab **Environment** trên Render, bạn thiết lập các biến sau:
 | `JEV_BASE_URL` | `https://opencode.ai/inference/v1/systemone` | Tùy chọn | Endpoint Jev System One (nếu có dùng Jev) |
 | `OPENCODE_API_KEY` | *(Khóa OpenCode nếu có)* | Tùy chọn | Nếu để trống, server tự động bỏ qua Jev mà không gây lỗi |
 | `NVIDIA_API_KEY` | *(Khóa NVIDIA nếu có)* | Dự phòng | Tự động kích hoạt thay thế nếu Gemini gặp sự cố mạng hoặc hết quota |
-| `NVIDIA_MODEL` | `nvidia/nemotron-3.5-lightning-30b-a3b` | Mặc định | Mô hình NVIDIA NIM dự phòng |
+| `NVIDIA_MODEL` | `nvidia/nemotron-3.5-lightning-30b-a3b` | Mặc định | Mô hình NVIDIA NIM dự phòng (hoặc `deepseek-ai/deepseek-v4.1-flash`) |
 
 ---
 
