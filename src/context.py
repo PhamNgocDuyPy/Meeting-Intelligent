@@ -212,7 +212,7 @@ def _rerank_keyword(query_text: str, sections: list[dict], top_k: int = 3) -> li
 
 def _rerank_with_jev(query_text: str, sections: list[dict], top_k: int = 3,
                      threshold: float = 0.4) -> list[dict]:
-    """Dùng Jev làm reranker cho policy snippets (Vị trí B theo PLAN_AND_JEV.md).
+    """Dùng Jev làm reranker cho policy snippets (Vị trí B theo thiết kế giải pháp).
 
     Mỗi section được chấm: "Đoạn chính sách này có trực tiếp liên quan đến
     mục đích/chương trình cuộc họp không?"

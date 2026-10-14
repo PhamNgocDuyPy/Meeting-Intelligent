@@ -1,4 +1,4 @@
-# BÁO CÁO HIỆN THỰC HÓA MISSION 2 — TRÍ TUỆ CUỘC HỌP
+# BÁO CÁO THỰC NGHIỆM & KẾT LUẬN (EXPERIMENTS & FINDINGS)
 *Người thực hiện: Nhóm phát triển Meeting Intel*  
 *Cam kết: Báo cáo trung thực, khoa học dựa trên output thực tế; định lượng rõ ràng vai trò của Luật tất định, Bộ chấm Jev System One và phạm vi dữ liệu cho kho tri thức.*
 
@@ -45,7 +45,7 @@ Toàn bộ 20 cuộc họp chuẩn (`m01–m08`, `g01–g12`) được chạy th
 5. `oracle + none` & `oracle + jev`: Nhãn tham chiếu chuẩn + Luật thuần / Jev (Mức trần lý tưởng kiểm thử luật).
 
 #### Bảng Đối chứng Hiệu năng Các Bộ Chấm trên Toàn bộ 20 Cuộc họp
-Trích xuất trực tiếp từ [`experiments/test_judge_comparison.py`](../experiments/test_judge_comparison.py) lưu tại `outputs/judge_comparison_results.json`:
+Trích xuất trực tiếp từ kết quả đối chứng thực nghiệm lưu tại `outputs/judge_comparison_results.json`:
 
 | Cấu hình Thử nghiệm | Chế độ Vận hành | Tỷ lệ Đạt (Pass Rate) | Lỗi Chốt Nhầm (Critical) | Hạ Oan Quyết Định Đúng | Bắt Điều Kiện Sót (True Positive) | Nhận xét Cơ chế & Đánh đổi |
 |---|---|:---:|:---:|:---:|:---:|---|

@@ -128,7 +128,7 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
   * *Lệnh thực thi toàn bộ kiểm thử:* `pytest -v`.
 * **Tài liệu phân tích chuyên sâu:**
   * [docs/TEST_CASES.md](docs/TEST_CASES.md): Bản mô tả chi tiết các ca kiểm thử tiêu biểu đối chiếu từng câu thoại gốc và bài học rút ra.
-  * [docs/MISSION_2_REPORT.md](docs/MISSION_2_REPORT.md): Báo cáo đối soát thực nghiệm, số liệu phân tích chuyên sâu và đối chứng bộ chấm.
+  * [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md): Báo cáo đối soát thực nghiệm, số liệu phân tích chuyên sâu và đối chứng bộ chấm.
 
 ---
 
@@ -203,7 +203,7 @@ Bảng so sánh đối chứng trên 20 cuộc họp chuẩn (`m01–m08`, `g01�
 Nhằm kiểm tra tính tổng quát hóa độc lập ngoài tập phát triển nội bộ:
 * **Tập thử nghiệm độc lập:** Gồm 60 câu phát biểu kiểm thử điều kiện (`conditional_sentences_60.json`) và 6 cuộc họp do AI ngoài (Nemotron) sinh độc lập tại `data/independent_tests/meetings/` (`indep_m01`–`indep_m06`), đạt **1/6 (16.7%) kết quả thô tự động**.
 * **Độ tin cậy và đối soát:** Con số "0 critical error" là trên tập dev; trên tập độc lập có 1 cảnh báo, sau đối soát là báo động giả của bộ chấm (bộ chấm chuỗi cứng `_hit()` phạt nhầm do lệch từ nối ngữ cảnh tại `indep_m04`, trong khi pipeline đã chốt đúng theo transcript và đúng thẩm quyền của PM Viết).
-* **Báo cáo chi tiết:** Phân tích đối soát từng ca và dữ liệu thực nghiệm được trình bày chi tiết tại [docs/MISSION_2_REPORT.md](docs/MISSION_2_REPORT.md).
+* **Báo cáo chi tiết:** Phân tích đối soát từng ca và dữ liệu thực nghiệm được trình bày chi tiết tại [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
 
 ---
 
