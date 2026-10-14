@@ -5,27 +5,18 @@ Hệ thống trích xuất dữ liệu có cấu trúc từ biên bản cuộc h
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests: 16/16 Passed](https://img.shields.io/badge/tests-16%2F16%20passed-brightgreen.svg)]()
-[![Benchmark: 90% Pass (0 Critical Errors)](https://img.shields.io/badge/benchmark-90%25%20(0%20critical%20errors)-success.svg)]()
+[![Benchmark: 90% Pass (Dev Set)](https://img.shields.io/badge/benchmark-90%25%20(0%20critical%20errors)-success.svg)]()
 
 ---
 
-## Demo Trực Tuyến
+## Bản Chạy Thử (Demo Trực Tuyến)
 
-* **Địa chỉ truy cập:** [https://meeting-intel.onrender.com](https://meeting-intel.onrender.com) *(hoặc URL do người triển khai cấu hình)*
+* **Địa chỉ truy cập:** [https://meeting-intel.onrender.com](https://meeting-intel.onrender.com) *(Thay bằng URL Render thật sau khi tạo Web Service)*
+* **Video demo (≤5 phút):** <link> *(Điền link video tại đây hoặc đính kèm qua form nộp bài)*
 * **Lưu ý khởi động:** Do sử dụng gói máy chủ miễn phí trên Render, hệ thống sẽ tự động ngủ khi không có lượt truy cập. **Lần đầu mở trang có thể mất khoảng 1 phút để máy chủ khởi động lại.**
-* **Mã truy cập (ACCESS_CODE):** Nhập mã truy cập được cung cấp riêng cho người chấm vào ô nhập mã trên thanh điều khiển của giao diện để mở khóa tính năng phân tích.
-* **Cơ chế dự phòng:** Toàn bộ 26 cuộc họp mẫu chuẩn đã được lưu sẵn trong thư mục `demo_cache/`, hệ thống có thể chạy tức thì và chuẩn xác ngay cả khi hết hạn mức API bên ngoài.
-
----
-
-## Bảng Quản Lý Rủi Ro Khi Chấm Trực Tuyến
-
-| Rủi ro tiềm ẩn | Biện pháp giảm thiểu kỹ thuật đã triển khai |
-|---|---|
-| **Máy chủ miễn phí tự ngủ (Cold start)** | Hiển thị cảnh báo "Mở lần đầu chờ ~1 phút" ngay đầu README và trên thanh thông báo trang web. Có thể kết hợp ping định kỳ (UptimeRobot) hoặc nâng gói dịch vụ khi cần duy trì liên tục. |
-| **Hết hạn mức (Quota) khóa Gemini** | 26 cuộc họp mẫu đọc trực tiếp từ `demo_cache/` (đã commit và quét bảo mật trước), chạy bình thường kể cả khi hết quota hoặc chưa cấu hình API key. Chỉ transcript mới do người dùng tải lên mới tiêu tốn quota, kèm trần giới hạn số lượt chạy mỗi ngày và thông báo hướng dẫn chạy local khi chạm trần. |
-| **Khóa API bị đổi hoặc thu hồi sau khi nộp** | Cung cấp khóa API riêng biệt dành riêng cho bản demo chấm thi, không thu hồi cho đến khi có kết quả đánh giá chính thức. |
-| **Commit mới làm hỏng phiên bản đang chạy** | Gắn tag phiên bản `v1.0` cố định cho bản nộp. Thiết lập Render triển khai từ tag hoặc nhánh release cố định và khóa auto-deploy sau khi nộp bài. |
+* **Mã truy cập (ACCESS_CODE):** Để bảo vệ hạn mức API và ngăn chặn lạm dụng, hệ thống yêu cầu mã truy cập khi phân tích transcript mới. Mã này được cung cấp riêng cho Ban Giám khảo qua form nộp bài (không ghi công khai trong README; nhập vào ô "Mã truy cập" ở góc trên thanh điều khiển web).
+* **Cơ chế dự phòng ngoại tuyến:** Toàn bộ 26 cuộc họp mẫu đã có sẵn trong thư mục `demo_cache/`, cho phép kiểm tra và xem kết quả phân tích tức thì (~50ms) ngay cả khi không có kết nối API ngoài hoặc hết hạn mức quota.
+* **Kế hoạch triển khai & Quản trị rủi ro:** Chi tiết về quy trình deploy và các biện pháp giảm thiểu sự cố khi chấm bài xem tại [docs/DEPLOY.md](docs/DEPLOY.md).
 
 ---
 
@@ -136,8 +127,8 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
   * `tests/test_mutations.py`: 4 kiểm thử đột biến kiểm tra khả năng phòng thủ trước ảo giác (trích dẫn giả mạo, gài bẫy người nhận việc).
   * *Lệnh thực thi toàn bộ kiểm thử:* `pytest -v`.
 * **Tài liệu phân tích chuyên sâu:**
-  * `docs/TEST_CASES.md`: Bản mô tả chi tiết các ca kiểm thử tiêu biểu kèm phân tích lỗi.
-  * `docs/MISSION_2_REPORT.md`: Báo cáo đối soát thực nghiệm và số liệu benchmark chi tiết.
+  * [docs/TEST_CASES.md](docs/TEST_CASES.md): Bản mô tả chi tiết các ca kiểm thử tiêu biểu đối chiếu từng câu thoại gốc và bài học rút ra.
+  * [docs/MISSION_2_REPORT.md](docs/MISSION_2_REPORT.md): Báo cáo đối soát thực nghiệm, số liệu phân tích chuyên sâu và đối chứng bộ chấm.
 
 ---
 
@@ -146,70 +137,55 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 *(Định dạng: Kỳ vọng → Kết quả thực tế → Đạt/Chưa đạt → Điều học được)*
 
 #### Tình huống 1: Sản phẩm làm tốt — Ý kiến ban đầu thay đổi trong cuộc họp (A sang B lật kèo)
-* **Kịch bản:** `m01` (Kiến trúc hàng đợi) & `tests/test_integrity.py::test_a_to_b_superseded`
-* **Diễn biến:** Đầu buổi họp Tuấn đề xuất dùng Redis. Sau khi Nam phản đối vì tốn RAM, Tuấn phát biểu đổi ý: *"Thôi bỏ Redis, chốt Memcached"*. Cả nhóm đồng thuận Memcached.
-* **Kỳ vọng:** Phương án ban đầu (Redis) phải được đánh dấu bị thay thế (`superseded`); hệ thống chỉ ghi nhận Memcached là quyết định hiện hành duy nhất; trích dẫn căn cứ phải là chuỗi con nguyên văn 100% từ transcript gốc.
-* **Kết quả thực tế:** Chủ đề đạt trạng thái "Đã chốt" với phương án Memcached; Redis xuất hiện trong danh sách `superseded`; trích dẫn nguyên văn `"chốt Memcached"` và `"bỏ Redis"` khớp 100%.
+* **Kịch bản:** `m01` (Kiến trúc Backend Aurora) & `tests/test_integrity.py::test_a_to_b_superseded`
+* **Diễn biến:** Đầu buổi họp Minh đề xuất dùng Firebase. Sau khi Quân phân tích nhược điểm vendor lock-in và chi phí đọc dữ liệu, Minh phát biểu đổi ý: *"Ok, vậy là mình đổi ý. Chốt Supabase cho backend Aurora, bỏ Firebase"*. Hà đồng ý.
+* **Kỳ vọng:** Phương án ban đầu (Firebase) phải được đánh dấu bị thay thế (`superseded`); hệ thống chỉ ghi nhận Supabase là quyết định hiện hành duy nhất; trích dẫn căn cứ phải là chuỗi con nguyên văn 100% từ transcript gốc.
+* **Kết quả thực tế:** Chủ đề đạt trạng thái "Đã chốt" với phương án Supabase; Firebase xuất hiện trong danh sách `rejected_options`; trích dẫn nguyên văn `"chốt Supabase cho backend Aurora, bỏ Firebase"` khớp 100%.
 * **Đánh giá:** **ĐẠT.**
-* **Điều học được:** Động cơ luật dòng thời gian kết hợp kiểm chứng chuỗi con xử lý triệt để bài toán lật kèo ý kiến mà các mô hình RAG hay tóm tắt LLM thông thường rất dễ bị nhầm (coi cả A và B cùng là quyết định).
+* **Điều học được:** Động cơ luật dòng thời gian kết hợp kiểm chứng chuỗi con bắt đúng mốc kết luận muộn nhất và lưu vết phương án bị thay thế, không bị đánh lừa bởi phát biểu đề xuất đầu giờ (xóa bỏ triệt để lỗi "chốt cả 2 phương án" của các hệ thống tóm tắt LLM hoặc RAG thông thường).
 
-#### Tình huống 2: Sản phẩm làm tốt — Quyết định kèm điều kiện ràng buộc (Conditional Decision)
-* **Kịch bản:** `m02` (Chọn cổng thanh toán) & `indep_m02`
-* **Diễn biến:** Nhóm thảo luận chọn Stripe, người chủ trì phát biểu: *"Tạm chốt Stripe, nhưng phải đợi Ban Giám đốc duyệt ngân sách phí 2.5%, nếu không duyệt thì hủy"*.
-* **Kỳ vọng:** Không được tự tiện chốt quyết định vì điều kiện tiên quyết chưa đáp ứng; hệ thống phải hạ cấp từ "Đã chốt" về "Nghiêng về" (`leaning`), cắm cờ `conditional` và đẩy vào hàng chờ cho con người duyệt.
-* **Kết quả thực tế:** Trạng thái chủ đề ghi nhận "Nghiêng về", trích dẫn chính xác điều kiện phê duyệt ngân sách, tự động đưa vào Review Queue với cờ cảnh báo.
+#### Tình huống 2: Sản phẩm làm tốt — Chặn gán nhầm người nhận việc khi chỉ bị nhắc tên hoặc nói ngập ngừng
+* **Kịch bản:** `g10` (Phân công công việc sprint) & `tests/test_integrity.py::test_task_assignee_only_mentioned_is_not_assigned`
+* **Diễn biến:** Hà giao việc đăng nhập cho Quân có hạn 18/11 (Quân nhận lời); Nam tự nhận viết tài liệu; Hà hỏi *"Còn phần kiểm thử tự động thì chắc Đạt làm được nhỉ"*, Đạt đáp do dự *"Để em xem đã"*.
+* **Kỳ vọng:** Công việc đăng nhập gán cho Quân; tài liệu gán cho Nam; riêng phần kiểm thử tự động tuyệt đối không được tự tiện gán Đạt làm người nhận (`assignee: null`), phân loại cơ sở giao việc là `mentioned_only`.
+* **Kết quả thực tế:** Công việc kiểm thử tự động được ghi nhận, nhưng trường người nhận việc để trống (`assignee: null`); hệ thống gắn cờ cảnh báo `assignee_only_mentioned` và đẩy vào Review Queue.
 * **Đánh giá:** **ĐẠT.**
-* **Điều học được:** Áp dụng nguyên tắc thận trọng: thà hạ về "Nghiêng về" để hỏi lại con người còn hơn tự ý chốt một quyết định chưa đủ điều kiện pháp lý để thi hành.
+* **Điều học được:** Bộ lọc từ do dự (Hedge Check) kết hợp kiểm tra 2 phát biểu kế tiếp chặn đứng việc biến người chỉ bị nhắc tên vu vơ thành người chịu trách nhiệm công việc.
 
-#### Tình huống 3: Tình huống khó / Dữ liệu không rõ ràng — Bị nhắc tên nhưng không nhận việc (Mentioned Only)
-* **Kịch bản:** `g10` (Tối ưu SQL) & `tests/test_integrity.py::test_task_assignee_only_mentioned_is_not_assigned`
-* **Diễn biến:** Một thành viên nói: *"Chắc Đạt làm được phần tối ưu SQL này nhỉ"*. Đạt không lên tiếng nhận lời hoặc chỉ đáp ngập ngừng *"để xem đã"*.
-* **Kỳ vọng:** Không tự tiện gán Đạt làm người chịu trách nhiệm (`assignee: null`), phân loại cơ sở giao việc là `mentioned_only` và cắm cờ cảnh báo cần người xác nhận.
-* **Kết quả thực tế:** Công việc được ghi nhận, nhưng trường người nhận việc để trống (`assignee: null`); hệ thống cắm cờ `assignee_needs_confirm` và đẩy vào Review Queue.
+#### Tình huống 3: Tình huống khó / Dữ liệu không rõ ràng — Quyết định kèm điều kiện ràng buộc chưa xảy ra
+* **Kịch bản:** `m05` (Chọn cổng thanh toán Aurora) & `indep_m02`
+* **Diễn biến:** Huy phát biểu: *"Ok, chốt Stripe, với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%"*. Phúc đáp: *"Mình cần hỏi lại bên Stripe, chưa có số chính thức"*.
+* **Kỳ vọng:** Không được tự tiện ghi nhận "Đã chốt" vì điều kiện tiên quyết về mức phí chưa đáp ứng; hệ thống phải hạ cấp từ "Đã chốt" về "Nghiêng về" (`leaning`), trích dẫn đúng điều kiện và đưa vào Review Queue.
+* **Kết quả thực tế:** `status: "leaning"`, `leaning_option: "Stripe"`, cờ cảnh báo `conditional`, trích dẫn nguyên văn *"với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%"*.
 * **Đánh giá:** **ĐẠT.**
-* **Điều học được:** Phải kết hợp bộ lọc từ do dự (Hedge Check) và kiểm tra phát biểu tiếp theo để phân biệt rõ giữa việc "chỉ bị nhắc tên vu vơ" và việc "thực sự được giao hoặc tự nhận việc".
+* **Điều học được:** Áp dụng nguyên tắc thận trọng: thà hạ về "Nghiêng về" để hỏi lại con người còn hơn tự ý chốt một quyết định chưa đủ điều kiện pháp lý, ngăn chặn rủi ro triển khai non trong doanh nghiệp.
 
-#### Tình huống 4: Tình huống khó / Dữ liệu không rõ ràng — Kiểm tra thẩm quyền chốt quyết định (Authority Check)
-* **Kịch bản:** `tests/test_integrity.py::test_stranger_leaning_vs_pm_decided` & `m08`
-* **Diễn biến:** Một người lạ hoặc thành viên chưa rõ vai trò phát biểu kết luận về phạm vi sản phẩm (Scope): *"Về phạm vi MVP, tôi chốt ta chỉ làm tính năng đăng nhập bằng email trước"*.
-* **Kỳ vọng:**
-  * Khi người này chỉ mang vai trò thành viên mặc định: Hệ thống phát hiện vi phạm thẩm quyền (Scope cần PM/Head of Product), hạ cấp về "Nghiêng về".
-  * Khi cùng transcript đó, người này được gán vai trò PM: Hệ thống công nhận thẩm quyền và chốt thành công "Đã chốt".
-* **Kết quả thực tế:**
-  * Lượt 1 (vai trò thành viên): Trạng thái "Nghiêng về", cờ cảnh báo người kết luận không có thẩm quyền đối với nhóm Scope.
-  * Lượt 2 (vai trò PM): Trạng thái "Đã chốt", phương án đăng nhập email được công nhận chính thức.
+#### Tình huống 4: Tình huống khó / Dữ liệu không rõ ràng — Kiểm tra thẩm quyền ra quyết định & Hợp lệ hóa muộn hơn
+* **Kịch bản:** `g02` (Phong cách hình ảnh giao diện) & `tests/test_integrity.py::test_stranger_leaning_vs_pm_decided`
+* **Diễn biến:** Trang (QA Lead) chốt *"Vậy chốt ảnh chụp thật nhé"*. Theo ma trận phân quyền `decision_rights.yaml`, nhóm design chỉ có Design Lead (Lan) hoặc Head of Product (Huy) mới có quyền chốt. Đến phát biểu kế tiếp, Lan lên tiếng: *"Ừ, mình đồng ý ảnh chụp thật"*.
+* **Kỳ vọng:** Phát biểu của Trang ban đầu chưa đủ thẩm quyền (nếu chỉ có Trang thì phải hạ về "Nghiêng về"), nhưng quyết định được hợp lệ hóa thành "Đã chốt" ngay sau khi người có thẩm quyền (Lan) lên tiếng xác nhận.
+* **Kết quả thực tế:** Trạng thái ghi nhận `status: "decided"`, `final_option: "ảnh chụp thật"`. (Ở bài test độc lập: nếu người lạ chốt mà không có PM xác nhận thì giữ nguyên trạng thái "Nghiêng về").
 * **Đánh giá:** **ĐẠT.**
-* **Điều học được:** Tách riêng ma trận thẩm quyền (`decision_rights.yaml`) khỏi lời thoại giúp ngăn chặn việc bất kỳ ai nói chữ "tôi chốt" cũng biến thành quyết định chính thức của dự án.
+* **Điều học được:** Tách riêng ma trận thẩm quyền (`decision_rights.yaml`) khỏi lời thoại giúp động cơ luật kiểm soát chặt chẽ ai có quyền chốt loại quyết định nào, đồng thời linh hoạt công nhận quyết định khi người có thẩm quyền chuẩn thuận sau đó.
 
-#### Tình huống 5: Tình huống sản phẩm chưa xử lý tốt / Thất bại — Bỏ sót việc phụ trao đổi nhanh cuối giờ (Tail-End Task Recall)
-* **Kịch bản:** `m01` (Việc nhắc QA kiểm thử lại)
-* **Diễn biến:** Ở 2 câu thoại cuối cùng khi chuẩn bị tan họp, một thành viên nói với theo: *"À tiện thể nhắn bạn QA test lại luồng cũ nhé"*.
-* **Kỳ vọng:** Hệ thống trích xuất đầy đủ cả 6/6 đầu việc, bao gồm cả việc nhắn QA kiểm thử lại.
-* **Kết quả thực tế:** Hệ thống trích xuất thành công 5/6 đầu việc chính, nhưng bỏ sót việc phụ trao đổi quá nhanh ở cuối giờ (chỉ đạt 5/6 việc, khiến ca `m01` không đạt điểm tuyệt đối 100%).
+#### Tình huống 5: Tình huống sản phẩm chưa xử lý tốt / Thất bại thực tế — Bỏ sót đầu việc phụ trao đổi nhanh cuối giờ
+* **Kịch bản:** `m01` (Việc xin ngân sách của Minh)
+* **Diễn biến:** Ở phần cuối buổi họp `m01`, Hà nhắc việc chưa duyệt ngân sách gói Pro của Supabase, Minh nói: *"Mình sẽ nhắn anh Phúc sau, chưa biết khi nào có trả lời"*.
+* **Kỳ vọng:** Hệ thống trích xuất đầy đủ cả 2 công việc (Việc dựng Supabase của Quân và Việc xin ngân sách của Minh).
+* **Kết quả thực tế:** Hệ thống bóc tách trúng việc của Quân; nhưng bỏ sót việc xin ngân sách của Minh (`tasks: 1/2`, `tasks_ok: False`, khiến ca `m01` không đạt benchmark tuyệt đối).
 * **Đánh giá:** **CHƯA ĐẠT** (thất bại ở khâu thu hồi việc phụ ở cuối buổi họp).
-* **Điều học được:** Khi phát biểu xuất hiện ở cuối buổi họp dưới dạng câu nói ngắn, thiếu chủ ngữ và không có hạn chót cụ thể, mô hình LLM dễ nhầm lẫn thành câu xã giao (chitchat) và bỏ qua. Cần bổ sung cơ chế quét riêng cho 5% phát biểu cuối transcript hoặc bổ sung câu hỏi rà soát việc phát sinh trước khi đóng biên bản.
+* **Điều học được:** Khi phát biểu xuất hiện ở cuối buổi họp dưới dạng câu nói ngắn, thiếu chủ ngữ và không có hạn chót cụ thể, mô hình LLM dễ nhầm lẫn thành câu xã giao (chitchat) và bỏ qua. Cần cải thiện few-shot prompt hoặc bổ sung câu hỏi rà soát riêng cho 5% phát biểu cuối transcript trước khi đóng biên bản.
 
 ---
 
-### 4.3. Xử lý Bộ Nhớ Đệm Demo Cache (`demo_cache/`)
+### 4.3. Kết Quả Thực Nghiệm Trên Tập Phát Triển (In-Sample Dev Set)
 
-Để bảo đảm quá trình chấm thi trực tuyến diễn ra mượt mà và không phụ thuộc vào tình trạng mạng hay hạn mức API:
-1. **Dữ liệu cache chuẩn bị sẵn:** Toàn bộ 707 mục phản hồi của Gemini và Jev cho cả 26 cuộc họp mẫu (`m01`–`m08`, `g01`–`g12`, `indep_m01`–`indep_m06`) đã được sao chép vào thư mục `demo_cache/` và đưa vào git repository.
-2. **Kiểm tra an toàn bí mật:** Thư mục `demo_cache/` đã được quét tự động bằng regex chuyên dụng, **bảo đảm 100% không chứa API key, mật mã hay token riêng tư**.
-3. **Cơ chế đọc ưu tiên:** Trong [src/llm.py](file:///d:/Tri%20tue%20phong%20hop/meeting-intel/src/llm.py), cả hai hàm `generate_json` và `call_jev` luôn kiểm tra thư mục `demo_cache/` đầu tiên trước khi gọi ra API bên ngoài.
-4. **Lợi ích khi chấm bài:**
-   * Ban Giám khảo có thể bấm xem và phân tích lại bất kỳ cuộc họp mẫu nào trong 26 cuộc họp với tốc độ phản hồi tức thì (~50ms).
-   * Hệ thống hoạt động 100% ổn định kể cả khi khóa API bị hết hạn mức (quota = 0) hoặc chưa cấu hình biến môi trường trên Render.
-   * Chỉ khi người dùng tải lên transcript mới chưa từng có trong cache, hệ thống mới tiêu tốn hạn mức API bên ngoài (có trần 100 lượt/ngày bảo vệ).
-
----
-
-### 4.4. Bảng Kết Quả Thực Nghiệm Benchmark
+Bảng so sánh đối chứng trên 20 cuộc họp chuẩn (`m01–m08`, `g01–g12`):
 
 | Chỉ số đánh giá | Gemini thuần (`gemini+none`) *(Cấu hình chính)* | Gemini + Jev Cảnh báo (`judge-mode advisory`) | Gemini + Jev Tự hạ (`judge-mode downgrade`) | Oracle tham chiếu (`oracle+none`) |
 |---|---|---|---|---|
 | **Tỷ lệ đạt (Pass rate)** | **90.0%** (18/20 ca) | **90.0%** (18/20 ca) | 85.0% (17/20 ca) | **100%** (20/20 ca) |
-| **Lỗi chốt nhầm (Critical Errors)** | **0** | **0** | **0** | **0** |
+| **Lỗi chốt nhầm (Critical Errors)** | **0** *(tập phát triển, in-sample)* | **0** | **0** | **0** |
 | **Hạ oan quyết định đúng** | **0 ca** (0%) | **0 ca** (0%) | 1 ca (`g12`, 12.5%) | **0** |
 | **Gánh nặng duyệt thêm** | 0 ca | 1 ca (`g12`, 12.5%) | 0 ca | 0 |
 | **Độ thu hồi việc (Task recall)** | 95% | 95% | 95% | 100% |
@@ -218,7 +194,29 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 | **Tự tạo người nhận / hạn chót** | **0** | **0** | **0** | **0** |
 | **Độ chính xác trích dẫn nguyên văn**| **100%** | **100%** | **100%** | **100%** |
 
-*Ghi chú:* Hai ca chưa đạt điểm tuyệt đối (`m01`, `m07`) do mô hình bỏ sót các việc phụ trao đổi ngắn ở cuối buổi họp. Trạng thái quyết định đạt độ chính xác 100% trên toàn bộ tập dữ liệu, hoàn toàn không có lỗi chốt nhầm.
+*Ghi chú:* Hai ca chưa đạt (`m01`, `m07`) xuất phát từ việc LLM bỏ sót việc phụ trao đổi ngắn hoặc câu hỏi mở bên lề ở cuối giờ. Trạng thái quyết định đạt 100% độ chính xác trên toàn bộ tập dữ liệu dev, hoàn toàn không có lỗi chốt nhầm.
+
+---
+
+### 4.4. Kết Quả Ngoài Tập Tinh Chỉnh (Out-of-Sample Generalization)
+
+Nhằm kiểm tra tính tổng quát hóa độc lập ngoài tập phát triển nội bộ:
+* **Tập thử nghiệm độc lập:** Gồm 60 câu phát biểu kiểm thử điều kiện (`conditional_sentences_60.json`) và 6 cuộc họp do AI ngoài (Nemotron) sinh độc lập tại `data/independent_tests/meetings/` (`indep_m01`–`indep_m06`), đạt **1/6 (16.7%) kết quả thô tự động**.
+* **Độ tin cậy và đối soát:** Con số "0 critical error" là trên tập dev; trên tập độc lập có 1 cảnh báo, sau đối soát là báo động giả của bộ chấm (bộ chấm chuỗi cứng `_hit()` phạt nhầm do lệch từ nối ngữ cảnh tại `indep_m04`, trong khi pipeline đã chốt đúng theo transcript và đúng thẩm quyền của PM Viết).
+* **Báo cáo chi tiết:** Phân tích đối soát từng ca và dữ liệu thực nghiệm được trình bày chi tiết tại [docs/MISSION_2_REPORT.md](docs/MISSION_2_REPORT.md).
+
+---
+
+### 4.5. Cơ Chế Xử Lý Bộ Nhớ Đệm Demo Cache (`demo_cache/`)
+
+Để bảo đảm quá trình chấm thi trực tuyến diễn ra mượt mà và không phụ thuộc vào tình trạng mạng hay hạn mức API:
+1. **Dữ liệu cache chuẩn bị sẵn:** Toàn bộ 707 mục phản hồi của Gemini và Jev cho cả 26 cuộc họp mẫu (`m01`–`m08`, `g01`–`g12`, `indep_m01`–`indep_m06`) đã được sao chép vào thư mục `demo_cache/` (dung lượng chỉ 0.31 MB) và commit trực tiếp vào git repository.
+2. **Kiểm tra an toàn bí mật:** Thư mục `demo_cache/` đã được quét tự động bằng regex chuyên dụng, **bảo đảm 100% không chứa API key, mật mã hay token riêng tư**.
+3. **Cơ chế đọc ưu tiên:** Trong [src/llm.py](src/llm.py), cả hai hàm `generate_json` và `call_jev` luôn kiểm tra thư mục `demo_cache/` đầu tiên trước khi gọi ra API bên ngoài.
+4. **Lợi ích khi chấm bài:**
+   * Ban Giám khảo có thể bấm xem và phân tích lại bất kỳ cuộc họp mẫu nào trong 26 cuộc họp với tốc độ phản hồi tức thì (~50ms).
+   * Hệ thống hoạt động 100% ổn định kể cả khi khóa API bị hết hạn mức (quota = 0) hoặc chưa cấu hình biến môi trường trên Render.
+   * Chỉ khi người dùng tải lên transcript mới chưa từng có trong cache, hệ thống mới tiêu tốn hạn mức API bên ngoài (có trần 100 lượt/ngày bảo vệ).
 
 ---
 
@@ -229,7 +227,7 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 * **Phần quan trọng nhất:** Tách rời hoàn toàn khâu đọc hiểu của LLM khỏi khâu ra quyết định, sử dụng bộ kiểm chứng trích dẫn nguyên văn 100% kết hợp với động cơ luật cứng theo dòng thời gian (*Exact Substring Verification + Deterministic Timeline Engine*).
 * **Vì sao tin là khả thi:** 
   Trong thực tế họp hành, rủi ro tai hại nhất là ghi nhận sai quyết định (người tham gia ban đầu bàn phương án A, sau đó đổi ý chốt phương án B) hoặc gán nhầm đầu việc cho người chỉ bị nhắc tên vu vơ. Nếu để LLM tự do tóm tắt hoặc dùng tìm kiếm ngữ nghĩa (RAG), mô hình rất dễ bị ảo giác, coi cả ý kiến ban đầu và kết luận mới đều là quyết định có hiệu lực.
-  Bằng cách buộc mọi trích dẫn làm bằng chứng phải khớp nguyên văn từng chữ trong biên bản gốc, sau đó cho động cơ luật kiểm tra tuần tự 4 điều kiện: (1) Không ràng buộc điều kiện, (2) Đúng người có thẩm quyền, (3) Không còn ai phản đối sau đó, (4) Không bị rút lại hoặc đổi ý ở phát biểu muộn hơn, hệ thống triệt tiêu hoàn toàn khả năng chốt nhầm. Thực nghiệm chứng minh hệ thống đạt 0 lỗi chốt nhầm trên toàn bộ 20 cuộc họp chuẩn.
+  Bằng cách buộc mọi trích dẫn làm bằng chứng phải khớp nguyên văn từng chữ trong biên bản gốc, sau đó cho động cơ luật kiểm tra tuần tự 4 điều kiện: (1) Không ràng buộc điều kiện, (2) Đúng người có thẩm quyền, (3) Không còn ai phản đối sau đó, (4) Không bị rút lại hoặc đổi ý ở phát biểu muộn hơn, hệ thống triệt tiêu hoàn toàn khả năng chốt nhầm. Thực nghiệm chứng minh hệ thống đạt 0 wrong decided trên 20 cuộc họp (tập phát triển, in-sample).
 
 ### Câu hỏi 2: So với kế hoạch ở Mission 1, bạn đã thay đổi quyết định hoặc thiết kế nào? Điều gì trong quá trình làm khiến bạn thay đổi?
 
