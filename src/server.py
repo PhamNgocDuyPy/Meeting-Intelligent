@@ -131,9 +131,9 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
                                 status=HTTPStatus.UNAUTHORIZED)
                 return
             mid = path.replace("/api/meeting/", "").strip("/")
-            oracle = qs.get("oracle", ["1"])[0] in ("1", "true")
+            oracle = qs.get("oracle", ["0"])[0] in ("1", "true")
             judge = qs.get("judge", ["jev"])[0]
-            backend = qs.get("backend", ["oracle"])[0]
+            backend = qs.get("backend", ["gemini"])[0]
             self._handle_get_meeting(mid, backend=backend, judge=judge, oracle=oracle)
         elif path == "/api/stats":
             self._handle_stats()
@@ -248,8 +248,15 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
 
     def _handle_list_meetings(self):
         meetings = []
-        for d in sorted(MEETINGS.iterdir()):
-            if d.is_dir() and (d / "transcript.txt").exists():
+        all_dirs = []
+        if MEETINGS.exists():
+            all_dirs.extend([d for d in MEETINGS.iterdir() if d.is_dir() and (d / "transcript.txt").exists()])
+        indep_dir = ROOT / "data" / "independent_tests" / "meetings"
+        if indep_dir.exists():
+            all_dirs.extend([d for d in indep_dir.iterdir() if d.is_dir() and (d / "transcript.txt").exists()])
+
+        for d in sorted(all_dirs, key=lambda x: x.name):
+            if (d / "transcript.txt").exists():
                 meta = {}
                 exp_path = d / "expected.json"
                 if exp_path.exists():

@@ -15,10 +15,14 @@ from .schema import LabelerOutput, MeetingResult
 
 ROOT = Path(__file__).resolve().parent.parent
 MEETINGS = ROOT / "data" / "meetings"
+INDEP_MEETINGS = ROOT / "data" / "independent_tests" / "meetings"
 
 
 def list_meetings() -> list[str]:
-    return sorted(p.name for p in MEETINGS.iterdir() if (p / "transcript.txt").exists())
+    meetings = [p.name for p in MEETINGS.iterdir() if (p / "transcript.txt").exists()]
+    if INDEP_MEETINGS.exists():
+        meetings.extend(p.name for p in INDEP_MEETINGS.iterdir() if (p / "transcript.txt").exists())
+    return sorted(meetings)
 
 
 def run_meeting_dir(meeting_dir: Path, backend: str = "gemini", judge: str = "none",
@@ -87,8 +91,12 @@ def run_meeting(meeting_id: str, backend: str = "gemini", judge: str = "none",
                 judge_mode: str = "downgrade", oracle: bool = False,
                 custom_roles: Optional[dict[str, str]] = None) -> MeetingResult:
     d = MEETINGS / meeting_id
+    if not d.exists() and (INDEP_MEETINGS / meeting_id).exists():
+        d = INDEP_MEETINGS / meeting_id
     lo = None
     if oracle:
-        lo = LabelerOutput.model_validate(json.loads((d / "labels_oracle.json").read_text(encoding="utf-8")))
-        backend = "oracle"
+        oracle_file = d / "labels_oracle.json"
+        if oracle_file.exists():
+            lo = LabelerOutput.model_validate(json.loads(oracle_file.read_text(encoding="utf-8")))
+            backend = "oracle"
     return run_meeting_dir(d, backend=backend, judge=judge, judge_mode=judge_mode, labeler_out=lo, custom_roles=custom_roles)

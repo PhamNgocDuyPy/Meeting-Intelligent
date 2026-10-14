@@ -311,7 +311,7 @@ async function loadMeeting(mid) {
   document.getElementById("inspector-content").innerHTML = `<div class="loading-state">đang phân tích dữ liệu cuộc họp...</div>`;
 
   try {
-    const res = await fetch(`/api/meeting/${mid}?oracle=1&judge=jev`, {
+    const res = await fetch(`/api/meeting/${mid}?oracle=0&judge=jev&backend=gemini`, {
       headers: getAuthHeaders()
     });
 

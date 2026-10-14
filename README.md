@@ -122,9 +122,89 @@ Kết quả: **16/16 kiểm thử toàn vẹn và đột biến phòng thủ vư
 
 ---
 
-## 4. Kết Quả Thực Nghiệm
+## 4. Bộ Kiểm Thử Mission 2 & Kết Quả Thực Nghiệm
 
-Bảng so sánh đối chứng trên 20 cuộc họp chuẩn (`m01–m08`, `g01–g12`):
+### 4.1. Vị trí bộ kiểm thử trong repository
+
+Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh bạch và có thể tái lập 100% trong repo:
+* **Dữ liệu kịch bản họp & Nhãn chuẩn:**
+  * `data/meetings/`: 20 kịch bản họp chuẩn (`m01`–`m08`, `g01`–`g12`). Mỗi thư mục bao gồm `transcript.txt` (lời thoại), `brief.yaml` (bối cảnh cuộc họp), và `expected.json` (kết quả chuẩn mặt đất).
+  * `data/independent_tests/meetings/`: 6 kịch bản họp kiểm thử độc lập (`indep_m01`–`indep_m06`).
+  * `data/independent_tests/conditional_sentences_60.json`: Bộ 60 câu phát biểu kiểm thử biên điều kiện.
+* **Mã nguồn kiểm thử tự động (Unit & Mutation Tests):**
+  * `tests/test_integrity.py`: 12 kiểm thử tự động kiểm tra chuỗi bằng chứng substring, 4 điều kiện chốt, thẩm quyền (người lạ vs PM), gán việc và phân giải hạn chót.
+  * `tests/test_mutations.py`: 4 kiểm thử đột biến kiểm tra khả năng phòng thủ trước ảo giác (trích dẫn giả mạo, gài bẫy người nhận việc).
+  * *Lệnh thực thi toàn bộ kiểm thử:* `pytest -v`.
+* **Tài liệu phân tích chuyên sâu:**
+  * `docs/TEST_CASES.md`: Bản mô tả chi tiết các ca kiểm thử tiêu biểu kèm phân tích lỗi.
+  * `docs/MISSION_2_REPORT.md`: Báo cáo đối soát thực nghiệm và số liệu benchmark chi tiết.
+
+---
+
+### 4.2. 5 Tình huống kiểm thử bắt buộc
+
+*(Định dạng: Kỳ vọng → Kết quả thực tế → Đạt/Chưa đạt → Điều học được)*
+
+#### Tình huống 1: Sản phẩm làm tốt — Ý kiến ban đầu thay đổi trong cuộc họp (A sang B lật kèo)
+* **Kịch bản:** `m01` (Kiến trúc hàng đợi) & `tests/test_integrity.py::test_a_to_b_superseded`
+* **Diễn biến:** Đầu buổi họp Tuấn đề xuất dùng Redis. Sau khi Nam phản đối vì tốn RAM, Tuấn phát biểu đổi ý: *"Thôi bỏ Redis, chốt Memcached"*. Cả nhóm đồng thuận Memcached.
+* **Kỳ vọng:** Phương án ban đầu (Redis) phải được đánh dấu bị thay thế (`superseded`); hệ thống chỉ ghi nhận Memcached là quyết định hiện hành duy nhất; trích dẫn căn cứ phải là chuỗi con nguyên văn 100% từ transcript gốc.
+* **Kết quả thực tế:** Chủ đề đạt trạng thái "Đã chốt" với phương án Memcached; Redis xuất hiện trong danh sách `superseded`; trích dẫn nguyên văn `"chốt Memcached"` và `"bỏ Redis"` khớp 100%.
+* **Đánh giá:** **ĐẠT.**
+* **Điều học được:** Động cơ luật dòng thời gian kết hợp kiểm chứng chuỗi con xử lý triệt để bài toán lật kèo ý kiến mà các mô hình RAG hay tóm tắt LLM thông thường rất dễ bị nhầm (coi cả A và B cùng là quyết định).
+
+#### Tình huống 2: Sản phẩm làm tốt — Quyết định kèm điều kiện ràng buộc (Conditional Decision)
+* **Kịch bản:** `m02` (Chọn cổng thanh toán) & `indep_m02`
+* **Diễn biến:** Nhóm thảo luận chọn Stripe, người chủ trì phát biểu: *"Tạm chốt Stripe, nhưng phải đợi Ban Giám đốc duyệt ngân sách phí 2.5%, nếu không duyệt thì hủy"*.
+* **Kỳ vọng:** Không được tự tiện chốt quyết định vì điều kiện tiên quyết chưa đáp ứng; hệ thống phải hạ cấp từ "Đã chốt" về "Nghiêng về" (`leaning`), cắm cờ `conditional` và đẩy vào hàng chờ cho con người duyệt.
+* **Kết quả thực tế:** Trạng thái chủ đề ghi nhận "Nghiêng về", trích dẫn chính xác điều kiện phê duyệt ngân sách, tự động đưa vào Review Queue với cờ cảnh báo.
+* **Đánh giá:** **ĐẠT.**
+* **Điều học được:** Áp dụng nguyên tắc thận trọng: thà hạ về "Nghiêng về" để hỏi lại con người còn hơn tự ý chốt một quyết định chưa đủ điều kiện pháp lý để thi hành.
+
+#### Tình huống 3: Tình huống khó / Dữ liệu không rõ ràng — Bị nhắc tên nhưng không nhận việc (Mentioned Only)
+* **Kịch bản:** `g10` (Tối ưu SQL) & `tests/test_integrity.py::test_task_assignee_only_mentioned_is_not_assigned`
+* **Diễn biến:** Một thành viên nói: *"Chắc Đạt làm được phần tối ưu SQL này nhỉ"*. Đạt không lên tiếng nhận lời hoặc chỉ đáp ngập ngừng *"để xem đã"*.
+* **Kỳ vọng:** Không tự tiện gán Đạt làm người chịu trách nhiệm (`assignee: null`), phân loại cơ sở giao việc là `mentioned_only` và cắm cờ cảnh báo cần người xác nhận.
+* **Kết quả thực tế:** Công việc được ghi nhận, nhưng trường người nhận việc để trống (`assignee: null`); hệ thống cắm cờ `assignee_needs_confirm` và đẩy vào Review Queue.
+* **Đánh giá:** **ĐẠT.**
+* **Điều học được:** Phải kết hợp bộ lọc từ do dự (Hedge Check) và kiểm tra phát biểu tiếp theo để phân biệt rõ giữa việc "chỉ bị nhắc tên vu vơ" và việc "thực sự được giao hoặc tự nhận việc".
+
+#### Tình huống 4: Tình huống khó / Dữ liệu không rõ ràng — Kiểm tra thẩm quyền chốt quyết định (Authority Check)
+* **Kịch bản:** `tests/test_integrity.py::test_stranger_leaning_vs_pm_decided` & `m08`
+* **Diễn biến:** Một người lạ hoặc thành viên chưa rõ vai trò phát biểu kết luận về phạm vi sản phẩm (Scope): *"Về phạm vi MVP, tôi chốt ta chỉ làm tính năng đăng nhập bằng email trước"*.
+* **Kỳ vọng:**
+  * Khi người này chỉ mang vai trò thành viên mặc định: Hệ thống phát hiện vi phạm thẩm quyền (Scope cần PM/Head of Product), hạ cấp về "Nghiêng về".
+  * Khi cùng transcript đó, người này được gán vai trò PM: Hệ thống công nhận thẩm quyền và chốt thành công "Đã chốt".
+* **Kết quả thực tế:**
+  * Lượt 1 (vai trò thành viên): Trạng thái "Nghiêng về", cờ cảnh báo người kết luận không có thẩm quyền đối với nhóm Scope.
+  * Lượt 2 (vai trò PM): Trạng thái "Đã chốt", phương án đăng nhập email được công nhận chính thức.
+* **Đánh giá:** **ĐẠT.**
+* **Điều học được:** Tách riêng ma trận thẩm quyền (`decision_rights.yaml`) khỏi lời thoại giúp ngăn chặn việc bất kỳ ai nói chữ "tôi chốt" cũng biến thành quyết định chính thức của dự án.
+
+#### Tình huống 5: Tình huống sản phẩm chưa xử lý tốt / Thất bại — Bỏ sót việc phụ trao đổi nhanh cuối giờ (Tail-End Task Recall)
+* **Kịch bản:** `m01` (Việc nhắc QA kiểm thử lại)
+* **Diễn biến:** Ở 2 câu thoại cuối cùng khi chuẩn bị tan họp, một thành viên nói với theo: *"À tiện thể nhắn bạn QA test lại luồng cũ nhé"*.
+* **Kỳ vọng:** Hệ thống trích xuất đầy đủ cả 6/6 đầu việc, bao gồm cả việc nhắn QA kiểm thử lại.
+* **Kết quả thực tế:** Hệ thống trích xuất thành công 5/6 đầu việc chính, nhưng bỏ sót việc phụ trao đổi quá nhanh ở cuối giờ (chỉ đạt 5/6 việc, khiến ca `m01` không đạt điểm tuyệt đối 100%).
+* **Đánh giá:** **CHƯA ĐẠT** (thất bại ở khâu thu hồi việc phụ ở cuối buổi họp).
+* **Điều học được:** Khi phát biểu xuất hiện ở cuối buổi họp dưới dạng câu nói ngắn, thiếu chủ ngữ và không có hạn chót cụ thể, mô hình LLM dễ nhầm lẫn thành câu xã giao (chitchat) và bỏ qua. Cần bổ sung cơ chế quét riêng cho 5% phát biểu cuối transcript hoặc bổ sung câu hỏi rà soát việc phát sinh trước khi đóng biên bản.
+
+---
+
+### 4.3. Xử lý Bộ Nhớ Đệm Demo Cache (`demo_cache/`)
+
+Để bảo đảm quá trình chấm thi trực tuyến diễn ra mượt mà và không phụ thuộc vào tình trạng mạng hay hạn mức API:
+1. **Dữ liệu cache chuẩn bị sẵn:** Toàn bộ 707 mục phản hồi của Gemini và Jev cho cả 26 cuộc họp mẫu (`m01`–`m08`, `g01`–`g12`, `indep_m01`–`indep_m06`) đã được sao chép vào thư mục `demo_cache/` và đưa vào git repository.
+2. **Kiểm tra an toàn bí mật:** Thư mục `demo_cache/` đã được quét tự động bằng regex chuyên dụng, **bảo đảm 100% không chứa API key, mật mã hay token riêng tư**.
+3. **Cơ chế đọc ưu tiên:** Trong [src/llm.py](file:///d:/Tri%20tue%20phong%20hop/meeting-intel/src/llm.py), cả hai hàm `generate_json` và `call_jev` luôn kiểm tra thư mục `demo_cache/` đầu tiên trước khi gọi ra API bên ngoài.
+4. **Lợi ích khi chấm bài:**
+   * Ban Giám khảo có thể bấm xem và phân tích lại bất kỳ cuộc họp mẫu nào trong 26 cuộc họp với tốc độ phản hồi tức thì (~50ms).
+   * Hệ thống hoạt động 100% ổn định kể cả khi khóa API bị hết hạn mức (quota = 0) hoặc chưa cấu hình biến môi trường trên Render.
+   * Chỉ khi người dùng tải lên transcript mới chưa từng có trong cache, hệ thống mới tiêu tốn hạn mức API bên ngoài (có trần 100 lượt/ngày bảo vệ).
+
+---
+
+### 4.4. Bảng Kết Quả Thực Nghiệm Benchmark
 
 | Chỉ số đánh giá | Gemini thuần (`gemini+none`) *(Cấu hình chính)* | Gemini + Jev Cảnh báo (`judge-mode advisory`) | Gemini + Jev Tự hạ (`judge-mode downgrade`) | Oracle tham chiếu (`oracle+none`) |
 |---|---|---|---|---|
