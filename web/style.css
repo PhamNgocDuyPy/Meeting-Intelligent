@@ -50,16 +50,22 @@
   padding: 0;
 }
 
+html, body {
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-body);
   font-family: var(--font-mono);
   font-size: 13.5px;
   line-height: 1.6;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -405,13 +411,17 @@ body {
 .workspace {
   flex: 1;
   display: grid;
-  grid-template-columns: 52% 48%;
+  grid-template-columns: 50% 50%;
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
 }
 
 .pane {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
   background-color: var(--bg-primary);
 }

@@ -375,6 +375,8 @@ async function loadMeeting(mid) {
   } catch (err) {
     console.error("Lỗi nạp dữ liệu cuộc họp:", err);
     showToast("Lỗi nạp cuộc họp: " + err.message);
+    document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">Không thể tải dữ liệu cuộc họp (${escapeHtml(err.message)}). Vui lòng thử lại.</div>`;
+    document.getElementById("inspector-content").innerHTML = `<div class="loading-state">Lỗi kết nối máy chủ.</div>`;
   }
 }
 
@@ -704,12 +706,23 @@ function bindInspectorInteractions() {
 
 function jumpToUtterance(uid) {
   if (!uid) return;
+  const feed = document.getElementById("transcript-feed");
   const targetCard = document.getElementById(`utt-${uid}`);
-  if (!targetCard) return;
+  if (!targetCard || !feed) return;
 
   clearHighlights();
   targetCard.classList.add("highlighted");
-  targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  // Cuộn mượt chỉ trong khung transcript-feed, tuyệt đối không dịch chuyển window/body
+  const feedRect = feed.getBoundingClientRect();
+  const cardRect = targetCard.getBoundingClientRect();
+  const offset = (cardRect.top - feedRect.top) + feed.scrollTop;
+  const targetScroll = offset - (feed.clientHeight / 2) + (cardRect.height / 2);
+
+  feed.scrollTo({
+    top: Math.max(0, targetScroll),
+    behavior: "smooth"
+  });
 }
 
 function clearHighlights() {
