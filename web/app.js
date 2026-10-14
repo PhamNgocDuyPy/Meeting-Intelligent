@@ -311,10 +311,31 @@ async function fetchMeetingList() {
     state.meetings = data.meetings || [];
 
     const select = document.getElementById("meeting-select");
-    select.innerHTML = state.meetings.map(m => {
-      const diff = m.difficulty ? ` (${m.difficulty})` : "";
-      return `<option value="${m.id}">${m.id}: ${m.title}${diff}</option>`;
-    }).join("");
+    if (!select) return;
+
+    const categories = [
+      { key: "base", label: "Bộ kiểm thử cơ sở (Base · m01–m08)" },
+      { key: "edge", label: "Bộ tình huống ranh giới (Edge Cases · g01–g12)" },
+      { key: "independent", label: "Bộ kiểm thử độc lập (Blind / Independent · 6 ca)" },
+      { key: "custom", label: "Cuộc họp tùy biến người dùng nạp" }
+    ];
+
+    let html = "";
+    categories.forEach(cat => {
+      const groupMeetings = state.meetings.filter(m => m.category === cat.key);
+      if (groupMeetings.length > 0) {
+        html += `<optgroup label="${escapeHtml(cat.label)}">`;
+        groupMeetings.forEach(m => {
+          let title = m.title || m.id;
+          let diff = m.difficulty ? ` [${m.difficulty}]` : "";
+          if (diff.length > 40) diff = diff.slice(0, 37) + "...]";
+          html += `<option value="${m.id}">${m.id} · ${escapeHtml(title)}${escapeHtml(diff)}</option>`;
+        });
+        html += `</optgroup>`;
+      }
+    });
+
+    select.innerHTML = html;
   } catch (err) {
     console.error("Lỗi tải danh sách cuộc họp:", err);
     showToast("Lỗi tải danh sách cuộc họp");

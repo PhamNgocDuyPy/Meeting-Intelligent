@@ -126,10 +126,6 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
         if path == "/api/meetings":
             self._handle_list_meetings()
         elif path.startswith("/api/meeting/"):
-            if not self._check_access_code(qs):
-                self._send_json({"error": "Mã truy cập không chính xác hoặc chưa được cung cấp (401 Unauthorized). Vui lòng nhập ACCESS_CODE trên thanh điều khiển."},
-                                status=HTTPStatus.UNAUTHORIZED)
-                return
             mid = path.replace("/api/meeting/", "").strip("/")
             oracle = qs.get("oracle", ["0"])[0] in ("1", "true")
             judge = qs.get("judge", ["jev"])[0]
@@ -274,11 +270,27 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
                         meta["date"] = bf.get("date", "")
                     except Exception:
                         pass
+                mid = d.name
+                if mid.startswith("m"):
+                    cat = "base"
+                    cat_name = "Bộ kiểm thử cơ sở (Base · m01–m08)"
+                elif mid.startswith("g"):
+                    cat = "edge"
+                    cat_name = "Bộ tình huống ranh giới (Edge Cases · g01–g12)"
+                elif mid.startswith("indep_"):
+                    cat = "independent"
+                    cat_name = "Bộ kiểm thử độc lập (Blind / Independent · 6 ca)"
+                else:
+                    cat = "custom"
+                    cat_name = "Cuộc họp tùy biến (Custom)"
+
                 meetings.append({
-                    "id": d.name,
-                    "title": meta.get("title") or d.name,
+                    "id": mid,
+                    "title": meta.get("title") or mid,
                     "difficulty": meta.get("difficulty", ""),
-                    "date": meta.get("date", "")
+                    "date": meta.get("date", ""),
+                    "category": cat,
+                    "category_name": cat_name
                 })
         self._send_json({"meetings": meetings})
 

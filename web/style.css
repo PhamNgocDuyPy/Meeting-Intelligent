@@ -69,11 +69,13 @@ body {
 .topbar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 24px;
+  gap: 12px;
+  padding: 10px 20px;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .brand {
@@ -85,6 +87,7 @@ body {
   letter-spacing: -0.5px;
   font-size: 15px;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .brand-icon {
@@ -110,11 +113,13 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .selector-label {
   color: var(--text-muted);
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .mono-select {
@@ -124,20 +129,97 @@ body {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   cursor: pointer;
   outline: none;
+  max-width: 360px;
   transition: border-color var(--transition-fast);
+}
+
+.mono-select optgroup {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 11.5px;
+}
+
+.mono-select option {
+  background-color: var(--bg-surface);
+  color: var(--text-bright);
+  font-weight: 400;
+  font-size: 12.5px;
+  padding: 4px 8px;
 }
 
 .mono-select:hover, .mono-select:focus {
   border-color: var(--accent-gold);
 }
 
+.btn-primary {
+  background-color: var(--accent-gold);
+  color: #1e2022;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 4px rgba(226, 183, 20, 0.2);
+  flex-shrink: 0;
+}
+
+.btn-primary:hover {
+  background-color: #f0c524;
+  transform: translateY(-1px);
+}
+
+.access-code-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.access-code-box:focus-within {
+  border-color: var(--accent-gold);
+}
+
+.access-code-tag {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.access-code-field {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 105px;
+}
+
+.access-code-field::placeholder {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
 .search-wrap {
   flex: 1;
-  max-width: 420px;
+  min-width: 180px;
+  max-width: 360px;
   display: flex;
   align-items: center;
   background-color: var(--bg-surface);

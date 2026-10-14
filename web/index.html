@@ -29,13 +29,16 @@
       </select>
     </div>
 
+    <button id="btn-open-modal" class="btn-primary" title="Nạp hoặc dán transcript cuộc họp mới">+ nạp transcript</button>
+
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="tra cứu từ khóa hoặc diễn biến... (Ctrl+K)" autocomplete="off" spellcheck="false">
       <span class="search-kbd">/</span>
     </div>
 
-    <div class="access-code-wrap" title="Nhập mã ACCESS_CODE để chạy phân tích trực tuyến">
-      <input type="password" id="access-code-input" class="mono-input" placeholder="Mã ACCESS_CODE..." autocomplete="off">
+    <div class="access-code-box" title="Nhập mã ACCESS_CODE để phân tích transcript mới trực tuyến">
+      <span class="access-code-tag">mã:</span>
+      <input type="password" id="access-code-input" class="access-code-field" placeholder="ACCESS_CODE..." autocomplete="off">
     </div>
 
     <div class="telemetry-pill" id="telemetry-pill" title="Hệ thống phân xử tất định kết hợp Jev System 1">
@@ -44,10 +47,9 @@
     </div>
 
     <div class="actions-wrap">
-      <button id="btn-open-modal" class="btn-ghost" title="Nạp hoặc dán transcript cuộc họp mới">+ nạp transcript</button>
       <button id="btn-export-md" class="btn-ghost" title="Xuất biên bản Markdown">markdown</button>
       <button id="btn-export-csv" class="btn-ghost" title="Xuất danh sách công việc sang CSV">csv việc</button>
-      <button id="btn-re-eval" class="btn-accent" title="Chạy lại phân xử với Jev">phân xử lại</button>
+      <button id="btn-re-eval" class="btn-ghost" title="Chạy lại phân xử với Jev">phân xử lại</button>
     </div>
   </header>
 
