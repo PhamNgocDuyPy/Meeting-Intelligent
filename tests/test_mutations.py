@@ -12,6 +12,7 @@
    Kỳ vọng: Lớp 1 (assignment_ok) phát hiện từ do dự ("chắc", "nhỉ", "để em xem", "để xem")
    và buộc hạ assignee về None kèm cờ 'assignee_only_mentioned'.
 """
+import os
 import sys
 import json
 from pathlib import Path
@@ -110,6 +111,10 @@ def test_mutation_hole_8_adversarial_assignee_m07_nam():
     assert "assignee_only_mentioned" in checked_item.flags
 
 
+@pytest.mark.skipif(
+    not (os.environ.get("JEV_BASE_URL") and (os.environ.get("OPENCODE_API_KEY") or os.environ.get("JEV_API_KEY"))),
+    reason="Yêu cầu API key Jev trong .env để gọi live Jev System One"
+)
 def test_reverse_mutation_jev_catches_missed_conditional():
     """Đột biến ngược (Phản biện Ý 1): Khi LLM bỏ sót cờ conditional trong m05 và g06.
     - Luật thuần (không Jev) sẽ chốt nhầm 'decided' (lỗi nghiêm trọng).
