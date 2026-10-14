@@ -6,7 +6,7 @@
   <title>Meeting Intel · Tra cứu Diễn biến & Quyết định Cuộc họp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,49 +22,51 @@
     </div>
 
     <div class="meeting-selector-wrap">
-      <label for="meeting-select" class="selector-label">cuộc họp:</label>
+      <label for="meeting-select" class="selector-label">Cuộc họp:</label>
       <select id="meeting-select" class="mono-select">
         <option value="">Đang tải danh sách...</option>
       </select>
     </div>
 
-    <button id="btn-open-modal" class="btn-primary" title="Nạp hoặc dán transcript cuộc họp mới">+ nạp transcript</button>
+    <button id="btn-open-modal" class="btn-primary" title="Nạp hoặc dán transcript cuộc họp mới">+ Nạp Transcript</button>
+
+    <button id="btn-re-eval" class="btn-secondary" title="Chạy lại phân tích dữ liệu cho cuộc họp này">Phân Xử Lại</button>
 
     <div class="search-wrap">
-      <input type="text" id="search-input" placeholder="tra cứu từ khóa hoặc diễn biến... (Ctrl+K)" autocomplete="off" spellcheck="false">
-      <span class="search-kbd">/</span>
+      <input type="text" id="search-input" placeholder="Tìm kiếm từ khóa hoặc diễn biến... (Ctrl+K)" autocomplete="off" spellcheck="false">
+      <span class="search-kbd">Ctrl+K</span>
     </div>
 
-    <div class="access-code-box" title="Nhập mã ACCESS_CODE để phân tích transcript mới trực tuyến">
-      <span class="access-code-tag">mã:</span>
-      <input type="password" id="access-code-input" class="access-code-field" placeholder="ACCESS_CODE..." autocomplete="off">
-    </div>
+    <div class="header-right-actions">
+      <div class="tech-badge" title="Hệ thống phân xử kết hợp Jev System 1 và Gemini Flash">
+        <span class="badge-dot"></span>
+        <span class="badge-title">JEV POWERED</span>
+      </div>
 
-    <div class="telemetry-pill" id="telemetry-pill" title="Hệ thống phân xử tất định kết hợp Jev System 1">
-      <span class="telemetry-text">Jev 1.13 · 0 lỗi chốt nhầm</span>
-    </div>
-
-    <div class="actions-wrap">
-      <button id="btn-export-md" class="btn-ghost" title="Xuất biên bản Markdown">markdown</button>
-      <button id="btn-export-csv" class="btn-ghost" title="Xuất danh sách công việc sang CSV">csv việc</button>
-      <button id="btn-re-eval" class="btn-ghost" title="Chạy lại phân xử với Jev">phân xử lại</button>
+      <div class="dropdown-wrap" id="export-dropdown-wrap">
+        <button id="btn-export-toggle" class="btn-ghost dropdown-trigger" title="Tùy chọn xuất dữ liệu">Xuất Dữ Liệu ▾</button>
+        <div class="dropdown-menu hidden" id="export-menu">
+          <button class="dropdown-item" id="btn-export-md">Xuất Biên Bản Markdown (.md)</button>
+          <button class="dropdown-item" id="btn-export-csv">Xuất Danh Sách Công Việc (.csv)</button>
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- FILTER & MODE TABS BAR -->
   <nav class="filter-bar">
     <div class="tabs-group" id="filter-tabs">
-      <button class="tab-btn active" data-filter="all">tất cả</button>
-      <button class="tab-btn" data-filter="a-to-b">đổi ý kiến (a sang b)</button>
-      <button class="tab-btn" data-filter="decisions">quyết định chốt</button>
-      <button class="tab-btn" data-filter="tasks">việc cần làm</button>
-      <button class="tab-btn" data-filter="review-queue">cần duyệt (<span id="review-count">0</span>)</button>
+      <button class="tab-btn active" data-filter="all">Tất cả</button>
+      <button class="tab-btn" data-filter="a-to-b">Đổi ý kiến (A sang B)</button>
+      <button class="tab-btn" data-filter="decisions">Quyết định chốt</button>
+      <button class="tab-btn" data-filter="tasks">Việc cần làm</button>
+      <button class="tab-btn" data-filter="review-queue">Cần duyệt (<span id="review-count">0</span>)</button>
     </div>
 
     <div class="stats-summary" id="stats-summary">
-      <span class="stat-item"><span class="stat-num" id="stat-decided">0</span> đã chốt</span>
-      <span class="stat-item"><span class="stat-num" id="stat-tasks">0</span> việc</span>
-      <span class="stat-item"><span class="stat-num" id="stat-superseded">0</span> bị thay thế</span>
+      <span class="stat-item"><span class="stat-num" id="stat-decided">0</span> Đã chốt</span>
+      <span class="stat-item"><span class="stat-num" id="stat-tasks">0</span> Công việc</span>
+      <span class="stat-item"><span class="stat-num" id="stat-superseded">0</span> Bị thay thế</span>
     </div>
   </nav>
 
@@ -74,13 +76,13 @@
     <section class="pane transcript-pane">
       <div class="pane-header">
         <div class="pane-title">
-          <span>bản ghi lời thoại</span>
+          <span>Bản Ghi Lời Thoại</span>
           <span class="badge-count" id="utt-count">0 phát biểu</span>
         </div>
       </div>
 
       <div class="transcript-feed" id="transcript-feed">
-        <div class="loading-state">đang tải lời thoại...</div>
+        <div class="loading-state">Đang tải dữ liệu lời thoại...</div>
       </div>
     </section>
 
@@ -88,16 +90,16 @@
     <section class="pane inspector-pane">
       <div class="pane-header">
         <div class="pane-title">
-          <span>bảng phân xử & hàng chờ duyệt</span>
+          <span>Bảng Phân Xử & Hàng Chờ Duyệt</span>
         </div>
         <div class="pane-actions">
-          <button id="btn-batch-approve" class="btn-micro" title="Duyệt tất cả các mục an toàn">duyệt nhanh các mục an toàn</button>
+          <button id="btn-batch-approve" class="btn-micro" title="Duyệt tất cả các mục an toàn">Duyệt nhanh mục an toàn</button>
         </div>
       </div>
 
       <div class="inspector-scroll" id="inspector-content">
         <!-- Chứa các khối: Quyết định, Hàng chờ duyệt, Việc cần làm, Vấn đề khác -->
-        <div class="loading-state">đang phân tích dữ liệu cuộc họp...</div>
+        <div class="loading-state">Đang phân tích dữ liệu cuộc họp...</div>
       </div>
     </section>
   </main>
@@ -106,45 +108,45 @@
   <div id="upload-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">nạp bản ghi cuộc họp mới</div>
+        <div class="modal-title">Nạp Bản Ghi Cuộc Họp Mới</div>
         <button id="btn-close-modal" class="modal-close-btn">&times;</button>
       </div>
 
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group flex-2">
-            <label class="form-label" for="inp-title">tiêu đề cuộc họp:</label>
+            <label class="form-label" for="inp-title">Tiêu đề cuộc họp:</label>
             <input type="text" id="inp-title" class="form-input" placeholder="Ví dụ: Họp kỹ thuật chốt kiến trúc hệ thống" value="Họp kỹ thuật mới">
           </div>
           <div class="form-group flex-1">
-            <label class="form-label" for="sel-mode">chế độ phân quyền:</label>
+            <label class="form-label" for="sel-mode">Chế độ phân quyền:</label>
             <select id="sel-mode" class="form-select">
-              <option value="consensus">đồng thuận nhóm (mặc định)</option>
-              <option value="authority">chỉ định người có quyền</option>
+              <option value="consensus">Đồng thuận nhóm (mặc định)</option>
+              <option value="authority">Chỉ định người có quyền</option>
             </select>
           </div>
         </div>
 
         <div class="form-group" id="leader-group" style="display: none;">
-          <label class="form-label" for="inp-leader">người có thẩm quyền chốt (leader):</label>
+          <label class="form-label" for="inp-leader">Người có thẩm quyền chốt (Leader):</label>
           <input type="text" id="inp-leader" class="form-input" placeholder="Nhập đúng tên trong lời thoại, ví dụ: Tuấn hoặc Nam">
-          <span class="form-hint">người này kết luận thì quyết định có hiệu lực; người khác phát biểu chỉ tính là đề xuất.</span>
+          <span class="form-hint">Người này kết luận thì quyết định có hiệu lực; người khác phát biểu chỉ tính là đề xuất.</span>
         </div>
 
         <div class="form-group">
           <div class="label-with-action">
-            <label class="form-label" for="inp-transcript">lời thoại cuộc họp (dán text hoặc chọn file .txt):</label>
+            <label class="form-label" for="inp-transcript">Lời thoại cuộc họp (Dán text hoặc chọn file .txt):</label>
             <label class="file-picker-btn">
               <span>chọn file .txt</span>
               <input type="file" id="inp-file" accept=".txt" style="display: none;">
             </label>
           </div>
           <textarea id="inp-transcript" class="form-textarea" rows="8" placeholder="Tuấn: Ban đầu mình đề xuất dùng Redis.&#10;Hùng: Nhưng Redis tốn RAM, mình thấy Memcached nhẹ hơn.&#10;Tuấn: Ok, đổi ý. Chốt Memcached, bỏ Redis.&#10;Hùng: Nhất trí."></textarea>
-          <span class="form-hint">hỗ trợ cả mốc giờ [00:01:23] lẫn không có mốc giờ. Tên người nói tự động nhận diện.</span>
+          <span class="form-hint">Hỗ trợ cả mốc giờ [00:01:23] lẫn không có mốc giờ. Tên người nói tự động nhận diện.</span>
         </div>
 
         <div class="form-group" id="speaker-roles-group">
-          <label class="form-label">vai trò người nói (chọn vai trò theo decision_rights.yaml):</label>
+          <label class="form-label">Ma trận vai trò người nói (Thẩm quyền quyết định):</label>
           <div class="roles-tip">
             <span><strong>Lưu ý thẩm quyền:</strong> Người chưa rõ vai trò (mặc định "thành viên") sẽ <em>không có thẩm quyền chốt</em> các chủ đề quan trọng (phạm vi, kỹ thuật, thiết kế...). Khi người này kết luận, quyết định sẽ được hệ thống xếp vào "Nghiêng về" để bảo đảm an toàn. Vai trò chỉ áp dụng cho lần chạy này, không ghi vào file. LLM không tham gia gán vai trò.</span>
           </div>
@@ -154,15 +156,15 @@
         </div>
 
         <div class="form-group" id="modal-access-code-group">
-          <label class="form-label" for="inp-modal-access-code">mã truy cập (ACCESS_CODE):</label>
+          <label class="form-label" for="inp-modal-access-code">Mã truy cập (ACCESS_CODE):</label>
           <input type="password" id="inp-modal-access-code" class="form-input mono-input" placeholder="Nhập ACCESS_CODE...">
           <span class="form-hint">Mã truy cập do quản trị viên cấp để phân tích transcript mới. Được lưu tự động trên trình duyệt.</span>
         </div>
       </div>
 
       <div class="modal-footer">
-        <button id="btn-cancel-modal" class="btn-ghost">hủy</button>
-        <button id="btn-submit-upload" class="btn-accent">phân tích ngay</button>
+        <button id="btn-cancel-modal" class="btn-ghost">Hủy bỏ</button>
+        <button id="btn-submit-upload" class="btn-primary">Phân Tích Ngay</button>
       </div>
     </div>
   </div>

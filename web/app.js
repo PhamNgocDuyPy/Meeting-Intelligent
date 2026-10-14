@@ -34,16 +34,13 @@ let state = {
 
 function getAccessCode() {
   const modalEl = document.getElementById("inp-modal-access-code");
-  const headerEl = document.getElementById("access-code-input");
-  return (modalEl && modalEl.value.trim()) || (headerEl && headerEl.value.trim()) || (localStorage.getItem("meeting_intel_access_code") || "");
+  return (modalEl && modalEl.value.trim()) || (localStorage.getItem("meeting_intel_access_code") || "");
 }
 
 function setAccessCode(val) {
   const trimmed = (val || "").trim();
   localStorage.setItem("meeting_intel_access_code", trimmed);
-  const headerEl = document.getElementById("access-code-input");
   const modalEl = document.getElementById("inp-modal-access-code");
-  if (headerEl && headerEl.value !== trimmed) headerEl.value = trimmed;
   if (modalEl && modalEl.value !== trimmed) modalEl.value = trimmed;
 }
 
@@ -62,12 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function initApp() {
   const savedCode = localStorage.getItem("meeting_intel_access_code") || "";
-  const headerEl = document.getElementById("access-code-input");
   const modalEl = document.getElementById("inp-modal-access-code");
-  if (headerEl) {
-    headerEl.value = savedCode;
-    headerEl.addEventListener("input", (e) => setAccessCode(e.target.value));
-  }
   if (modalEl) {
     modalEl.value = savedCode;
     modalEl.addEventListener("input", (e) => setAccessCode(e.target.value));
@@ -83,47 +75,87 @@ async function initApp() {
 
 function setupEventListeners() {
   const select = document.getElementById("meeting-select");
-  select.addEventListener("change", (e) => {
-    loadMeeting(e.target.value);
-  });
+  if (select) {
+    select.addEventListener("change", (e) => {
+      loadMeeting(e.target.value);
+    });
+  }
 
   const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", (e) => {
-    state.searchQuery = e.target.value.trim().toLowerCase();
-    renderInspector();
-    highlightSearchInTranscript();
-  });
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      state.searchQuery = e.target.value.trim().toLowerCase();
+      renderInspector();
+      highlightSearchInTranscript();
+    });
 
-  // Phím tắt / hoặc Ctrl+K để focus tìm kiếm
-  window.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey && e.key.toLowerCase() === "k") || (e.key === "/" && document.activeElement !== searchInput)) {
-      e.preventDefault();
-      searchInput.focus();
-    }
-  });
+    // Phím tắt / hoặc Ctrl+K để focus tìm kiếm
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey && e.key.toLowerCase() === "k") || (e.key === "/" && document.activeElement !== searchInput)) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  }
 
   // Filter tabs
   const tabGroup = document.getElementById("filter-tabs");
-  tabGroup.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tab-btn");
-    if (!btn) return;
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    state.activeFilter = btn.dataset.filter;
-    renderInspector();
-  });
+  if (tabGroup) {
+    tabGroup.addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab-btn");
+      if (!btn) return;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      state.activeFilter = btn.dataset.filter;
+      renderInspector();
+    });
+  }
 
-  // Export buttons
-  document.getElementById("btn-export-md").addEventListener("click", () => exportData("markdown"));
-  document.getElementById("btn-export-csv").addEventListener("click", () => exportData("csv"));
-  document.getElementById("btn-re-eval").addEventListener("click", () => {
-    showToast("Đang kích hoạt Jev 1.13 phân xử...");
-    loadMeeting(state.currentMeetingId);
-  });
+  // Export dropdown menu
+  const exportToggle = document.getElementById("btn-export-toggle");
+  const exportMenu = document.getElementById("export-menu");
+  if (exportToggle && exportMenu) {
+    exportToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      exportMenu.classList.toggle("hidden");
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#export-dropdown-wrap")) {
+        exportMenu.classList.add("hidden");
+      }
+    });
+  }
 
-  document.getElementById("btn-batch-approve").addEventListener("click", () => {
-    batchApproveSafeItems();
-  });
+  const btnMd = document.getElementById("btn-export-md");
+  if (btnMd) {
+    btnMd.addEventListener("click", () => {
+      if (exportMenu) exportMenu.classList.add("hidden");
+      exportData("markdown");
+    });
+  }
+
+  const btnCsv = document.getElementById("btn-export-csv");
+  if (btnCsv) {
+    btnCsv.addEventListener("click", () => {
+      if (exportMenu) exportMenu.classList.add("hidden");
+      exportData("csv");
+    });
+  }
+
+  const btnReEval = document.getElementById("btn-re-eval");
+  if (btnReEval) {
+    btnReEval.addEventListener("click", () => {
+      showToast("Đang kích hoạt Jev phân xử lại...");
+      loadMeeting(state.currentMeetingId);
+    });
+  }
+
+  const btnBatchApprove = document.getElementById("btn-batch-approve");
+  if (btnBatchApprove) {
+    btnBatchApprove.addEventListener("click", () => {
+      batchApproveSafeItems();
+    });
+  }
 
   // Upload modal handlers
   const uploadModal = document.getElementById("upload-modal");
@@ -347,8 +379,8 @@ async function loadMeeting(mid) {
   const select = document.getElementById("meeting-select");
   if (select) select.value = mid;
 
-  document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">đang tải lời thoại ${mid}...</div>`;
-  document.getElementById("inspector-content").innerHTML = `<div class="loading-state">đang phân tích dữ liệu cuộc họp...</div>`;
+  document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">Đang tải dữ liệu lời thoại ${mid}...</div>`;
+  document.getElementById("inspector-content").innerHTML = `<div class="loading-state">Đang phân tích dữ liệu cuộc họp...</div>`;
 
   try {
     const res = await fetch(`/api/meeting/${mid}?oracle=0&judge=jev&backend=gemini`, {
@@ -357,7 +389,7 @@ async function loadMeeting(mid) {
 
     if (res.status === 401) {
       showToast("Yêu cầu mã truy cập hợp lệ (401). Vui lòng nhập ACCESS_CODE.");
-      document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">Vui lòng nhập đúng ACCESS_CODE trên thanh điều khiển để xem cuộc họp.</div>`;
+      document.getElementById("transcript-feed").innerHTML = `<div class="loading-state">Vui lòng nhập đúng ACCESS_CODE khi nạp transcript mới.</div>`;
       document.getElementById("inspector-content").innerHTML = `<div class="loading-state">Chưa được cấp quyền truy cập (401 Unauthorized).</div>`;
       return;
     }
@@ -390,7 +422,7 @@ function renderTranscript() {
   document.getElementById("utt-count").textContent = `${utts.length} phát biểu`;
 
   if (!utts.length) {
-    feed.innerHTML = `<div class="loading-state">không có lời thoại nào.</div>`;
+    feed.innerHTML = `<div class="loading-state">Không có dữ liệu lời thoại nào.</div>`;
     return;
   }
 
@@ -445,7 +477,7 @@ function renderInspector() {
   if (filteredTopics.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title">chủ đề & diễn biến quyết định (${filteredTopics.length})</div>
+        <div class="sec-title">Chủ Đề & Diễn Biến Quyết Định (${filteredTopics.length})</div>
         ${filteredTopics.map(t => renderTopicCard(t)).join("")}
       </section>
     `;
@@ -456,7 +488,7 @@ function renderInspector() {
   if (taskItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title">việc cần làm (${taskItems.length})</div>
+        <div class="sec-title">Danh Sách Việc Cần Làm (${taskItems.length})</div>
         ${taskItems.map((it, idx) => renderTaskCard(it, idx)).join("")}
       </section>
     `;
@@ -467,14 +499,14 @@ function renderInspector() {
   if (otherItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title">vướng mắc & yêu cầu & tri thức (${otherItems.length})</div>
+        <div class="sec-title">Vướng Mắc & Tri Thức Khác (${otherItems.length})</div>
         ${otherItems.map((it, idx) => renderOtherItemCard(it, idx)).join("")}
       </section>
     `;
   }
 
   if (!html) {
-    html = `<div class="loading-state">không tìm thấy kết quả phù hợp với bộ lọc hiện tại.</div>`;
+    html = `<div class="loading-state">Không tìm thấy kết quả phù hợp với bộ lọc hiện tại.</div>`;
   }
 
   container.innerHTML = html;
@@ -484,17 +516,17 @@ function renderInspector() {
 function renderTopicCard(t) {
   const isAtoB = t.superseded && t.superseded.length > 0;
   const statusClass = t.status;
-  const statusText = t.status_vi || t.status;
+  const statusText = t.status === "decided" ? "ĐÃ CHỐT" : (t.status === "leaning" ? "NGHIÊNG VỀ" : "CHƯA CHỐT");
   const tid = t.topic_id;
 
   // Outcome string
   let outcomeHtml = "";
   if (t.final_option) {
-    outcomeHtml = `<span class="final-choice">chốt: ${escapeHtml(t.final_option)}</span>`;
+    outcomeHtml = `<span class="final-choice">Chốt: ${escapeHtml(t.final_option)}</span>`;
   } else if (t.leaning_option) {
-    outcomeHtml = `<span style="color: var(--accent-gold);">nghiêng về: ${escapeHtml(t.leaning_option)}</span>`;
+    outcomeHtml = `<span style="color: var(--accent-gold); font-weight: 600;">Nghiêng về: ${escapeHtml(t.leaning_option)}</span>`;
   } else {
-    outcomeHtml = `<span style="color: var(--text-muted);">chưa ngã ngũ</span>`;
+    outcomeHtml = `<span style="color: var(--text-muted);">Chưa ngã ngũ</span>`;
   }
 
   // Superseded pills (Phương án A đã bị thay thế)
@@ -503,12 +535,24 @@ function renderTopicCard(t) {
     supersededHtml = t.superseded.map(s => `<span class="superseded-pill" title="Đã bị thay thế">~~${escapeHtml(s)}~~</span>`).join(" ");
   }
 
+  // Stance labels mapping
+  const stanceLabels = {
+    propose: "Đề xuất",
+    support: "Tán thành",
+    oppose: "Phản đối",
+    reverse: "Đổi ý",
+    conclude: "Kết luận",
+    defer: "Tạm hoãn",
+    question: "Câu hỏi",
+    info: "Thông tin"
+  };
+
   // Timeline events
   const timelineHtml = (t.timeline || []).map(e => `
     <div class="timeline-step" data-uid="${e.utterance_id}">
       <span class="step-ts">[${e.ts_label}]</span>
       <span class="step-speaker">${escapeHtml(e.speaker)}</span>
-      <span class="step-stance-badge ${e.stance}">${e.stance}</span>
+      <span class="step-stance-badge ${e.stance}">${stanceLabels[e.stance] || e.stance}</span>
       <span class="step-quote">“${escapeHtml(e.quote)}”</span>
     </div>
   `).join("");
@@ -524,12 +568,12 @@ function renderTopicCard(t) {
 
     jevTelemetryHtml = `
       <div class="jev-telemetry">
-        <span>telemetry (jev 1.13):</span>
+        <span class="jev-telemetry-header">ĐO LƯỜNG JEV (TELEMETRY):</span>
         <div class="jev-telemetry-scores">
-          <span class="tev-item"><span class="tev-label">chốt:</span><span class="tev-val ${pConclude >= 0.5 ? 'pass' : 'fail'}">${(pConclude * 100).toFixed(0)}%</span></span>
-          <span class="tev-item"><span class="tev-label">phản đối:</span><span class="tev-val ${pObj >= 0.6 ? 'fail' : 'pass'}">${(pObj * 100).toFixed(0)}%</span></span>
-          <span class="tev-item"><span class="tev-label">điều kiện:</span><span class="tev-val ${pCond >= 0.7 ? 'fail' : 'pass'}">${(pCond * 100).toFixed(0)}%</span></span>
-          <span class="tev-item"><span class="tev-label">thẩm quyền:</span><span class="tev-val ${pAuth >= 0.4 ? 'pass' : 'fail'}">${(pAuth * 100).toFixed(0)}%</span></span>
+          <span class="tev-item"><span class="tev-label">Chốt:</span><span class="tev-val ${pConclude >= 0.5 ? 'pass' : 'fail'}">${(pConclude * 100).toFixed(0)}%</span></span>
+          <span class="tev-item"><span class="tev-label">Phản đối:</span><span class="tev-val ${pObj >= 0.6 ? 'fail' : 'pass'}">${(pObj * 100).toFixed(0)}%</span></span>
+          <span class="tev-item"><span class="tev-label">Điều kiện:</span><span class="tev-val ${pCond >= 0.7 ? 'fail' : 'pass'}">${(pCond * 100).toFixed(0)}%</span></span>
+          <span class="tev-item"><span class="tev-label">Thẩm quyền:</span><span class="tev-val ${pAuth >= 0.4 ? 'pass' : 'fail'}">${(pAuth * 100).toFixed(0)}%</span></span>
         </div>
       </div>
     `;
@@ -545,7 +589,7 @@ function renderTopicCard(t) {
     <div class="topic-card ${isAtoB ? 'has-atob' : ''}" id="topic-${tid}">
       <div class="topic-header">
         <div class="topic-title-wrap">
-          <span class="topic-category">${t.category}</span>
+          <span class="topic-category">${(t.category || "").toUpperCase()}</span>
           <span class="topic-title">${escapeHtml(t.title)}</span>
         </div>
         <span class="status-badge ${statusClass}">${statusText}</span>
@@ -553,12 +597,12 @@ function renderTopicCard(t) {
 
       <div class="outcome-block">
         ${outcomeHtml}
-        ${supersededHtml ? `<span style="color:var(--text-muted);font-size:11px;">đã thay thế:</span> ${supersededHtml}` : ''}
+        ${supersededHtml ? `<span style="color:var(--text-muted);font-size:12px;margin-left:8px;">Đã thay thế:</span> ${supersededHtml}` : ''}
       </div>
 
       ${t.flags && t.flags.length ? `
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
-          ${t.flags.map(f => `<span class="flag-chip">cờ: ${f}</span>`).join("")}
+          ${t.flags.map(f => `<span class="flag-chip">Cờ: ${f}</span>`).join("")}
         </div>
       ` : ''}
 
@@ -570,13 +614,13 @@ function renderTopicCard(t) {
 
       <div class="review-actions">
         <button class="btn-review approve ${isApproved ? 'approved' : ''}" data-target="${tid}" data-action="approve" title="Xác nhận quyết định này">
-          ${isApproved ? 'đã xác nhận' : 'xác nhận'}
+          ${isApproved ? 'Đã xác nhận' : 'Xác nhận'}
         </button>
         <button class="btn-review edit ${isEdited ? 'edited' : ''}" data-target="${tid}" data-action="edit" title="Chỉnh sửa nội dung quyết định">
-          ${isEdited ? 'đã sửa' : 'sửa'}
+          ${isEdited ? 'Đã sửa' : 'Chỉnh sửa'}
         </button>
         <button class="btn-review reject ${isRejected ? 'rejected' : ''}" data-target="${tid}" data-action="reject" title="Từ chối quyết định này">
-          ${isRejected ? 'đã từ chối' : 'từ chối'}
+          ${isRejected ? 'Đã từ chối' : 'Từ chối'}
         </button>
       </div>
     </div>
@@ -587,12 +631,12 @@ function renderTaskCard(it, idx) {
   const iid = `item-task-${idx}`;
   const isAssigneeVerified = it.assignee && it.assignee_basis in { assigned: 1, self_accepted: 1 };
   const assigneeBadge = it.assignee 
-    ? `<span class="badge-assignee ${isAssigneeVerified ? '' : 'unverified'}" title="Căn cứ: ${it.assignee_basis}">${escapeHtml(it.assignee)}</span>`
-    : `<span class="badge-assignee unverified">chưa xác định</span>`;
+    ? `<span class="badge-assignee ${isAssigneeVerified ? '' : 'unverified'}" title="Căn cứ: ${it.assignee_basis}">Người nhận: ${escapeHtml(it.assignee)}</span>`
+    : `<span class="badge-assignee unverified">Chưa xác định người nhận</span>`;
 
   const deadlineBadge = it.deadline_date
-    ? `<span class="badge-deadline known">hạn: ${it.deadline_date}</span>`
-    : `<span class="badge-deadline">hạn: ${it.deadline_text || 'chưa rõ'}</span>`;
+    ? `<span class="badge-deadline known">Hạn: ${it.deadline_date}</span>`
+    : `<span class="badge-deadline">Hạn: ${it.deadline_text || 'Chưa rõ'}</span>`;
 
   const primaryUid = it.utterance_ids && it.utterance_ids[0] ? it.utterance_ids[0] : "";
 
@@ -606,11 +650,11 @@ function renderTaskCard(it, idx) {
         </div>
       </div>
       <div class="task-quote" data-uid="${primaryUid}" title="Bấm để cuộn đến phát biểu nguồn trong transcript">
-        “${escapeHtml(it.quote)}” <span style="font-size:11px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
+        “${escapeHtml(it.quote)}” <span style="font-size:11.5px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
       </div>
       ${it.flags && it.flags.length ? `
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
-          ${it.flags.map(f => `<span class="flag-chip">${f}</span>`).join("")}
+          ${it.flags.map(f => `<span class="flag-chip">Cờ: ${f}</span>`).join("")}
         </div>
       ` : ''}
     </div>
@@ -620,7 +664,7 @@ function renderTaskCard(it, idx) {
 function renderOtherItemCard(it, idx) {
   const iid = `item-other-${idx}`;
   const primaryUid = it.utterance_ids && it.utterance_ids[0] ? it.utterance_ids[0] : "";
-  const kindVi = { issue: "vướng mắc", request: "yêu cầu", feedback: "phản hồi", open_question: "câu hỏi mở", knowledge: "tri thức" }[it.kind] || it.kind;
+  const kindVi = { issue: "Vướng mắc", request: "Yêu cầu", feedback: "Góp ý", open_question: "Câu hỏi mở", knowledge: "Tri thức mới" }[it.kind] || it.kind;
 
   return `
     <div class="task-item" id="${iid}">
@@ -634,6 +678,7 @@ function renderOtherItemCard(it, idx) {
     </div>
   `;
 }
+
 
 /* ==========================================================================
    INTERACTIONS & BIDIRECTIONAL HIGHLIGHTING
