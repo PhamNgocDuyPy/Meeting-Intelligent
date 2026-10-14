@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import re
+import sys
 import time
 from pathlib import Path
 from typing import Type, TypeVar
@@ -119,9 +120,9 @@ def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
         return data["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         if os.environ.get("NVIDIA_API_KEY"):
-            sys.stderr.write(f"[FALLBACK] Gemini lỗi ({e}), chuyển sang dự phòng NVIDIA NIM...\n")
+            print(f"[FALLBACK] Gemini lỗi ({e}), chuyển sang dự phòng NVIDIA NIM...", file=sys.stderr)
             return call_nvidia_text(system, user, temperature)
-        raise
+        raise LLMError(f"Gemini API gặp sự cố ({e}) và chưa cấu hình NVIDIA_API_KEY để kích hoạt mô hình dự phòng.")
 
 
 def _jev_config() -> tuple[str | None, str | None, str]:
@@ -220,12 +221,21 @@ _BACKENDS = {"gemini": call_gemini_text, "jev": call_jev_text, "nvidia": call_nv
 def generate_json(backend: str, system: str, user: str, model_cls: Type[T], repairs: int = 2, use_cache: bool = True) -> T:
     if backend not in _BACKENDS:
         raise LLMError(f"Backend không hỗ trợ: {backend}")
-    model_id = os.environ.get("GEMINI_MODEL" if backend == "gemini" else ("NVIDIA_MODEL" if backend == "nvidia" else "JEV_MODEL"), "")
+    default_model = "gemini-3.1-flash-lite" if backend == "gemini" else ("nvidia/nemotron-3.5-lightning-30b-a3b" if backend == "nvidia" else "jev-1.13-free")
+    model_id = os.environ.get("GEMINI_MODEL" if backend == "gemini" else ("NVIDIA_MODEL" if backend == "nvidia" else "JEV_MODEL")) or default_model
+
     key = hashlib.sha256(json.dumps([backend, model_id, system, user], ensure_ascii=False).encode()).hexdigest()[:24]
     demo_cache_file = DEMO_CACHE_DIR / f"{backend}_{key}.json"
     cache_file = CACHE_DIR / f"{backend}_{key}.json"
     if use_cache:
         target = demo_cache_file if demo_cache_file.exists() else (cache_file if cache_file.exists() else None)
+        # Nếu chưa tìm thấy và backend là gemini, thử tra cứu với model chuẩn "gemini-3.1-flash-lite" trong demo_cache
+        if not target and backend == "gemini" and model_id != "gemini-3.1-flash-lite":
+            fb_key = hashlib.sha256(json.dumps([backend, "gemini-3.1-flash-lite", system, user], ensure_ascii=False).encode()).hexdigest()[:24]
+            fb_file = DEMO_CACHE_DIR / f"{backend}_{fb_key}.json"
+            if fb_file.exists():
+                target = fb_file
+
         if target:
             raw_data = json.loads(target.read_text(encoding="utf-8"))
             return raw_data if model_cls is dict else model_cls.model_validate(raw_data)
