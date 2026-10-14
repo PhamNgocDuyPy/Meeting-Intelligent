@@ -395,7 +395,7 @@ function renderTranscript() {
   }
 
   feed.innerHTML = utts.map(u => {
-    const highlightedText = highlightKeywords(u.text);
+    const formattedText = formatTranscriptText(u.text);
     return `
       <div class="utterance-card" id="utt-${u.id}" data-uid="${u.id}">
         <div class="utt-meta">
@@ -403,7 +403,7 @@ function renderTranscript() {
           <span class="utt-speaker">${escapeHtml(u.speaker)}</span>
           <span class="utt-id">${u.id}</span>
         </div>
-        <div class="utt-text">${highlightedText}</div>
+        <div class="utt-text">${formattedText}</div>
       </div>
     `;
   }).join("");
@@ -417,27 +417,12 @@ function renderTranscript() {
   });
 }
 
-function highlightKeywords(text) {
+function formatTranscriptText(text) {
   let escaped = escapeHtml(text);
-
-  // Tô màu các từ khóa tương quan thuận (xanh)
-  POSITIVE_KEYWORDS.forEach(kw => {
-    const regex = new RegExp(`(${escapeRegex(kw)})`, "gi");
-    escaped = escaped.replace(regex, `<span class="w-pos">$1</span>`);
-  });
-
-  // Tô màu các từ khóa tương quan nghịch (đỏ)
-  NEGATIVE_KEYWORDS.forEach(kw => {
-    const regex = new RegExp(`(${escapeRegex(kw)})`, "gi");
-    escaped = escaped.replace(regex, `<span class="w-neg">$1</span>`);
-  });
-
-  // Tô màu các từ khóa điều kiện (amber)
-  WARN_KEYWORDS.forEach(kw => {
-    const regex = new RegExp(`(${escapeRegex(kw)})`, "gi");
-    escaped = escaped.replace(regex, `<span class="w-warn">$1</span>`);
-  });
-
+  if (state.searchQuery) {
+    const q = escapeRegex(state.searchQuery);
+    escaped = escaped.replace(new RegExp(`(${q})`, "gi"), `<mark class="search-highlight">$1</mark>`);
+  }
   return escaped;
 }
 
@@ -460,7 +445,7 @@ function renderInspector() {
   if (filteredTopics.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title"><span>🎯</span> chủ đề & diễn biến quyết định (${filteredTopics.length})</div>
+        <div class="sec-title">chủ đề & diễn biến quyết định (${filteredTopics.length})</div>
         ${filteredTopics.map(t => renderTopicCard(t)).join("")}
       </section>
     `;
@@ -471,7 +456,7 @@ function renderInspector() {
   if (taskItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title"><span>📋</span> việc cần làm (${taskItems.length})</div>
+        <div class="sec-title">việc cần làm (${taskItems.length})</div>
         ${taskItems.map((it, idx) => renderTaskCard(it, idx)).join("")}
       </section>
     `;
@@ -482,7 +467,7 @@ function renderInspector() {
   if (otherItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title"><span>💡</span> vướng mắc & yêu cầu & tri thức (${otherItems.length})</div>
+        <div class="sec-title">vướng mắc & yêu cầu & tri thức (${otherItems.length})</div>
         ${otherItems.map((it, idx) => renderOtherItemCard(it, idx)).join("")}
       </section>
     `;

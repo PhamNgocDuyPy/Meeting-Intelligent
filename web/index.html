@@ -15,11 +15,10 @@
     <span><strong>Chỉ dùng dữ liệu giả hoặc ẩn danh:</strong> Vui lòng không tải lên thông tin mật của doanh nghiệp. Bản demo trực tuyến tự động làm mới định kỳ.</span>
   </div>
 
-  <!-- TOPBAR / HEADER (MONKEYTYPE STYLE) -->
+  <!-- TOPBAR / HEADER -->
   <header class="topbar">
     <div class="brand">
-      <span class="brand-name">meeting_intel</span>
-      <span class="caret"></span>
+      <span class="brand-name">MEETING INTEL</span>
     </div>
 
     <div class="meeting-selector-wrap">
@@ -42,7 +41,6 @@
     </div>
 
     <div class="telemetry-pill" id="telemetry-pill" title="Hệ thống phân xử tất định kết hợp Jev System 1">
-      <span class="pulse-dot"></span>
       <span class="telemetry-text">Jev 1.13 · 0 lỗi chốt nhầm</span>
     </div>
 
@@ -57,18 +55,10 @@
   <nav class="filter-bar">
     <div class="tabs-group" id="filter-tabs">
       <button class="tab-btn active" data-filter="all">tất cả</button>
-      <button class="tab-btn" data-filter="a-to-b">
-        <span class="tab-dot dot-amber"></span>a ➔ b lật kèo
-      </button>
-      <button class="tab-btn" data-filter="decisions">
-        <span class="tab-dot dot-green"></span>quyết định chốt
-      </button>
-      <button class="tab-btn" data-filter="tasks">
-        <span class="tab-dot dot-cyan"></span>việc cần làm
-      </button>
-      <button class="tab-btn" data-filter="review-queue">
-        <span class="tab-dot dot-red"></span>cần người duyệt (<span id="review-count">0</span>)
-      </button>
+      <button class="tab-btn" data-filter="a-to-b">đổi ý kiến (a sang b)</button>
+      <button class="tab-btn" data-filter="decisions">quyết định chốt</button>
+      <button class="tab-btn" data-filter="tasks">việc cần làm</button>
+      <button class="tab-btn" data-filter="review-queue">cần duyệt (<span id="review-count">0</span>)</button>
     </div>
 
     <div class="stats-summary" id="stats-summary">
@@ -84,13 +74,8 @@
     <section class="pane transcript-pane">
       <div class="pane-header">
         <div class="pane-title">
-          <span>bản ghi lời thoại (transcript)</span>
+          <span>bản ghi lời thoại</span>
           <span class="badge-count" id="utt-count">0 phát biểu</span>
-        </div>
-        <div class="legend">
-          <span class="legend-item"><span class="legend-box pos"></span>thuận / chốt</span>
-          <span class="legend-item"><span class="legend-box neg"></span>nghịch / phản đối</span>
-          <span class="legend-item"><span class="legend-box warn"></span>điều kiện</span>
         </div>
       </div>
 
