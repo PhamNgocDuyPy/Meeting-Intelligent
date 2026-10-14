@@ -562,13 +562,13 @@ function renderTopicCard(t) {
 
       <div class="review-actions">
         <button class="btn-review approve ${isApproved ? 'approved' : ''}" data-target="${tid}" data-action="approve" title="Xác nhận quyết định này">
-          ${isApproved ? '✓ đã xác nhận' : '✓ xác nhận'}
+          ${isApproved ? 'đã xác nhận' : 'xác nhận'}
         </button>
         <button class="btn-review edit ${isEdited ? 'edited' : ''}" data-target="${tid}" data-action="edit" title="Chỉnh sửa nội dung quyết định">
-          ${isEdited ? '✎ đã sửa' : '✎ sửa'}
+          ${isEdited ? 'đã sửa' : 'sửa'}
         </button>
         <button class="btn-review reject ${isRejected ? 'rejected' : ''}" data-target="${tid}" data-action="reject" title="Từ chối quyết định này">
-          ${isRejected ? '✕ đã từ chối' : '✕ từ chối'}
+          ${isRejected ? 'đã từ chối' : 'từ chối'}
         </button>
       </div>
     </div>

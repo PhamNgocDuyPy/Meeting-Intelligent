@@ -9,7 +9,7 @@ Tài liệu này lưu trữ quy trình kỹ thuật nội bộ triển khai hệ
 | Rủi ro tiềm ẩn | Mức độ | Biện pháp giảm thiểu kỹ thuật đã triển khai |
 |---|:---:|---|
 | **Máy chủ miễn phí tự ngủ (Cold start)** | Trung bình | • Hiển thị cảnh báo "Mở lần đầu chờ ~1 phút" ngay đầu README và trên thanh thông báo web.<br>• Sử dụng dịch vụ ping định kỳ (UptimeRobot) gọi `/healthz` mỗi 5 phút để giữ máy chủ luôn thức trong giờ cao điểm chấm bài.<br>• Chuẩn bị sẵn phương án nâng gói trả phí nếu cần đảm bảo độ khả dụng tuyệt đối. |
-| **Hết hạn mức (Quota) khóa Gemini** | Cao | • Toàn bộ 26 cuộc họp mẫu đọc trực tiếp từ `demo_cache/` (đã commit và quét bảo mật trước), chạy bình thường kể cả khi hết quota hoặc chưa cấu hình API key.<br>• Chỉ transcript mới do giám khảo tải lên mới tiêu tốn quota; hệ thống đặt trần `DAILY_RUN_LIMIT=100` lượt/ngày và hiển thị thông báo hướng dẫn chạy local khi chạm trần. |
+| **Hết hạn mức (Quota) khóa Gemini** | Cao | • Toàn bộ 26 cuộc họp mẫu đọc trực tiếp từ `demo_cache/` (đã commit và quét bảo mật trước), chạy bình thường kể cả khi hết quota hoặc chưa cấu hình API key.<br>• Khi phân tích transcript mới, nếu Gemini gặp lỗi mạng/hết quota, hệ thống tự động chuyển sang mô hình dự phòng NVIDIA NIM (`NVIDIA_API_KEY`).<br>• Đặt trần `DAILY_RUN_LIMIT=100` lượt/ngày để bảo vệ tài khoản. |
 | **Khóa API bị đổi hoặc thu hồi sau khi nộp** | Cao | • Sử dụng khóa Gemini độc lập dành riêng cho bản demo trực tuyến (tách biệt hoàn toàn với khóa phát triển cá nhân).<br>• Cam kết không thu hồi hoặc chỉnh sửa khóa này cho đến khi có thông báo kết quả chính thức từ ban tổ chức. |
 | **Commit mới làm hỏng phiên bản đang chạy** | Cao | • Gắn tag phiên bản `v1.0` cố định cho bản nộp.<br>• Cấu hình Render triển khai từ nhánh cố định `release` (hoặc tắt tính năng Auto-Deploy sau khi kiểm tra xong bản nộp).<br>• Tuyệt đối không đẩy thêm commit vào nhánh `release` sau hạn nộp bài. |
 
@@ -50,8 +50,8 @@ Trong tab **Environment** trên Render, bạn thiết lập các biến sau:
 | `RATE_LIMIT_PER_MINUTE` | `30` | Mặc định | Chặn địa chỉ IP gửi request dồn dập |
 | `JEV_BASE_URL` | `https://opencode.ai/inference/v1/systemone` | Tùy chọn | Endpoint Jev System One (nếu có dùng Jev) |
 | `OPENCODE_API_KEY` | *(Khóa OpenCode nếu có)* | Tùy chọn | Nếu để trống, server tự động bỏ qua Jev mà không gây lỗi |
-| `JEV_MODEL` | `jev-1.13-free` | Tùy chọn | Mô hình Jev kiểm tra an toàn |
-| `NVIDIA_API_KEY` | *(Khóa NVIDIA nếu có)* | Tùy chọn | Chỉ dùng trong các thí nghiệm sinh dữ liệu ngoài tập với Nemotron |
+| `NVIDIA_API_KEY` | *(Khóa NVIDIA nếu có)* | Dự phòng | Tự động kích hoạt thay thế nếu Gemini gặp sự cố mạng hoặc hết quota |
+| `NVIDIA_MODEL` | `nvidia/nemotron-4-340b-instruct` | Mặc định | Mô hình NVIDIA NIM dự phòng |
 
 ---
 

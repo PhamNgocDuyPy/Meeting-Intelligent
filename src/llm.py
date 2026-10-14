@@ -68,10 +68,39 @@ def _post_with_retry(url: str, headers: dict, payload: dict, tries: int = 5, tim
     raise LLMError(f"Hết số lần thử: {last}")
 
 
+def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
+    key = os.environ.get("NVIDIA_API_KEY")
+    if not key:
+        raise LLMError("Thiếu NVIDIA_API_KEY để gọi fallback mô hình.")
+    model = os.environ.get("NVIDIA_MODEL", "nvidia/nemotron-4-340b-instruct")
+    url = "https://integrate.api.nvidia.com/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "temperature": temperature,
+        "max_tokens": 4096,
+    }
+    data = _post_with_retry(url, headers, payload)
+    try:
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError):
+        raise LLMError(f"Phản hồi NVIDIA không hợp lệ: {str(data)[:300]}")
+
+
 def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
-        raise LLMError("Thiếu GEMINI_API_KEY. Để phân tích transcript mới, vui lòng cung cấp GEMINI_API_KEY trong biến môi trường hoặc .env; hoặc chọn các cuộc họp mẫu đã có sẵn trong demo_cache.")
+        if os.environ.get("NVIDIA_API_KEY"):
+            return call_nvidia_text(system, user, temperature)
+        raise LLMError("Thiếu GEMINI_API_KEY (hoặc NVIDIA_API_KEY dự phòng).")
     model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     payload = {
@@ -79,11 +108,14 @@ def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
         "contents": [{"role": "user", "parts": [{"text": user}]}],
         "generationConfig": {"temperature": temperature, "responseMimeType": "application/json"},
     }
-    data = _post_with_retry(url, {"x-goog-api-key": key, "Content-Type": "application/json"}, payload)
     try:
+        data = _post_with_retry(url, {"x-goog-api-key": key, "Content-Type": "application/json"}, payload)
         return data["candidates"][0]["content"]["parts"][0]["text"]
-    except (KeyError, IndexError):
-        raise LLMError(f"Phản hồi Gemini không hợp lệ: {str(data)[:300]}")
+    except Exception as e:
+        if os.environ.get("NVIDIA_API_KEY"):
+            sys.stderr.write(f"[FALLBACK] Gemini lỗi ({e}), chuyển sang dự phòng NVIDIA NIM...\n")
+            return call_nvidia_text(system, user, temperature)
+        raise
 
 
 def _jev_config() -> tuple[str | None, str | None, str]:
@@ -176,13 +208,13 @@ def call_jev_text(system: str, user: str, temperature: float = 0.0) -> str:
     return json.dumps({"answer": p >= 0.5, "p": p})
 
 
-_BACKENDS = {"gemini": call_gemini_text, "jev": call_jev_text}
+_BACKENDS = {"gemini": call_gemini_text, "jev": call_jev_text, "nvidia": call_nvidia_text}
 
 
 def generate_json(backend: str, system: str, user: str, model_cls: Type[T], repairs: int = 2, use_cache: bool = True) -> T:
     if backend not in _BACKENDS:
         raise LLMError(f"Backend không hỗ trợ: {backend}")
-    model_id = os.environ.get("GEMINI_MODEL" if backend == "gemini" else "JEV_MODEL", "")
+    model_id = os.environ.get("GEMINI_MODEL" if backend == "gemini" else ("NVIDIA_MODEL" if backend == "nvidia" else "JEV_MODEL"), "")
     key = hashlib.sha256(json.dumps([backend, model_id, system, user], ensure_ascii=False).encode()).hexdigest()[:24]
     demo_cache_file = DEMO_CACHE_DIR / f"{backend}_{key}.json"
     cache_file = CACHE_DIR / f"{backend}_{key}.json"
