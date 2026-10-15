@@ -234,8 +234,9 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
             import yaml
             (mdir / "brief.yaml").write_text(yaml.safe_dump(brief_data, allow_unicode=True), encoding="utf-8")
 
+            judge_choice = payload.get("judge", "jev")
             try:
-                res = run_meeting(mid, backend="gemini", judge="none", oracle=False, custom_roles=effective_roles)
+                res = run_meeting(mid, backend="gemini", judge=judge_choice, oracle=False, custom_roles=effective_roles)
                 data = res.model_dump()
                 data["new_meeting_id"] = mid
                 self._send_json(data)
