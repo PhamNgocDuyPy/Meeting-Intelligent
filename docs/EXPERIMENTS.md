@@ -1,14 +1,14 @@
-# BÁO CÁO THỰC NGHIỆM & KẾT LUẬN (EXPERIMENTS & FINDINGS)
+# BÁO CÁO THỰC NGHIỆM & KẾT LUẬN
 *Người thực hiện: Nhóm phát triển Meeting Intel*  
-*Cam kết: Báo cáo trung thực, khoa học dựa trên output thực tế; định lượng rõ ràng vai trò của Luật tất định, Bộ chấm Jev System One và phạm vi dữ liệu cho kho tri thức.*
+*Cam kết: Báo cáo trung thực, khoa học dựa trên kết quả chạy thực tế; đánh giá khách quan vai trò của bộ quy tắc logic bằng code, mô hình kiểm toán Jev System One và kế hoạch dữ liệu cho kho tri thức.*
 
 > [!NOTE]
-> **Bảng Kê Cấu Hình Thực Nghiệm & Môi Trường Chạy (Benchmark Run Metadata):**
-> - **Mô hình Trích xuất (LLM Extraction Backend):** `gemini-3.1-flash-lite` (nhiệt độ `temperature=0.0`, gọi qua Google GenAI API chính thức). Tên model được xác lập trong `.env` (`GEMINI_MODEL=gemini-3.1-flash-lite`) và ghi nhận trong trường `backend` của file kết quả `outputs/*.json`. *(Ghi chú giai đoạn: Trong giai đoạn phát triển và dò lỗi ban đầu, mô hình `gemini-2.5-flash` được dùng thử nghiệm; toàn bộ số liệu báo cáo chính thức nộp bài được chạy lại và đồng bộ hoàn toàn trên `gemini-3.1-flash-lite`).*
-> - **Phiên bản Prompt Bóc tách:** Bộ prompt tách rời (Decoupled extraction schema), đã loại bỏ hoàn toàn các cụm từ ví dụ của bộ test để tránh rò rỉ dữ liệu.
+> **Bảng Kê Cấu Hình Thực Nghiệm & Môi Trường Chạy:**
+> - **Mô hình trích xuất (LLM Backend):** `gemini-3.1-flash-lite` (thiết lập `temperature = 0.0`, gọi qua API Google GenAI chính thức). Tên model được xác lập trong `.env` (`GEMINI_MODEL=gemini-3.1-flash-lite`) và ghi nhận trong trường `backend` của file kết quả `outputs/*.json`. *(Ghi chú giai đoạn: Trong giai đoạn phát triển và dò lỗi ban đầu, mô hình `gemini-2.5-flash` được dùng thử nghiệm; toàn bộ số liệu báo cáo chính thức nộp bài được chạy lại và đồng bộ hoàn toàn trên `gemini-3.1-flash-lite`).*
+> - **Phiên bản Prompt bóc tách:** Prompt được thiết kế chuyên biệt để bóc tách thông tin thô, đã lược bỏ hoàn toàn các ví dụ mẫu cụ thể để đảm bảo AI tự suy luận khách quan, không bị rò rỉ dữ liệu kiểm thử.
 > - **Phân tách Tập Dữ liệu (Tập Viết tay m* vs Tập Sinh theo khuôn g*):**
 >   * **Tập phát triển viết tay (`m01`–`m08`):** Đạt **75.0%** (6/8 ca đạt; 2 ca chưa đạt là `m01` thiếu việc phụ Minh nhắn Phúc và `m07` thiếu câu hỏi mở khảo sát biểu đồ). Đây là con số phản ánh sát thực tế năng lực ngôn ngữ của LLM nhất; việc tinh chỉnh ranh giới `scope`/`release` của `m02` cũng là tối ưu trên tập dev này.
->   * **Tập sinh theo khuôn (không độc lập) (`g01`–`g12`):** Đạt **100.0%** (12/12 ca đạt). Tập này do script sinh theo khuôn mẫu nhằm kiểm tra ma trận phân quyền; kết quả 12/12 chủ yếu chứng minh động cơ luật bao phủ tốt các khuôn câu đã biết, không đại diện cho khả năng tổng quát hóa ngôn ngữ mở.
+>   * **Tập sinh theo khuôn (không độc lập) (`g01`–`g12`):** Đạt **100.0%** (12/12 ca đạt). Tập này do script tự sinh theo kịch bản để kiểm tra bảng phân quyền theo chức danh; kết quả 12/12 chứng minh bộ quy tắc logic bằng code xử lý chuẩn xác các tình huống đã định hình, chứ chưa đại diện cho khả năng hiểu ngôn ngữ tự do ngoài đời.
 >   * **Tổng thể 20 cuộc họp chuẩn nội bộ:** **90.0%** (18/20 ca đạt chuẩn; 0 lỗi chốt nhầm; 0 ca hạ oan quyết định đúng).
 >   * **Tập kiểm nghiệm độc lập ngoài mẫu (`indep_m01`–`indep_m06`, do AI ngoài sinh):** Đạt **1/6 (16.7%) kết quả thô tự động** (được giữ làm số liệu chính thức; đối soát thủ công chỉ mang tính phân tích kỹ thuật phụ trợ).
 > - **Ngày chạy & Đồng bộ Dữ liệu:** `2026-10-14`. Mọi bảng số liệu trong báo cáo được trích xuất trực tiếp từ các file kết quả thực tế trong thư mục `outputs/*.json` và được kiểm chứng tự động qua script.
@@ -17,32 +17,32 @@
 
 ## 1. Bản chất Giải pháp & Trọng tâm Hiện thực hóa
 
-### 1.1. Core Loop được chứng minh
-Đề bài yêu cầu: Biến transcript cuộc họp thành dữ liệu có cấu trúc có thể tiếp tục sử dụng cho công việc và kho tri thức, đặc biệt xử lý tình huống **ý kiến ban đầu thay đổi (đầu cuộc họp đề xuất phương án A, cuối cuộc họp chốt phương án B)**.
+### 1.1. Quy trình cốt lõi được chứng minh
+Đề bài yêu cầu: Biến biên bản cuộc họp thành dữ liệu có cấu trúc phục vụ công việc và kho tri thức, đặc biệt xử lý tình huống **ý kiến ban đầu thay đổi (đầu cuộc họp đề xuất phương án A, cuối cuộc họp chốt phương án B)**.
 
-Hệ thống hiện thực hóa Core Loop qua kiến trúc **4 lớp phòng vệ tách rời (Decoupled Architecture)**:
-1. **Lớp 1 — Kiểm chứng Bằng chứng Cứng (Exact Substring Verification):** Mọi trích dẫn `quote` do LLM bóc tách bắt buộc là chuỗi con thực tế trong transcript. Ngăn chặn trích dẫn bịa đặt (hallucination nguồn).
-2. **Lớp 2 — Động cơ Luật Tất định theo Dòng thời gian (Deterministic Timeline Engine):** Áp dụng 4 điều kiện chốt cứng (Có kết luận rõ ràng, Đúng thẩm quyền, Không còn phản đối chưa giải quyết, Không bị đảo ngược muộn hơn). Phương án A được lưu vết là phương án bị thay thế (`rejected_options`), phương án B là phương án chốt (`final_option`).
-3. **Lớp 3 — Chốt chặn Jev System One (Asymmetric Gatekeeper):** Gọi API native `/systemone` đánh giá các câu hỏi nhị phân (`noul`) về kết luận, phản đối, đảo ngược, điều kiện, thẩm quyền và kiểm tra giao việc. **Chỉ được HẠ cấp, không bao giờ tự ý nâng cấp.**
-4. **Lớp 4 — Phân luồng Rà soát & Giao diện Tra cứu (Review Queue & Web UI):** Các mục có cờ nghi ngờ được đẩy vào hàng duyệt riêng để con người quyết định trước khi xuất dữ liệu.
+Hệ thống hiện thực hóa quy trình này qua kiến trúc **4 tầng bảo vệ độc lập**:
+1. **Tầng 1 — Bắt buộc trích dẫn nguyên văn:** Mọi trích dẫn làm căn cứ do AI bóc tách bắt buộc phải là chuỗi ký tự có thật từng chữ trong biên bản. Nếu AI bịa trích dẫn, hệ thống sẽ phát hiện và loại bỏ ngay.
+2. **Tầng 2 — Bộ quy tắc logic theo dòng thời gian:** Không để AI tự phán xét quyết định, mà dùng code lập trình kiểm tra tuần tự 4 điều kiện: (1) Có kết luận rõ ràng, không kèm điều kiện treo; (2) Đúng người có quyền theo quy chế công ty; (3) Không còn ai phản đối sau đó; (4) Không bị đổi ý hoặc hủy bỏ ở phát biểu muộn hơn. Phương án A được lưu vết là phương án bị thay thế (`rejected_options`), phương án B là phương án chốt (`final_option`).
+3. **Tầng 3 — Chốt chặn kiểm toán an toàn (Mô hình Jev):** Gọi mô hình Jev qua API để đánh giá độc lập các câu hỏi then chốt (kết luận, phản đối, đổi ý, điều kiện ràng buộc, thẩm quyền và giao việc). Bộ phận này hoạt động theo nguyên tắc an toàn: chỉ cảnh báo hoặc hạ cấp khi nghi ngờ, tuyệt đối không tự tiện nâng cấp quyết định.
+4. **Tầng 4 — Hàng đợi rà soát cho con người:** Các mục có dấu hiệu nghi vấn được gom vào hàng đợi trên giao diện web để người điều hành duyệt trước khi xuất dữ liệu.
 
 *Lưu ý về Cấu hình Vận hành & Cờ lệnh:*
 - **Cấu hình Vận hành Chính (Primary Operational Pipeline):** `python main.py eval --backend gemini --judge none` (hoặc `python main.py run <id> --backend gemini`). Tỷ lệ đạt: **75.0%** trên tập viết tay `m*`, **100.0%** trên tập sinh theo khuôn `g*` (trung bình 20 ca là **90.0%**; 0 lỗi chốt nhầm; 0 ca hạ oan quyết định đúng). *(Ghi chú lịch sử: Trong lần chạy trước với mô hình `gemini-2.5-flash`, pass rate từng ghi nhận 85% do `m02` bị gán sai `category` sang `release`; ở lần chạy chuẩn hóa đồng bộ với `gemini-3.1-flash-lite`, `m02` đạt chuẩn và pass rate là 90.0%).*
 - **Tách bạch Cờ lệnh & Chế độ Bộ chấm (`--judge-mode advisory|downgrade`):**
   - **Chế độ Tự hạ cấp (`--judge-mode downgrade`):** Bộ chấm có quyền cưỡng bức hạ `decided` về `leaning`. Số liệu: Bắt được 2/2 điều kiện bị mất nhãn (`m05`, `g06`), nhưng **hạ oan 1/8 (12.5%) quyết định đúng** (`g12`), pass rate giảm xuống 85% (17/20 ca).
-  - **Chế độ Cảnh báo Khuyến nghị (`--judge-mode advisory` - Mặc định trong pipeline):** Bộ chấm không bao giờ tự ý hạ cấp, giữ nguyên các quyết định đúng; cắm cờ cảnh báo (`judge:conditional`, `judge:objection_remaining`) vào trường `flags` để đưa vào Review Queue cho PM xác nhận. Bắt được 2/2 ca điều kiện bị mất nhãn qua cờ cảnh báo. Gánh nặng duyệt thêm cho PM là **1/8 quyết định đúng** (12.5%, ca `g12`).
+  - **Chế độ Cảnh báo Khuyến nghị (`--judge-mode advisory` - Mặc định trong pipeline):** Bộ chấm không bao giờ tự ý hạ cấp, giữ nguyên các quyết định đúng; cắm cờ cảnh báo (`judge:conditional`, `judge:objection_remaining`) vào trường `flags` để đưa vào hàng đợi cho PM xác nhận. Bắt được 2/2 ca điều kiện bị mất nhãn qua cờ cảnh báo. Gánh nặng duyệt thêm cho PM là **1/8 quyết định đúng** (12.5%, ca `g12`).
 
 ---
 
 ## 2. Số liệu Thực nghiệm Thực tế & Đánh giá Khách quan về Jev
 
-### 2.1. Ma trận Kiểm thử Thực nghiệm Toàn diện & Đối chứng Bộ Chấm (Jev vs Gemini vs None)
+### 2.1. Thử Nghiệm Đối Chứng Toàn Diện Các Phương Án Đánh Giá (Jev vs Gemini vs Không dùng)
 Toàn bộ 20 cuộc họp chuẩn (`m01–m08`, `g01–g12`) được chạy thực tế qua các cấu hình đối chứng độc lập và lưu tại thư mục `outputs/`:
-1. `gemini + none` (**Cấu hình chính thức khuyến nghị**): LLM Gemini bóc tách nhãn + Động cơ luật thuần.
-2. `gemini + jev` (`--judge-mode downgrade`): LLM Gemini + Động cơ luật + Jev System One tự động hạ cấp.
-3. `gemini + jev` (`--judge-mode advisory`): LLM Gemini + Động cơ luật + Jev System One cắm cờ cảnh báo (Lưới an toàn).
-4. `gemini + gemini` (`--judge-mode downgrade`): LLM Gemini + Gemini LLM đóng vai trò Bộ chấm có schema (Proposal đối chứng).
-5. `oracle + none` & `oracle + jev`: Nhãn tham chiếu chuẩn + Luật thuần / Jev (Mức trần lý tưởng kiểm thử luật).
+1. `gemini + none` (**Cấu hình chính thức khuyến nghị**): Gemini bóc tách nội dung thô + Bộ quy tắc logic bằng code.
+2. `gemini + jev` (`--judge-mode downgrade`): Gemini + Bộ quy tắc logic + Jev tự động hạ cấp quyết định.
+3. `gemini + jev` (`--judge-mode advisory`): Gemini + Bộ quy tắc logic + Jev đóng vai trò cảnh báo (Lưới an toàn).
+4. `gemini + gemini` (`--judge-mode downgrade`): Gemini bóc tách + Mô hình Gemini thứ hai làm người chấm phản biện có schema.
+5. `oracle + none` & `oracle + jev`: Nhãn tham chiếu chuẩn + Quy tắc logic / Jev (Mức trần lý tưởng để kiểm tra bộ quy tắc).
 
 #### Bảng Đối chứng Hiệu năng Các Bộ Chấm trên Toàn bộ 20 Cuộc họp
 Trích xuất trực tiếp từ kết quả đối chứng thực nghiệm lưu tại `outputs/judge_comparison_results.json`:
@@ -68,7 +68,7 @@ Soi chiếu cam kết tại Mục 5 Proposal:
 > *"Chỉ cân nhắc tích hợp Jev nếu không có lỗi chốt nhầm nghiêm trọng hơn LLM đối chứng và thời gian duyệt giảm mà không tăng lỗi giao việc."*
 
 Phân tích số liệu thực tế chỉ ra:
-1. **Lỗi chốt nhầm là 0 ở mọi chế độ:** Động cơ luật tất định đã ngăn chặn được 100% lỗi chốt nhầm trên tập thử nghiệm. Jev và Gemini Judge không ngăn thêm được lỗi chốt nhầm nào.
+1. **Không xảy ra lỗi chốt nhầm ở bất kỳ chế độ nào:** Bộ quy tắc logic kiểm tra dòng thời gian bằng code đã ngăn chặn được 100% các ca chốt nhầm trên tập thử nghiệm. Cả Jev lẫn Gemini khi tham gia phản biện đều không phát hiện thêm lỗi chốt nhầm nào.
 2. **Chi phí hạ oan quyết định đúng ở chế độ tự động hạ cấp (`downgrade`):**
    - Trong toàn bộ đáp án tham chiếu (`expected.json`), có chính xác **8 quyết định đã chốt (`decided`)**: `g01`, `g02`, `g03`, `g12`, `m01`, `m02`, `m06`, `m08`.
    - Khi bật Jev ở chế độ tự động hạ cấp, ca `g12` (Minh nói *"Ok, mình vẫn lo nhưng sẽ làm theo"*) bị câu hỏi phản đối của Jev đo $p = 0.51$ và tự ý hạ về `leaning`.
@@ -209,7 +209,7 @@ Trích xuất trực tiếp từ bài đo thực nghiệm [`experiments/experime
 | Phương pháp Reranker | Recall@3 | Precision@3 | Độ trễ TB / truy vấn | Độ nhạy Thứ tự (Order Invariance) | Nhận xét Cơ chế |
 |---|---|---|---|---|---|
 | **Lọc Từ khóa (Keyword)** | 48.8% | 54.2% | **1.10 ms** | Đổi top-3 **3/3 lần** | Dễ hòa điểm giữa các đoạn có số từ trùng nhau; thứ tự xuất hiện quyết định top-3. |
-| **BM25 Okapi (`rank_bm25`)** | 33.1% | 37.5% | **0.46 ms** | Đổi top-3 **0/3 lần** *(Tất định)* | Do corpus chỉ 12 đoạn ngắn và truy vấn ngắn, BM25 bị phạt điểm độ dài và thiếu từ đồng nghĩa ("backend" không khớp "công nghệ, hạ tầng"). |
+| **BM25 Okapi (`rank_bm25`)** | 33.1% | 37.5% | **0.46 ms** | Đổi top-3 **0/3 lần** *(Luôn cố định)* | Do corpus chỉ 12 đoạn ngắn và truy vấn ngắn, BM25 bị phạt điểm độ dài và thiếu từ đồng nghĩa ("backend" không khớp "công nghệ, hạ tầng"). |
 | **Gemini Reranker** | **70.0%** | **79.2%** | 1.340,30 ms | Đổi top-3 **2/3 lần** | Hiểu ngữ nghĩa tốt nhất nhưng bị ảnh hưởng bởi *position bias* khi đọc danh sách dài. |
 | **Jev System One Reranker** | 69.0% | **79.2%** | 653,57 ms | Đổi top-3 **0/3 lần** *(Ổn định)* | Chấm xác suất độc lập cho từng cặp (query, doc) qua câu hỏi noul, cho xác suất float ổn định, ngang ngửa Gemini về Precision. |
 
@@ -248,7 +248,7 @@ Chúng tôi thiết lập bài kiểm tra sức chịu tải ([`experiments/test
 Chúng tôi đo lường tác động của Reranker đến chất lượng chốt quyết định cuối cùng ([`experiments/test_rerank_e2e_passrate.py`](../experiments/test_rerank_e2e_passrate.py)):
 - **Trên Nhãn Tham chiếu (Oracle):** Cả cấu hình Lọc Từ khóa (`0.51s`) lẫn Jev Reranker (`107.43s`) đều đạt **Pass Rate 100% (20/20)**, 0 lỗi nghiêm trọng.
 - **Trên Pipeline Gemini Thật (`--backend gemini`):** Cả hai cấu hình đạt **Pass Rate 90.0% (18/20)**, 0 lỗi chốt nhầm nghiêm trọng, 0 ca hạ oan quyết định đúng. 2 ca chưa đạt là `m01` (LLM bỏ sót 1 việc phụ nhỏ) và `m07` (LLM bỏ sót câu hỏi mở về biểu đồ).
-- **Lý do số đo không thay đổi:** Trong kiến trúc Meeting Intel, các đoạn chính sách được đưa vào context (`to_prompt`) nhằm hỗ trợ LLM suy luận, nhưng việc xác định thẩm quyền chốt được mã nguồn tính toán trực tiếp theo luật tất định từ `decision_rights.yaml`. Do đó, sự khác biệt trong việc xếp hạng chính sách chưa làm thay đổi quyết định cuối cùng trên 20 cuộc họp hiện tại.
+- **Lý do số đo không thay đổi:** Trong kiến trúc Meeting Intel, các đoạn chính sách được đưa vào ngữ cảnh nhằm hỗ trợ AI hiểu tình huống, nhưng việc xác định quyền hạn ra quyết định được tính toán trực tiếp bằng code đối chiếu với bảng quy chế phân quyền (`decision_rights.yaml`). Do đó, sự khác biệt trong việc xếp hạng chính sách chưa làm thay đổi quyết định cuối cùng trên 20 cuộc họp hiện tại.
 
 #### E. Kết luận Kỹ thuật & Quyết định Kiến trúc Được Điều Chỉnh
 1. **Giới hạn của Bộ lọc Truyền thống:** Thí nghiệm với 200 đoạn nhiễu cho thấy lọc từ khóa và BM25 thuần rất dễ bị đánh lừa bởi các văn bản hành chính dài có chứa từ khóa mồi.
@@ -260,10 +260,10 @@ Chúng tôi đo lường tác động của Reranker đến chất lượng ch�
 ## 3. Trả lời 3 Câu hỏi Bắt buộc
 
 ### Câu hỏi 1: Phần quan trọng nhất bạn chọn để hiện thực hóa trong MVP là gì? Vì sao nếu phần này hoạt động, bạn tin rằng hướng giải quyết của mình là khả thi?
-* **Phần quan trọng nhất:** **Cặp động cơ phân xử theo dòng thời gian bằng luật tất định kết hợp kiểm chứng trích dẫn chuỗi con nguyên văn** (*Deterministic Timeline Engine + Exact Substring Verification*).
+* **Phần quan trọng nhất:** **Sự kết hợp giữa Bộ quy tắc logic kiểm tra dòng thời gian và cơ chế bắt buộc trích dẫn nguyên văn từ biên bản.**
 * **Lý do tin rằng khả thi:**
-  1. Trong ghi nhận cuộc họp, lỗi nguy hiểm nhất là **ghi nhận sai quyết định** (biến đề xuất cũ đã bị thay thế thành quyết định hiện hành) và **giao nhầm việc** (gán việc cho người chỉ bị nhắc tên).
-  2. Bằng cách tách rời: LLM chỉ bóc tách phát biểu; Động cơ luật kiểm soát mốc thời gian và thẩm quyền; Bộ kiểm chuỗi con loại bỏ trích dẫn bịa đặt.
+  1. Trong biên bản họp, sai sót nguy hiểm nhất là **nhận diện sai quyết định** (coi một đề xuất cũ đã bị bác bỏ là quyết định đang thi hành) và **giao nhầm việc** (tự tiện gán việc cho một người chỉ được nhắc tên thoáng qua).
+  2. Bằng cách phân định rõ ràng nhiệm vụ: AI chỉ đóng vai trò thư ký đọc hiểu và trích xuất câu chữ; còn code logic kiểm soát chặt chẽ mốc thời gian, quyền hạn chức danh và loại bỏ hoàn toàn các trích dẫn bịa đặt.
   3. Kết quả 0 lỗi nghiêm trọng chứng minh: trên tập dữ liệu chuẩn 20 cuộc họp, hệ thống **chưa quan sát thấy lỗi chốt nhầm nào**. Tuy nhiên, theo quy tắc số ba (Rule of Three), với 0 lỗi ghi nhận trên cỡ mẫu $N=20$, cận trên khoảng tin cậy 95% của tỷ lệ lỗi thực tế vẫn vào khoảng **~15%** ($3/20 = 15\%$). Do đó, cần tiếp tục mở rộng quy mô kiểm thử trước khi khẳng định loại trừ hoàn toàn rủi ro này.
 
 ### Câu hỏi 2: So với kế hoạch ở Mission 1, bạn đã thay đổi quyết định hoặc thiết kế nào? Điều gì trong quá trình làm khiến bạn thay đổi?
@@ -301,8 +301,8 @@ Tất cả trích dẫn thời gian và phát biểu dưới đây được trí
 | **1** | **Xử lý tốt: Đổi A sang B (`m01`)**<br>*Transcript:*<br>• [00:00:20] Minh: *"Ban đầu mình đề xuất dùng Firebase."*<br>• [00:01:10] Quân: *"Mình hơi lo vendor lock-in."*<br>• [00:05:40] Minh: *"Ok, vậy là mình đổi ý. Chốt Supabase cho backend Aurora, bỏ Firebase."* | Chốt Supabase; Firebase bị thay thế (`rejected_options: ["Firebase"]`). | `status: "decided"`<br>`final_option: "Supabase"`<br>`rejected_options: ["Firebase"]` | **ĐẠT** | Theo dõi thứ tự thời gian giúp loại bỏ đề xuất cũ. Gemini bóc tách sót 1 việc nhỏ phụ (Minh nhắn anh Phúc xin ngân sách), nhưng quyết định cốt lõi đạt chuẩn. |
 | **2** | **Xử lý tốt: Phân loại đủ loại việc (`g10`)**<br>*Transcript:*<br>• [00:00:48] Hà: *"Quân làm phần đăng nhập, xong trước ngày 18/11 nhé."*<br>• [00:01:30] Quân: *"Ok, mình nhận."*<br>• [00:02:11] Nam: *"Mình sẽ viết tài liệu cho phần giao diện."*<br>• [00:02:36] Hà: *"Còn phần kiểm thử tự động thì chắc Đạt làm được nhỉ."*<br>• [00:03:00] Đạt: *"Để em xem đã."* | Quân có hạn 18/11; Nam không hạn; Đạt không được gán việc. | • Việc đăng nhập: `assignee: "Quân"`, `deadline: "2026-11-18"`<br>• Tài liệu UI: `assignee: "Nam"`, `deadline: null`<br>• Kiểm thử: `assignee: null`, cờ `assignee_only_mentioned` | **ĐẠT** | Bộ lọc regex `HEDGE` và kiểm tra phản hồi người được gọi tên chặn đứng việc biến người chỉ bị nhắc tên thành người chịu trách nhiệm. |
 | **3** | **Tình huống khó: Chốt có điều kiện chưa xảy ra (`m05`)**<br>*Transcript:*<br>• [00:04:00] Huy: *"Ok, chốt Stripe, với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%."*<br>• [00:04:30] Phúc: *"Mình cần hỏi lại bên Stripe, chưa có số chính thức."* | Không được để `Đã chốt`; phải là `Nghiêng về` hoặc `Chưa chốt`. | `status: "leaning"`<br>`leaning_option: "Stripe"`<br>Cờ: `conditional`<br>Quote: *"với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%"* | **ĐẠT** | Nhận diện cờ điều kiện giúp doanh nghiệp không triển khai non khi điều kiện tiên quyết chưa hoàn tất. |
-| **4** | **Tình huống khó: Người chốt không có quyền, người có quyền xác nhận sau (`g02`)**<br>*Transcript:*<br>• [00:03:58] Trang: *"Vậy chốt ảnh chụp thật nhé."* (Trang là QA Lead, không có quyền chốt design)<br>• [00:04:18] Lan: *"Ừ, mình đồng ý ảnh chụp thật."* (Lan là Design Lead có thẩm quyền xác nhận sau) | Hợp lệ hóa quyết định sau khi có thẩm quyền xác nhận. | `status: "decided"`<br>`final_option: "ảnh chụp thật"`<br>`rejected_options: ["minh họa phẳng"]` | **ĐẠT** | Ma trận vai trò (`people.yaml` & `decision_rights.yaml`) cho phép hợp lệ hóa quyết định dựa trên quyền hạn thực tế. |
-| **5** | **Thất bại thực tế do LLM gán sai category (`m02`)**<br>*Transcript:*<br>• [00:02:00] Hà: *"Vậy demo cho khách mình đề xuất thứ Năm tuần sau, 15/10."*<br>• [00:03:20] Hà: *"Ok, chốt demo ngày 15/10."* | Đáp án tham chiếu: `decided` (Hà là PM có quyền chốt nhóm `scope`). | `status: "leaning"`<br>`leaning_option: "Thứ Năm 15/10"`<br>Cờ: `needs_authority_confirmation`<br>Explanation: *"Người chốt (Hà) không có thẩm quyền xác nhận cho nhóm 'release'"* | **CHƯA ĐẠT** *(Lỗi Phân loại Category)* | **Bài học lớn:** Gemini tự ý phân loại topic ngày demo vào nhóm `"category": "release"`. Theo ma trận thẩm quyền, nhóm `release` chỉ có Head of Product (Huy) được chốt. Category là **đòn bẩy ngầm** quyết định bảng thẩm quyền nào được áp dụng. Giải pháp: Thêm ranh giới rõ ràng trong prompt bóc tách và đề xuất tính năng cho phép PM chỉnh sửa category trên Review Queue (*planned feature*) để luật tự động tính lại. |
+| **4** | **Tình huống khó: Người chốt không có quyền, người có quyền xác nhận sau (`g02`)**<br>*Transcript:*<br>• [00:03:58] Trang: *"Vậy chốt ảnh chụp thật nhé."* (Trang là QA Lead, không có quyền chốt design)<br>• [00:04:18] Lan: *"Ừ, mình đồng ý ảnh chụp thật."* (Lan là Design Lead có thẩm quyền xác nhận sau) | Hợp lệ hóa quyết định sau khi có thẩm quyền xác nhận. | `status: "decided"`<br>`final_option: "ảnh chụp thật"`<br>`rejected_options: ["minh họa phẳng"]` | **ĐẠT** | Bảng phân quyền và vai trò nhân sự (`people.yaml` & `decision_rights.yaml`) giúp code tự động hợp lệ hóa quyết định khi có người có thẩm quyền xác nhận. |
+| **5** | **Thất bại thực tế do LLM gán sai nhóm chủ đề (`m02`)**<br>*Transcript:*<br>• [00:02:00] Hà: *"Vậy demo cho khách mình đề xuất thứ Năm tuần sau, 15/10."*<br>• [00:03:20] Hà: *"Ok, chốt demo ngày 15/10."* | Đáp án tham chiếu: `decided` (Hà là PM có quyền chốt nhóm `scope`). | `status: "leaning"`<br>`leaning_option: "Thứ Năm 15/10"`<br>Cờ: `needs_authority_confirmation`<br>Explanation: *"Người chốt (Hà) không có quyền xác nhận cho nhóm 'release'"* | **CHƯA ĐẠT** *(Lỗi Phân loại Nhóm Chủ đề)* | **Bài học lớn:** Gemini tự ý phân loại chủ đề ngày demo vào nhóm `"release"`. Theo bảng phân quyền công ty, nhóm `release` chỉ có Head of Product (Huy) được chốt. Việc xếp nhầm nhóm chủ đề khiến code áp dụng nhầm quy chế phân quyền. Giải pháp: Nêu rõ ranh giới phân loại trong prompt và hỗ trợ sửa trực tiếp nhóm chủ đề trên giao diện web để hệ thống tự tính toán lại. |
 
 ---
 
@@ -310,7 +310,7 @@ Tất cả trích dẫn thời gian và phát biểu dưới đây được trí
 
 1. **Dữ liệu kiểm thử do đội ngũ tự xây dựng:** 20 transcript hiện tại (gồm 8 ca viết tay `m01–m08` và 12 ca sinh theo cấu trúc `g01–g12`) nhằm kiểm tra độ phủ của luật và các trường hợp biên. Bộ dữ liệu này chưa bao quát được toàn bộ sự phức tạp của tiếng Việt đời thường (nói chen ngang, khẩu ngữ, tiếng Việt pha tiếng Anh công nghệ, âm thanh ồn hoặc lỗi nhận diện giọng nói ASR).
 2. **Khả năng bao quát của LLM ở các câu hỏi mở:** Trong lần chạy thật, Gemini còn bỏ sót một số việc phụ phát sinh trong trao đổi nhanh (như việc Minh nhắn riêng anh Phúc ở `m01`, hay câu hỏi mở về format biểu đồ ở `m07`). Cần tinh chỉnh prompt bóc tách và bổ sung few-shot examples.
-3. **Sự phụ thuộc vào phân loại Category của LLM:** Như ca `m02` đã chứng minh, nếu LLM phân loại sai nhóm quyết định (`scope` thành `release`), động cơ luật sẽ áp sai bảng thẩm quyền, dẫn đến hạ cấp oan quyết định của PM.
+3. **Sự phụ thuộc vào việc phân loại nhóm chủ đề của AI:** Như ca `m02` đã chứng minh, nếu AI phân loại sai nhóm quyết định (`scope` thành `release`), code logic sẽ áp dụng nhầm quy định phân quyền, dẫn đến việc hạ cấp nhầm quyết định hợp lệ của PM.
 
 ---
 
@@ -327,7 +327,7 @@ Bộ dữ liệu gồm 20 cuộc họp chuẩn nằm trong thư mục `data/meet
   - `m06`: Huy chốt ngày release thứ Hai 19/10; tính năng thanh toán tắt bằng feature flag để test thêm.
   - `m07`: Thảo luận định dạng báo cáo cuối tháng (PDF hay Excel); tham chiếu mơ hồ; giao việc Nam không hạn.
   - `m08`: Hai chủ đề đan xen: Minh chốt AWS cho hosting; Hà hoãn công cụ monitoring Datadog sang tuần sau.
-- **12 cuộc họp sinh cấu trúc (`g01` đến `g12`):** Sinh tự động từ script kịch bản kiểm thử nhằm phủ kín các tổ hợp ma trận quyền hạn (`decision_rights.yaml`), xung đột nhiều phe và thời hạn tương đối.
+- **12 cuộc họp sinh cấu trúc (`g01` đến `g12`):** Sinh tự động từ kịch bản kiểm thử nhằm bao phủ mọi tình huống phân quyền theo chức danh (`decision_rights.yaml`), các cuộc tranh luận nhiều bên và các mốc thời hạn tương đối.
 - **Đáp án tham chiếu (`expected.json`):** Được thiết lập thủ công làm ground truth để đo lường độ chính xác.
 
 ### 6.2. Mã nguồn & Hướng dẫn Tái hiện Thực tế
@@ -349,45 +349,14 @@ python main.py ui --port 8080
 
 ---
 
-## 7. Kịch bản Video Demo 5 Phút (5-Minute Video Pitch Script)
-
-*Nguyên tắc: Không để giao diện chiếm thời gian; tập trung sâu vào Core Loop, Ca khó, Thất bại thực tế và Bằng chứng phòng thủ đột biến. Tổng thời lượng thiết kế ~4 phút 40 giây để có 20 giây đệm an toàn.*
-
-* **Phút 0:00 – 0:40 (Vấn đề Cốt lõi):**
-  - Mở đầu bằng vấn đề: *"Trong cuộc họp doanh nghiệp, thách thức không phải là tóm tắt dài dòng, mà là quyết định bị đảo ngược nằm chìm trong biên bản: đầu giờ đề xuất A, cuối giờ chốt B. Nếu dùng RAG tìm kiếm tương tự thuần túy, hệ thống có nguy cơ coi cả A và B đều là quyết định hợp lệ."*
-* **Phút 0:40 – 1:20 (Kiến trúc Giải pháp — Vì sao Khả thi?):**
-  - Trình chiếu sơ đồ 4 lớp phòng vệ tách rời:
-    * LLM chỉ làm nhiệm vụ bóc tách phát biểu và gán nhãn thô.
-    * Động cơ luật dòng thời gian quyết định trạng thái theo 4 điều kiện cứng.
-    * 100% trích dẫn bắt buộc là chuỗi con nguyên văn (Substring Verification) để loại bỏ hallucination nguồn.
-* **Phút 1:20 – 2:50 (Demo Trực tiếp Web UI Meeting Intel — 1 phút 30 giây):**
-  - Mở trình duyệt tại `http://127.0.0.1:8080`.
-  - Tải ca `m01`: Bấm vào quyết định "Supabase" ➔ Cột transcript tự động cuộn đến phát biểu [00:05:40] và phát sáng viền vàng hổ phách.
-  - Chỉ rõ nhãn phương án cũ bị thay thế: `rejected_options: ["Firebase"]`.
-  - Giới thiệu nhanh các tab phân loại `[a ➔ b lật kèo]`, `[cần người duyệt]`, và thao tác nút `[✓ xác nhận duyệt]` của cơ chế Human-in-the-Loop.
-  - Bấm nút xuất file `decisions.jsonl` chuẩn hóa cho kho tri thức.
-* **Phút 2:50 – 3:50 (Ca Khó `m05` & Thất Bại Thực Tế `m01`):**
-  - **Ca khó `m05`:** Huy chốt Stripe nhưng kèm điều kiện *"Phúc xác nhận phí dưới 2%"* ➔ Hệ thống tự động hạ về `Nghiêng về` (leaning).
-  - **Thẳng thắn nhìn nhận thất bại ở `m01`:** Trình bày rõ: *"Ở ca m01, hệ thống xử lý A->B rất chuẩn, nhưng pipeline thực tế vẫn chưa đạt 100% vì LLM bỏ sót 1 việc phụ nhỏ khi Minh nhắn riêng anh Phúc xin ngân sách."*
-  - Chiếu nhanh terminal chạy `pytest -v tests/test_mutations.py` (4/4 passed trong 0.2s) chứng minh khả năng chặn đứng việc bịa trích dẫn và gán bừa người nhận việc.
-* **Phút 3:50 – 4:30 (Hạn chế Thực tế & Bài học Đối soát — 40 giây):**
-  - *"Trên 6 cuộc họp ngắn do AI ngoài sinh, kết quả thô là 1/6; sau đối soát, chúng tôi không tìm thấy lỗi pipeline được xác nhận, nhưng mẫu quá nhỏ để kết luận."*
-  - *"Về bộ chấm: Jev và Gemini đều chưa đủ cơ sở tự hạ cấp vì còn rủi ro hạ oan (Jev 10%, Gemini 40% FPR trên 60 câu độc lập, McNemar $p=0.0117$). Vì vậy chúng tôi giữ Jev ở chế độ cảnh báo (`advisory`)."*
-  - *"Với kho tri thức: Chúng tôi chuẩn bị sẵn hợp đồng dữ liệu sạch `decisions.jsonl`, hoãn Graph RAG để tránh bẫy kỹ thuật tốn kém."*
-* **Phút 4:30 – 5:00 (Đệm Thời Gian An Toàn & Kết Luận):**
-  - Tóm lược thông điệp cốt lõi: *"Đúng hơn đủ — AI tìm ứng viên, luật tất định phân xử, con người phê duyệt."*
-
-
----
-
-## 8. Đã Chuẩn Bị Hợp Đồng Dữ Liệu, Hoãn Có Chủ Đích Phần Lưu Trữ Kho Tri Thức
+## 7. Đã Chuẩn Bị Hợp Đồng Dữ Liệu, Hoãn Có Chủ Đích Phần Lưu Trữ Kho Tri Thức
 
 > **Soi chiếu nguyên văn Đề bài:**  
 > *"Doanh nghiệp cần một sản phẩm sử dụng AI để biến nội dung cuộc họp thành dữ liệu có cấu trúc có thể tiếp tục sử dụng cho công việc, quy trình và kho tri thức (gồm: quyết định, việc cần làm, vướng mắc, yêu cầu, phản hồi, vấn đề chưa chốt và tri thức mới)."*
 
 Đề bài yêu cầu dữ liệu **"có thể tiếp tục sử dụng cho kho tri thức"**, không đòi hỏi phải dựng toàn bộ hạ tầng lưu trữ cồng kềnh ngay trong MVP.
 
-### 8.1. Đánh giá Công nghệ: Tránh "Dao Mổ Trâu" Cho Dữ liệu Cuộc Họp
+### 7.1. Đánh giá Công nghệ: Tránh "Dao Mổ Trâu" Cho Dữ liệu Cuộc Họp
 * **Mô hình đúng hướng: Knowledge Graph theo dòng thời gian (Temporal Knowledge Graph)**:
   - Khái niệm lưu sự kiện kèm khoảng thời gian hiệu lực (`valid_from`, `valid_to: null`) và đánh dấu bản cũ bị thay thế (`rejected_options` / `supersedes_decision_id`) thay vì xóa bỏ là cách tiếp cận chuẩn mực hiện nay (như mô hình của [Zep / Graphiti](https://arxiv.org/pdf/2501.13956.pdf)). Hệ thống Meeting Intel **đã chuẩn bị sẵn các trường dữ liệu tương thích này**, và hoãn có chủ đích phần xử lý suy luận xuyên cuộc họp sang giai đoạn sau khi có cơ chế đối chiếu người dùng.
 * **Quy mô công cụ phù hợp thực tế:**
@@ -395,7 +364,7 @@ python main.py ui --port 8080
   - Việc đưa GraphRAG của Microsoft hoặc Neo4j vào giai đoạn này là quá mức cần thiết (overkill). Theo các bài phân tích kỹ thuật ([beri.net](https://www.beri.net/article/graphrag-vs-vector-rag-indexing-query-cost-lightrag-lazygraphrag-2026), [HackerNoon](https://hackernoon.com/when-graphrag-is-overkill-a-break-even-test-for-plain-rag-graphs-and-hybrid-search)), chi phí lập chỉ mục vector chỉ bằng khoảng 0.1% so với GraphRAG, và GraphRAG kiểu gom cụm tóm tắt cộng đồng không phù hợp với dữ liệu quyết định thay đổi liên tục. Hầu hết câu hỏi của doanh nghiệp là tra cứu điểm (*"Quyết định hiện hành của chủ đề X là gì?"*), vốn được giải quyết tối ưu bằng metadata và tìm kiếm từ khóa/vector.
 * **Rủi ro lớn nhất trong thực tế:** Khó khăn lớn nhất không nằm ở việc lưu trữ, mà là việc nhận diện hai phát biểu ở hai cuộc họp cách nhau nhiều tháng có cùng một chủ đề hay không. Việc nối nhầm thực thể bằng AI sẽ tạo ra cảnh báo mâu thuẫn giả—đúng loại sai sót nguy hiểm mà chúng tôi muốn tránh.
 
-### 8.2. Kế hoạch 3 Bước Hiện thực hóa Kho Tri thức
+### 7.2. Kế hoạch 3 Bước Hiện thực hóa Kho Tri thức
 1. **Làm ngay trong MVP: Hợp đồng dữ liệu chuẩn hóa (Data Contract)**:
    - Hệ thống đã bổ sung hàm xuất `decisions_jsonl()` trong `src/export.py`, sinh ra file `outputs/<id>_decisions.jsonl` chuẩn hóa:
      ```json

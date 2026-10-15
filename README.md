@@ -23,39 +23,39 @@ Trong các cuộc họp điều hành và kỹ thuật:
 * **Thách thức cốt lõi:** Xác định chính xác kết luận nào thực sự có hiệu lực thi hành, thay vì tóm tắt văn bản chung chung hoặc dùng RAG semantic search (vốn dễ coi cả đề xuất ban đầu A và kết luận đảo chiều B đều là các quyết định song song).
 
 ### Nguyên tắc cốt lõi:
-1. **Precision over Recall (Độ chính xác cao hơn độ phủ):** Thà hạ cấp quyết định còn nghi vấn về trạng thái `Nghiêng về` (`leaning`) để con người rà soát (Human Review), còn hơn chốt nhầm quyết định chưa ngã ngũ (`decided`) gây sai lệch trong vận hành.
-2. **Tách biệt Extraction và Adjudication:** LLM chỉ đảm nhận vai trò trích xuất cấu trúc và dẫn chiếu chứng cứ thô; Deterministic Timeline Engine (Động cơ quy tắc tất định) chịu trách nhiệm xác định trạng thái quyết định cuối cùng dựa trên các điều kiện kiểm soát nghiêm ngặt.
-3. **Xác thực chứng cứ nguyên văn (Exact Substring Verification):** Mọi trích dẫn làm căn cứ bắt buộc phải là chuỗi con trùng khớp tuyệt đối (exact substring) trong transcript gốc, loại bỏ triệt để ảo giác (hallucination).
+1. **Độ chính xác cao hơn độ phủ:** Thà hạ cấp quyết định còn nghi vấn về trạng thái `Nghiêng về` (`leaning`) để con người rà soát, còn hơn chốt nhầm quyết định chưa ngã ngũ (`decided`) gây sai lệch trong vận hành thực tế.
+2. **Tách biệt khâu đọc hiểu và khâu ra quyết định:** AI chỉ đảm nhận vai trò thư ký trích xuất câu chữ và dẫn chứng nguyên văn; toàn bộ logic phân định hiệu lực quyết định được giao cho code logic kiểm tra (xét thứ tự thời gian, quyền hạn chức danh và điều kiện đi kèm). Cách làm này triệt tiêu hoàn toàn nguy cơ AI tự ý suy diễn hoặc bịa đặt.
+3. **Bắt buộc trích dẫn nguyên văn:** Mọi trích dẫn làm căn cứ bắt buộc phải là chuỗi ký tự trùng khớp từng chữ trong biên bản gốc, loại bỏ triệt để tình trạng AI tự bịa căn cứ.
 
 ---
 
 ## 2. Kiến Trúc Hệ Thống
 
 ```
-[ Raw Meeting Transcript ]
+[ Biên bản cuộc họp thô ]
        │
        ▼
-[ Layer 1: Exact Substring Verification ]
-  • Xác thực 100% trích dẫn là chuỗi con trùng khớp tuyệt đối (exact substring) từ transcript gốc.
-  • Evidence Asymmetry: Bảo lưu tín hiệu phản đối hoặc đảo chiều quan điểm ngay cả khi trích dẫn có sai lệch định dạng nhỏ, nhằm ưu tiên hạ cấp an toàn.
+[ Tầng 1: Kiểm tra trích dẫn nguyên văn ]
+  • Đối soát 100% trích dẫn phải trùng khớp tuyệt đối từng chữ trong biên bản gốc.
+  • Nguyên tắc ưu tiên an toàn: Nếu phát hiện câu phản đối hoặc đổi ý, kể cả khi trích dẫn có sai lệch nhỏ về định dạng, hệ thống vẫn giữ lại để hạ cấp an toàn về trạng thái chờ duyệt.
        │
        ▼
-[ Layer 2: Deterministic Timeline Engine ]
-  • Kiểm soát 4 điều kiện tất định: Không kèm điều kiện ràng buộc, Đúng thẩm quyền (Decision Rights), Không có phản đối sau cùng, Không bị đảo ngược muộn hơn.
-  • Theo dõi diễn biến theo mốc thời gian: Đề xuất A ➔ Phản đối / Đổi ý ➔ Kết luận B (Superseded Tracking).
+[ Tầng 2: Bộ quy tắc logic theo dòng thời gian ]
+  • Kiểm tra tuần tự 4 điều kiện: Không kèm điều kiện treo, Đúng người có thẩm quyền, Không còn phản đối sau đó, Không bị đổi ý muộn hơn.
+  • Theo dõi diễn biến theo thời gian: Đề xuất A ➔ Phản đối / Đổi ý ➔ Kết luận B (Lưu vết phương án cũ bị thay thế).
        │
        ▼
-[ Layer 3: Advisory Safety Net ]
+[ Tầng 3: Chốt chặn kiểm toán độc lập (Mô hình Jev) ]
   • Đánh giá đa chiều qua các câu hỏi hẹp: Quyết định, Phản đối, Đổi ý, Ràng buộc điều kiện, Thẩm quyền, Giao việc.
-  • Hedge Language Detection: Nhận diện ngôn ngữ thăm dò, do dự để ngăn chặn việc tự động gán task khi người tham gia chỉ được nhắc tên gián tiếp.
-  • Advisory Mode: Hoạt động ở chế độ cảnh báo, tự động đưa các trường hợp nghi vấn vào Hàng chờ duyệt (Review Queue) thay vì tự ý hạ cấp, hạn chế tối đa báo động giả (false alarms).
+  • Nhận diện phát biểu do dự: Phát hiện các từ ngập ngừng, thăm dò để ngăn chặn việc tự động gán việc khi người tham gia chỉ được nhắc tên gián tiếp.
+  • Chế độ cảnh báo an toàn: Đưa các trường hợp nghi vấn vào Hàng chờ duyệt thay vì tự ý hạ cấp, hạn chế tối đa báo động giả.
        │
        ▼
-[ Layer 4: Human-in-the-Loop Review UI & Export ]
-  • Bidirectional Highlighting: Liên kết hai chiều trực quan giữa kết luận và phát biểu gốc trong transcript.
-  • Dynamic Decision Rights: Điều chỉnh linh hoạt ma trận thẩm quyền trực tiếp trên giao diện theo từng phiên làm việc.
+[ Tầng 4: Giao diện duyệt cho con người & Xuất dữ liệu ]
+  • Đánh dấu phát biểu hai chiều: Bấm vào kết luận sẽ tự động cuộn đến và làm sáng câu thoại gốc trong biên bản.
+  • Điều chỉnh bảng phân quyền linh hoạt: Chỉnh sửa trực tiếp quyền hạn theo chức danh ngay trên giao diện theo từng phiên họp.
   • Thao tác phê duyệt 3 trạng thái: Xác nhận (Approve), Chỉnh sửa (Edit), Bác bỏ (Reject).
-  • Export Pipeline: Biên bản Markdown (.md), Danh sách công việc CSV (.csv), và JSONL kho tri thức.
+  • Xuất dữ liệu đa định dạng: Biên bản Markdown (.md), Danh sách việc CSV (.csv), và file chuẩn (.jsonl) cho kho tri thức.
 ```
 
 ---
@@ -88,7 +88,7 @@ Mở trình duyệt tại: `http://127.0.0.1:8080`
 
 ### Bước 4: Chạy Đánh giá và So sánh Benchmark (CLI)
 ```bash
-# Đánh giá cấu hình chuẩn (Gemini + Deterministic Timeline Engine)
+# Đánh giá cấu hình chuẩn (Gemini + Bộ quy tắc logic theo thời gian)
 python main.py eval --backend gemini --judge none
 
 # Đánh giá cấu hình cảnh báo an toàn (Gemini + Jev Advisory)
@@ -137,7 +137,7 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 * **Kỳ vọng:** Phương án ban đầu (Firebase) phải được đánh dấu bị thay thế (`superseded`); hệ thống chỉ ghi nhận Supabase là quyết định hiện hành duy nhất; trích dẫn căn cứ phải là exact substring từ transcript gốc.
 * **Kết quả thực tế:** Chủ đề đạt trạng thái "Đã chốt" với phương án Supabase; Firebase xuất hiện trong danh sách `rejected_options`; trích dẫn nguyên văn `"chốt Supabase cho backend Aurora, bỏ Firebase"` khớp 100%.
 * **Đánh giá:** **ĐẠT.**
-* **Bài học rút ra:** Deterministic Timeline Engine kết hợp Exact Substring Verification xác định chính xác mốc kết luận muộn nhất và lưu vết phương án bị thay thế (superseded), loại bỏ triệt để lỗi ghi nhận đồng thời cả hai phương án của các giải pháp tóm tắt LLM hoặc RAG thông thường.
+* **Bài học rút ra:** Bộ quy tắc logic theo dòng thời gian kết hợp đối soát trích dẫn nguyên văn giúp xác định chính xác mốc kết luận muộn nhất và lưu vết phương án cũ bị thay thế, loại bỏ triệt để lỗi ghi nhận đồng thời cả hai phương án của các giải pháp tóm tắt AI thông thường.
 
 #### Tình huống 2: Sản phẩm xử lý tốt — Ngăn chặn gán nhầm Task khi người tham gia chỉ được nhắc tên hoặc phản hồi do dự
 * **Kịch bản:** `g10` (Phân công công việc sprint) & `tests/test_integrity.py::test_task_assignee_only_mentioned_is_not_assigned`
@@ -145,7 +145,7 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 * **Kỳ vọng:** Công việc đăng nhập gán cho Quân; tài liệu gán cho Nam; riêng phần kiểm thử tự động tuyệt đối không được tự tiện gán Đạt làm người nhận (`assignee: null`), phân loại cơ sở giao việc là `mentioned_only`.
 * **Kết quả thực tế:** Công việc kiểm thử tự động được ghi nhận, nhưng trường người nhận việc để trống (`assignee: null`); hệ thống gắn cờ cảnh báo `assignee_only_mentioned` và chuyển vào Review Queue.
 * **Đánh giá:** **ĐẠT.**
-* **Bài học rút ra:** Cơ chế Hedge Language Detection kết hợp rà soát ngữ cảnh phát biểu kế tiếp ngăn chặn việc gán trách nhiệm công việc cho người chỉ được nhắc tên gián tiếp (mentioned only).
+* **Bài học rút ra:** Cơ chế nhận diện từ do dự kết hợp rà soát ngữ cảnh phát biểu kế tiếp ngăn chặn việc gán trách nhiệm công việc cho người chỉ được nhắc tên gián tiếp.
 
 #### Tình huống 3: Tình huống phức tạp — Quyết định có điều kiện ràng buộc chưa thỏa mãn (Conditional Decision)
 * **Kịch bản:** `m05` (Chọn cổng thanh toán Aurora) & `indep_m02`
@@ -153,15 +153,15 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 * **Kỳ vọng:** Không được tự tiện ghi nhận "Đã chốt" vì điều kiện tiên quyết về mức phí chưa được đáp ứng; hệ thống phải hạ cấp từ "Đã chốt" về "Nghiêng về" (`leaning`), trích dẫn đúng điều kiện và đưa vào Review Queue.
 * **Kết quả thực tế:** `status: "leaning"`, `leaning_option: "Stripe"`, cờ cảnh báo `conditional`, trích dẫn nguyên văn *"với điều kiện Phúc xác nhận phí giao dịch tổng cộng dưới 2%"*.
 * **Đánh giá:** **ĐẠT.**
-* **Bài học rút ra:** Áp dụng nguyên tắc thận trọng (Precision over Recall): hạ cấp về trạng thái "Nghiêng về" (`leaning`) kèm cờ cảnh báo `conditional` để con người xác nhận, ngăn ngừa rủi ro triển khai sớm khi điều kiện tiên quyết chưa được đáp ứng.
+* **Bài học rút ra:** Áp dụng nguyên tắc thận trọng (ưu tiên độ chính xác): hạ cấp về trạng thái "Nghiêng về" (`leaning`) kèm cờ cảnh báo `conditional` để con người xác nhận, ngăn ngừa rủi ro triển khai sớm khi điều kiện tiên quyết chưa được đáp ứng.
 
-#### Tình huống 4: Tình huống phức tạp — Kiểm soát thẩm quyền ra quyết định (Decision Rights) và Hợp lệ hóa muộn hơn
+#### Tình huống 4: Tình huống phức tạp — Kiểm soát thẩm quyền ra quyết định theo quy chế và Hợp lệ hóa muộn hơn
 * **Kịch bản:** `g02` (Phong cách hình ảnh giao diện) & `tests/test_integrity.py::test_stranger_leaning_vs_pm_decided`
-* **Diễn biến:** Trang (QA Lead) chốt *"Vậy chốt ảnh chụp thật nhé"*. Theo ma trận phân quyền `decision_rights.yaml`, nhóm design chỉ có Design Lead (Lan) hoặc Head of Product (Huy) mới có quyền chốt. Đến phát biểu kế tiếp, Lan lên tiếng: *"Ừ, mình đồng ý ảnh chụp thật"*.
+* **Diễn biến:** Trang (QA Lead) chốt *"Vậy chốt ảnh chụp thật nhé"*. Theo bảng phân quyền công ty `decision_rights.yaml`, nhóm design chỉ có Design Lead (Lan) hoặc Head of Product (Huy) mới có quyền chốt. Đến phát biểu kế tiếp, Lan lên tiếng: *"Ừ, mình đồng ý ảnh chụp thật"*.
 * **Kỳ vọng:** Phát biểu của Trang ban đầu chưa đủ thẩm quyền (nếu chỉ có Trang thì hạ về "Nghiêng về"), nhưng quyết định được hợp lệ hóa thành "Đã chốt" ngay sau khi người có thẩm quyền (Lan) lên tiếng xác nhận.
 * **Kết quả thực tế:** Trạng thái ghi nhận `status: "decided"`, `final_option: "ảnh chụp thật"`. (Ở bài test độc lập: nếu người không có thẩm quyền chốt mà không có PM xác nhận thì giữ nguyên trạng thái "Nghiêng về").
 * **Đánh giá:** **ĐẠT.**
-* **Bài học rút ra:** Tách riêng ma trận thẩm quyền (`decision_rights.yaml`) khỏi transcript giúp hệ thống kiểm soát chặt chẽ vai trò ra quyết định theo từng lĩnh vực, đồng thời linh hoạt công nhận quyết định khi người có thẩm quyền chuẩn thuận sau đó.
+* **Bài học rút ra:** Tách riêng bảng phân quyền (`decision_rights.yaml`) khỏi biên bản giúp hệ thống kiểm soát chặt chẽ vai trò ra quyết định theo từng lĩnh vực, đồng thời linh hoạt công nhận quyết định khi người có thẩm quyền chuẩn thuận sau đó.
 
 #### Tình huống 5: Tình huống chưa tối ưu — Bỏ sót công việc phụ trao đổi nhanh ở cuối buổi họp
 * **Kịch bản:** `m01` (Việc xin ngân sách của Minh)
@@ -169,7 +169,7 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
 * **Kỳ vọng:** Hệ thống trích xuất đầy đủ cả 2 công việc (Việc dựng Supabase của Quân và Việc xin ngân sách của Minh).
 * **Kết quả thực tế:** Hệ thống bóc tách trúng việc của Quân; nhưng bỏ sót việc xin ngân sách của Minh (`tasks: 1/2`, `tasks_ok: False`, khiến ca `m01` không đạt benchmark tuyệt đối).
 * **Đánh giá:** **CHƯA ĐẠT** (bỏ sót đầu việc trao đổi ngắn ở cuối buổi họp).
-* **Bài học rút ra:** Khi phát biểu diễn ra ở cuối phiên dưới dạng câu ngắn, thiếu chủ ngữ và không có hạn chót cụ thể, LLM dễ nhận định nhầm là giao tiếp thông thường (chitchat). Hướng khắc phục: tinh chỉnh few-shot prompt hoặc bổ sung bước quét chuyên biệt (Tail-sweep Scan) cho các phát biểu cuối transcript.
+* **Bài học rút ra:** Khi phát biểu diễn ra ở cuối phiên dưới dạng câu ngắn, thiếu chủ ngữ và không có hạn chót cụ thể, AI dễ nhận định nhầm là trao đổi xã giao. Hướng khắc phục: bổ sung ví dụ minh họa trong prompt hoặc thiết lập bước quét rà soát chuyên biệt cho các phát biểu ở cuối biên bản.
 
 ---
 
@@ -219,23 +219,23 @@ Nhằm kiểm tra tính tổng quát hóa độc lập ngoài tập phát triể
 
 ### Câu hỏi 1: Phần quan trọng nhất bạn chọn để hiện thực hóa trong MVP là gì? Vì sao nếu phần này hoạt động, bạn tin rằng hướng giải quyết của mình là khả thi?
 
-* **Phần quan trọng nhất:** Tách rời hoàn toàn khâu trích xuất của LLM khỏi khâu xác định hiệu lực quyết định, sử dụng bộ kiểm chứng trích dẫn nguyên văn 100% kết hợp với động cơ quy tắc cứng theo dòng thời gian (*Exact Substring Verification + Deterministic Timeline Engine*).
+* **Phần quan trọng nhất:** Tách rời hoàn toàn khâu đọc hiểu trích xuất của AI khỏi khâu phân định hiệu lực quyết định. AI chỉ trích xuất câu chữ và dẫn chứng nguyên văn; sau đó bộ quy tắc logic bằng code sẽ kiểm tra tuần tự theo dòng thời gian (*Exact Substring Verification + Timeline Logic Engine*).
 * **Vì sao tin là khả thi:** 
-  Trong thực tế họp hành, rủi ro nghiêm trọng nhất là ghi nhận sai quyết định (người tham gia ban đầu đề xuất Phương án A, sau đó đổi ý chốt Phương án B) hoặc gán nhầm trách nhiệm công việc cho người chỉ được nhắc tên gián tiếp. Nếu để LLM tự do tóm tắt hoặc dùng tìm kiếm tương đồng (RAG), mô hình rất dễ gặp ảo giác, coi cả ý kiến đề xuất ban đầu và kết luận mới đều là quyết định có hiệu lực.
-  Bằng cách bắt buộc mọi trích dẫn chứng cứ phải khớp nguyên văn từng chữ trong biên bản gốc, sau đó để Deterministic Timeline Engine kiểm tra tuần tự 4 điều kiện: (1) Không ràng buộc điều kiện, (2) Đúng người có thẩm quyền, (3) Không có ý kiến phản đối sau cùng, (4) Không bị rút lại hoặc thay thế ở phát biểu muộn hơn, hệ thống triệt tiêu nguy cơ chốt nhầm. Thực nghiệm chứng minh hệ thống đạt 0 wrong decided trên 20 cuộc họp tập phát triển (in-sample).
+  Trong thực tế họp hành, rủi ro tai hại nhất là ghi nhận sai quyết định (người tham gia ban đầu đề xuất Phương án A, sau đó đổi ý chốt Phương án B) hoặc gán nhầm trách nhiệm công việc cho người chỉ được nhắc tên gián tiếp. Nếu để AI tự do tóm tắt hoặc dùng tìm kiếm ngữ nghĩa (RAG), mô hình rất dễ gặp ảo giác, coi cả ý kiến đề xuất ban đầu và kết luận mới đều là các quyết định song song.
+  Bằng cách bắt buộc mọi trích dẫn chứng cứ phải khớp nguyên văn từng chữ trong biên bản gốc, sau đó dùng code logic kiểm tra tuần tự 4 điều kiện: (1) Không ràng buộc điều kiện treo, (2) Đúng người có quyền theo quy chế công ty, (3) Không có ý kiến phản đối sau cùng, (4) Không bị đổi ý hoặc thay thế ở phát biểu muộn hơn, hệ thống triệt tiêu nguy cơ chốt nhầm. Thực nghiệm chứng minh hệ thống đạt 0 lỗi chốt nhầm trên toàn bộ 20 cuộc họp tập phát triển.
 
 ### Câu hỏi 2: So với kế hoạch ở Mission 1, bạn đã thay đổi quyết định hoặc thiết kế nào? Điều gì trong quá trình làm khiến bạn thay đổi?
 
-* **Loại bỏ mô hình Reranker bên ngoài:** Ban đầu dự kiến dùng một mô hình LLM riêng để xếp hạng lại tài liệu quy định công ty trước khi đưa vào ngữ cảnh. Tuy nhiên qua thực nghiệm, các tài liệu dự án thường ngắn gọn; việc nạp trực tiếp toàn bộ tài liệu vào bộ nhớ vừa nhanh hơn, vừa loại bỏ phụ thuộc mạng và tiết kiệm chi phí gọi API.
-* **Cơ chế Evidence Asymmetry khi xử lý ý kiến phản đối:** Ban đầu nếu nhãn trích dẫn bị lệch định dạng dù chỉ một ký tự, hệ thống sẽ loại bỏ nhãn đó. Tuy nhiên, nếu loại bỏ một nhãn phản đối hoặc đảo chiều ý kiến, hệ thống có thể vô tình xác nhận một quyết định vốn đã bị bác bỏ trong thực tế. Vì vậy, hệ thống áp dụng cơ chế bất đối xứng: câu phản đối dù trích dẫn chưa chuẩn tuyệt đối vẫn được bảo lưu để hạ cấp quyết định về "Nghiêng về", tuân thủ nguyên tắc thà rà soát thêm còn hơn chốt thiếu căn cứ.
-* **Chuyển bộ đánh giá an toàn sang chế độ cảnh báo (Advisory Mode):** Ban đầu dự kiến để bộ đánh giá phụ tự động hạ cấp quyết định (Downgrade Mode). Thực nghiệm cho thấy bộ đánh giá phụ có thể phân tích sai các câu đồng thuận ngắn và hạ cấp sai lệch quyết định đã đồng thuận (như ca `g12`). Chuyển sang Advisory Mode giúp hệ thống vừa bảo đảm an toàn dữ liệu, vừa tránh gây phiền hà cho người vận hành.
+* **Loại bỏ mô hình Reranker bên ngoài:** Ban đầu dự kiến dùng một mô hình AI riêng để xếp hạng lại tài liệu quy định công ty trước khi đưa vào ngữ cảnh. Tuy nhiên qua thực nghiệm, các tài liệu dự án thường ngắn gọn; việc nạp trực tiếp toàn bộ tài liệu vào bộ nhớ vừa nhanh hơn, vừa loại bỏ phụ thuộc mạng và tiết kiệm chi phí gọi API.
+* **Nguyên tắc an toàn khi xử lý ý kiến phản đối:** Ban đầu nếu nhãn trích dẫn bị lệch định dạng dù chỉ một ký tự, hệ thống sẽ loại bỏ nhãn đó. Tuy nhiên, nếu loại bỏ một nhãn phản đối hoặc đổi ý, hệ thống có thể vô tình xác nhận một quyết định vốn đã bị bác bỏ trong thực tế. Vì vậy, hệ thống áp dụng nguyên tắc thận trọng: câu phản đối dù trích dẫn chưa chuẩn tuyệt đối vẫn được bảo lưu để hạ cấp quyết định về "Nghiêng về", tuân thủ nguyên tắc thà rà soát thêm còn hơn chốt thiếu căn cứ.
+* **Chuyển bộ đánh giá an toàn sang chế độ cảnh báo (Advisory Mode):** Ban đầu dự kiến để mô hình kiểm toán phụ tự động hạ cấp quyết định. Thực nghiệm cho thấy mô hình phụ có thể nhầm lẫn trước các câu nói do dự và hạ cấp oan quyết định đã được đồng thuận (như ca `g12`). Chuyển sang chế độ cảnh báo giúp hệ thống vừa bảo đảm an toàn dữ liệu, vừa tránh gây phiền hà cho người vận hành.
 
 ### Câu hỏi 3: Loại thông tin nào hệ thống hiện dễ ghi nhận sai nhất? Bạn đang làm gì để tránh tạo ra một quyết định, công việc hoặc dữ liệu không thực sự tồn tại trong cuộc họp?
 
 * **Thông tin dễ sai nhất:** Xác định người nhận việc khi người tham gia chỉ được nhắc tên gián tiếp ("chắc Nam làm được việc này"), các phát biểu ngập ngừng do dự ("để em xem lại đã", "chắc là được"), và các đầu việc trao đổi quá vắn tắt ở những giây cuối buổi họp.
 * **Giải pháp kiểm soát và phòng ngừa:**
-  1. **Hedge Language Detection:** Nhận diện các câu nói ngập ngừng, thăm dò; nếu phát hiện, hệ thống không tự động gán tên người đó mà chuyển về trạng thái cần xác nhận (`assignee: null`, cờ `assignee_only_mentioned`).
-  2. **Kiểm soát ma trận thẩm quyền nghiêm ngặt (Decision Rights Matrix):** Chỉ những người có vai trò phù hợp trong ma trận quyền hạn mới có thể chốt các chủ đề tương ứng (ví dụ: chỉ Tech Lead mới có quyền chốt kiến trúc kỹ thuật; thành viên thông thường kết luận sẽ tự động đưa về "Nghiêng về").
+  1. **Nhận diện phát biểu do dự:** Tự động phát hiện các câu nói ngập ngừng, thăm dò; nếu phát hiện, hệ thống không tự động gán tên người đó mà chuyển về trạng thái cần xác nhận (`assignee: null`, gắn cờ `assignee_only_mentioned`).
+  2. **Kiểm soát chặt chẽ theo bảng phân quyền công ty (Decision Rights):** Chỉ những người có vai trò phù hợp trong quy chế phân quyền mới có thể chốt các chủ đề tương ứng (ví dụ: chỉ Tech Lead mới có quyền chốt kiến trúc kỹ thuật; thành viên không có quyền kết luận sẽ tự động được đưa về "Nghiêng về").
   3. **Hàng chờ duyệt (Review Queue) cho con người:** Toàn bộ các trường hợp có cờ cảnh báo nghi vấn đều được đưa vào hàng chờ duyệt trên giao diện để người chủ trì rà soát và phê duyệt với một thao tác, ngăn chặn triệt để dữ liệu sai lệch lọt vào cơ sở tri thức doanh nghiệp.
 
 ---
