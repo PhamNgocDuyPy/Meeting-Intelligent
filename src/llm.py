@@ -51,11 +51,13 @@ def _extract_json(text: str) -> dict:
         raise
 
 
-def _post_with_retry(url: str, headers: dict, payload: dict, tries: int = 5, timeout: int = 120) -> dict:
+def _post_with_retry(url: str, headers: dict, payload: dict, tries: int = 5, timeout: int = 120, fail_fast_on_429: bool = False) -> dict:
     last = None
     for i in range(tries):
         try:
             r = requests.post(url, headers=headers, json=payload, timeout=timeout)
+            if r.status_code == 429 and fail_fast_on_429:
+                raise LLMError(f"HTTP 429 RateLimit/Quota: {r.text[:200]}")
             if r.status_code in (429, 500, 502, 503, 504):
                 last = f"HTTP {r.status_code}: {r.text[:200]}"
                 time.sleep(min(2 ** i * 2, 30))
@@ -104,8 +106,9 @@ def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
 
 def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
     key = os.environ.get("GEMINI_API_KEY")
+    has_nvidia = bool(os.environ.get("NVIDIA_API_KEY"))
     if not key:
-        if os.environ.get("NVIDIA_API_KEY"):
+        if has_nvidia:
             return call_nvidia_text(system, user, temperature)
         raise LLMError("Thiếu GEMINI_API_KEY (hoặc NVIDIA_API_KEY dự phòng).")
     model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
@@ -116,11 +119,13 @@ def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
         "generationConfig": {"temperature": temperature, "responseMimeType": "application/json"},
     }
     try:
-        data = _post_with_retry(url, {"x-goog-api-key": key, "Content-Type": "application/json"}, payload)
+        # Nếu đã có NVIDIA Nemotron dự phòng, bật fail_fast_on_429 để chuyển ngay sang Nemotron thay vì ngủ 60s
+        data = _post_with_retry(url, {"x-goog-api-key": key, "Content-Type": "application/json"}, payload,
+                                tries=2 if has_nvidia else 4, fail_fast_on_429=has_nvidia)
         return data["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
-        if os.environ.get("NVIDIA_API_KEY"):
-            print(f"[FALLBACK] Gemini lỗi ({e}), chuyển sang dự phòng NVIDIA NIM...", file=sys.stderr)
+        if has_nvidia:
+            print(f"[FALLBACK] Gemini gặp sự cố ({e}), lập tức chuyển sang dự phòng NVIDIA NIM (Nemotron)...", file=sys.stderr)
             return call_nvidia_text(system, user, temperature)
         raise LLMError(f"Gemini API gặp sự cố ({e}) và chưa cấu hình NVIDIA_API_KEY để kích hoạt mô hình dự phòng.")
 

@@ -29,7 +29,7 @@ from src.pipeline import MEETINGS, list_meetings, run_meeting
 
 # Giới hạn an toàn trực tuyến
 _IP_REQUESTS: dict[str, list[float]] = {}
-RATE_LIMIT_PER_MINUTE = int(os.environ.get("RATE_LIMIT_PER_MINUTE", 30))
+RATE_LIMIT_PER_MINUTE = int(os.environ.get("RATE_LIMIT_PER_MINUTE", 60))
 
 _DAILY_COUNTER = {"date": "", "count": 0}
 DAILY_RUN_LIMIT = int(os.environ.get("DAILY_RUN_LIMIT", 100))
