@@ -225,6 +225,8 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
                 "title": title,
                 "date": date_str,
                 "project": "aurora",
+                "mode": payload.get("mode", "consensus"),
+                "leader": payload.get("leader", "").strip(),
                 "purpose": title,
                 "agenda": [title],
                 "attendees": speakers

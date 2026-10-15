@@ -221,6 +221,9 @@ function setupEventListeners() {
   if (btnSubmitUpload) {
     btnSubmitUpload.addEventListener("click", async () => {
       const title = document.getElementById("inp-title").value.trim() || "Cuộc họp mới";
+      const date = (document.getElementById("inp-date")?.value || "2026-10-15").trim();
+      const mode = document.getElementById("sel-mode")?.value || "consensus";
+      const leader = document.getElementById("inp-leader")?.value.trim() || "";
       const transcript = document.getElementById("inp-transcript").value.trim();
 
       if (!transcript) {
@@ -235,13 +238,13 @@ function setupEventListeners() {
       });
 
       btnSubmitUpload.disabled = true;
-      btnSubmitUpload.textContent = "đang phân tích...";
+      btnSubmitUpload.textContent = "Đang phân tích...";
 
       try {
         const res = await fetch("/api/upload", {
           method: "POST",
           headers: getAuthHeaders({ "Content-Type": "application/json" }),
-          body: JSON.stringify({ title, transcript, roles, access_code: getAccessCode() })
+          body: JSON.stringify({ title, date, mode, leader, transcript, roles, access_code: getAccessCode() })
         });
 
         if (res.status === 401) {

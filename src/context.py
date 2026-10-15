@@ -122,7 +122,16 @@ def load_context(root: Path, meeting_dir: Path, use_jev_rerank: bool = False,
     custom_mode = brief.get("mode")
     leader_name = brief.get("leader")
 
-    if custom_roles is not None:
+    if custom_mode == "consensus" and (custom_roles is None or all(r == "member" for r in custom_roles.values())):
+        # Chế độ họp đồng thuận: Mọi người tham gia đều được công nhận và có quyền biểu quyết
+        rights = {cat: {"mode": "consensus"} for cat in ["scope", "technical", "design", "budget", "release", "process", "other"]}
+        all_speakers = list(dict.fromkeys(list(brief.get("attendees", [])) + (list(custom_roles.keys()) if custom_roles else [])))
+        for name in all_speakers:
+            s_name = str(name).strip()
+            entry = {"id": norm_plain(s_name), "name": s_name, "title": "Thành viên", "roles": ["member"], "known": True}
+            index[norm_plain(s_name)] = entry
+            attendees.append(entry)
+    elif custom_roles is not None:
         # Chế độ gán vai trò trực tiếp trong bộ nhớ cho lần chạy này (không ghi file)
         # Giữ nguyên bảng thẩm quyền chuẩn của công ty (decision_rights.yaml)
         all_speakers = list(dict.fromkeys(list(brief.get("attendees", [])) + list(custom_roles.keys())))
@@ -135,17 +144,9 @@ def load_context(root: Path, meeting_dir: Path, use_jev_rerank: bool = False,
                 "name": s_name,
                 "title": f"Vai trò: {role}",
                 "roles": roles,
-                "known": (role != "member")
+                "known": True
             }
             index[norm_plain(s_name)] = entry
-            attendees.append(entry)
-    elif custom_mode == "consensus":
-        # Chế độ họp đồng thuận: Mọi người tham gia đều được công nhận và có quyền biểu quyết
-        rights = {cat: {"mode": "consensus"} for cat in ["scope", "technical", "design", "budget", "release", "process", "other"]}
-        for ref in brief.get("attendees", []):
-            name = str(ref)
-            entry = {"id": norm_plain(name), "name": name, "title": "Thành viên", "roles": ["member"], "known": True}
-            index[norm_plain(name)] = entry
             attendees.append(entry)
     elif leader_name:
         # Chế độ chỉ định người chủ trì / chốt quyền

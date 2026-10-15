@@ -3,7 +3,7 @@
 # mode=consensus: cả nhóm đồng thuận (>= nửa số người dự, tối thiểu 2), không cần vai trò đặc biệt.
 categories:
   scope:     {mode: authority, roles: [pm, head_of_product]}
-  technical: {mode: authority, roles: [tech_lead]}
+  technical: {mode: authority, roles: [tech_lead, pm]}
   design:    {mode: authority, roles: [design_lead, head_of_product]}
   budget:    {mode: authority, roles: [head_of_product, finance]}
   release:   {mode: authority, roles: [head_of_product]}
