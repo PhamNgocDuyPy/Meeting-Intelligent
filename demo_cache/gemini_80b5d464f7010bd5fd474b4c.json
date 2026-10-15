@@ -1,0 +1,1 @@
+{"topics": [{"topic_id": "T1", "title": "Chốt A", "category": "other", "options": [{"option_id": "A", "label": "A"}]}], "labels": [{"utterance_id": "U001", "topic_id": "T1", "option_id": "A", "stance": "conclude", "conditional": false, "condition_text": null, "quote": "Chốt A."}], "items": []}
