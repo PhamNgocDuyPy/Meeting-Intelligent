@@ -41,10 +41,19 @@ _load_dotenv()
 
 def _extract_json(text: str) -> dict:
     text = text.strip()
-    text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text)
+    # 1. Thử bóc khối ```json ... ``` hoặc ``` ... ``` nếu có
+    fence_m = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.S)
+    if fence_m:
+        try:
+            return json.loads(fence_m.group(1))
+        except json.JSONDecodeError:
+            pass
+    # 2. Thử parse trực tiếp sau khi cắt bỏ markdown ở đầu/cuối
+    cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", text).strip()
     try:
-        return json.loads(text)
+        return json.loads(cleaned)
     except json.JSONDecodeError:
+        # 3. Tìm khối {...} rộng nhất
         m = re.search(r"\{.*\}", text, re.S)
         if m:
             return json.loads(m.group(0))
@@ -90,8 +99,9 @@ def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
         ],
         "temperature": temperature,
         "max_tokens": 4096,
+        "chat_template_kwargs": {"thinking": False},
     }
-    data = _post_with_retry(url, headers, payload)
+    data = _post_with_retry(url, headers, payload, tries=3, timeout=45)
     try:
         msg = data["choices"][0]["message"]
         content = msg.get("content")
@@ -104,9 +114,17 @@ def call_nvidia_text(system: str, user: str, temperature: float = 0.0) -> str:
         raise LLMError(f"Phản hồi NVIDIA không hợp lệ: {str(data)[:300]}")
 
 
+_GEMINI_COOLDOWN_UNTIL = 0.0
+
+
 def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
+    global _GEMINI_COOLDOWN_UNTIL
     key = os.environ.get("GEMINI_API_KEY")
     has_nvidia = bool(os.environ.get("NVIDIA_API_KEY"))
+    now = time.time()
+    if has_nvidia and now < _GEMINI_COOLDOWN_UNTIL:
+        return call_nvidia_text(system, user, temperature)
+
     if not key:
         if has_nvidia:
             return call_nvidia_text(system, user, temperature)
@@ -125,6 +143,9 @@ def call_gemini_text(system: str, user: str, temperature: float = 0.0) -> str:
         return data["candidates"][0]["content"]["parts"][0]["text"]
     except Exception as e:
         if has_nvidia:
+            # Nếu là lỗi 402 (hết tiền prepay) hoặc RESOURCE_EXHAUSTED/403, đặt cooldown 10 phút để gọi thẳng NVIDIA
+            if any(k in str(e) for k in ("402", "RESOURCE_EXHAUSTED", "403")):
+                _GEMINI_COOLDOWN_UNTIL = time.time() + 600
             print(f"[FALLBACK] Gemini gặp sự cố ({e}), lập tức chuyển sang dự phòng NVIDIA NIM (Nemotron)...", file=sys.stderr)
             return call_nvidia_text(system, user, temperature)
         raise LLMError(f"Gemini API gặp sự cố ({e}) và chưa cấu hình NVIDIA_API_KEY để kích hoạt mô hình dự phòng.")
@@ -245,9 +266,18 @@ def generate_json(backend: str, system: str, user: str, model_cls: Type[T], repa
             raw_data = json.loads(target.read_text(encoding="utf-8"))
             return raw_data if model_cls is dict else model_cls.model_validate(raw_data)
 
+    current_backend = backend
     prompt, last_err = user, None
     for _ in range(repairs + 1):
-        text = _BACKENDS[backend](system, prompt)
+        try:
+            text = _BACKENDS[current_backend](system, prompt)
+        except Exception as e:
+            if current_backend == "gemini" and os.environ.get("NVIDIA_API_KEY"):
+                print(f"[FALLBACK] Chuyển hoàn toàn backend sang NVIDIA NIM: {e}", file=sys.stderr)
+                current_backend = "nvidia"
+                text = _BACKENDS["nvidia"](system, prompt)
+            else:
+                raise
         try:
             obj = _extract_json(text)
             parsed = obj if model_cls is dict else model_cls.model_validate(obj)

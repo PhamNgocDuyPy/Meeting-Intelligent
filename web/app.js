@@ -240,12 +240,27 @@ function setupEventListeners() {
       btnSubmitUpload.disabled = true;
       btnSubmitUpload.textContent = "Đang phân tích...";
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
       try {
         const res = await fetch("/api/upload", {
           method: "POST",
           headers: getAuthHeaders({ "Content-Type": "application/json" }),
-          body: JSON.stringify({ title, date, mode, leader, transcript, roles, access_code: getAccessCode() })
+          body: JSON.stringify({
+            title,
+            date,
+            mode,
+            leader,
+            transcript,
+            roles,
+            judge: state.judge || "jev",
+            backend: state.backend || "gemini",
+            access_code: getAccessCode()
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (res.status === 401) {
           showToast("Mã truy cập không hợp lệ (401). Vui lòng nhập đúng ACCESS_CODE.");
@@ -255,21 +270,29 @@ function setupEventListeners() {
             modalEl.style.borderColor = "#ef4444";
           }
           btnSubmitUpload.disabled = false;
-          btnSubmitUpload.textContent = "phân tích ngay";
+          btnSubmitUpload.textContent = "Phân Tích Ngay";
           return;
         }
 
-        const data = await res.json();
+        const contentType = res.headers.get("content-type") || "";
+        let data = {};
+        if (contentType.includes("application/json")) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(`Máy chủ phản hồi HTTP ${res.status}: ${text.slice(0, 150)}`);
+        }
+
         if (data.error) {
           showToast("Lỗi: " + data.error);
           btnSubmitUpload.disabled = false;
-          btnSubmitUpload.textContent = "phân tích ngay";
+          btnSubmitUpload.textContent = "Phân Tích Ngay";
           return;
         }
 
         uploadModal.classList.add("hidden");
         btnSubmitUpload.disabled = false;
-        btnSubmitUpload.textContent = "phân tích ngay";
+        btnSubmitUpload.textContent = "Phân Tích Ngay";
 
         await fetchMeetingList();
         if (data.new_meeting_id) {
@@ -282,9 +305,14 @@ function setupEventListeners() {
           showToast(`Đã phân tích thành công [${data.new_meeting_id}]!`);
         }
       } catch (err) {
-        showToast("Lỗi kết nối máy chủ: " + err.message);
+        clearTimeout(timeoutId);
+        if (err.name === "AbortError") {
+          showToast("Quá thời gian chờ (60s). Máy chủ hoặc mô hình AI phản hồi quá lâu.");
+        } else {
+          showToast("Lỗi kết nối máy chủ: " + err.message);
+        }
         btnSubmitUpload.disabled = false;
-        btnSubmitUpload.textContent = "phân tích ngay";
+        btnSubmitUpload.textContent = "Phân Tích Ngay";
       }
     });
   }
