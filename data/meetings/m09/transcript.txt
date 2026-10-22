@@ -1,0 +1,17 @@
+[00:01:15] Hoàng: Chào cả đội, hôm nay chúng ta có buổi họp kỹ thuật dài dự kiến hơn một tiếng để giải quyết bài toán tái cấu trúc toàn diện hệ thống.
+[00:04:30] Tuấn: Đầu tiên về phần kiến trúc tổng thể, tôi đề xuất chúng ta tiếp tục giữ mô hình Monolith nguyên khối để team đẩy nhanh tiến độ bàn giao.
+[00:09:45] Dũng: Tôi thấy Monolith ban đầu thì nhanh nhưng sau này rất khó scale khi lượng người dùng đồng thời tăng vọt, bảo trì sẽ cực kỳ mệt.
+[00:15:20] Lan: Đúng vậy, tôi đề xuất chuyển sang Microservices hoàn toàn để các phân hệ có thể độc lập deploy và scale riêng rẽ.
+[00:22:10] Tuấn: Nhưng Microservices thì chi phí hạ tầng và việc vận hành Kubernetes cho một team nhỏ như chúng ta là quá đắt đỏ và phức tạp.
+[00:29:40] Bảo: Về phía tài chính, em cũng lưu ý các anh là chi phí cloud cho cụm Microservices sẽ vượt quá hạn mức ngân sách quý 4 này.
+[00:36:15] Lan: Nhưng nếu cứ giữ Monolith thuần túy thì tech debt sau này ai sẽ đứng ra chịu trách nhiệm gánh?
+[00:44:50] Sơn: Tôi đề xuất một phương án thỏa hiệp rất thực tế: áp dụng kiến trúc Modular Monolith, vừa tiết kiệm chi phí vừa tách module rõ ràng.
+[00:52:10] Dũng: Tôi ủng hộ đề xuất của Sơn. Modular Monolith giải quyết được cả bài toán chi phí hạ tầng lẫn cấu trúc code gọn gàng cho team.
+[00:59:30] Tuấn: Tôi cũng thấy hợp lý, tôi đồng ý bỏ đề xuất Monolith cũ để chuyển sang ủng hộ Modular Monolith.
+[01:06:40] Lan: Tôi cũng rút lại đề xuất Microservices vì vấn đề rào cản ngân sách, hoàn toàn nhất trí phương án Modular Monolith.
+[01:12:00] Hoàng: Với tư cách Tech Lead phụ trách kỹ thuật, tôi chốt chính thức phương án Modular Monolith cho toàn bộ dự án.
+[01:14:20] Hoàng: Về mặt tri thức dài hạn, toàn bộ hệ thống từ nay thống nhất chuẩn hóa kiến trúc Modular Monolith và cơ sở dữ liệu PostgreSQL cho mọi module.
+[01:17:45] Tuấn: Em tự nhận sẽ dựng môi trường staging cho cấu trúc Modular Monolith trước ngày 2026-10-30.
+[01:20:10] Lan: Em sẽ viết test plan chi tiết cho phần kiểm thử hồi quy của kiến trúc mới trước thứ Sáu tuần sau.
+[01:23:00] Bảo: Còn vấn đề báo giá license của Datadog và chứng chỉ SSL wildcard thì bên đối tác chưa gửi lại, mục này em xin phép để buổi sau báo cáo tiếp nhé.
+[01:24:45] Hoàng: Nhất trí, cảm ơn cả đội. Buổi họp hôm nay đến đây là kết thúc.

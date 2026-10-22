@@ -514,24 +514,35 @@ function renderInspector() {
     `;
   }
 
-  // 2. VIỆC CẦN LÀM (TASKS)
-  const taskItems = filteredItems.filter(it => it.kind === "task");
+  // 2. BẢNG VIỆC TÁC NGHIỆP (TASKS & REQUESTS)
+  const taskItems = filteredItems.filter(it => it.kind === "task" || it.kind === "request");
   if (taskItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title">Danh Sách Việc Cần Làm (${taskItems.length})</div>
+        <div class="sec-title">Bảng Việc Tác Nghiệp (Sprint / Dự Án) (${taskItems.length})</div>
         ${taskItems.map((it, idx) => renderTaskCard(it, idx)).join("")}
       </section>
     `;
   }
 
-  // 3. VƯỚNG MẮC / YÊU CẦU / TRI THỨC MỚI
-  const otherItems = filteredItems.filter(it => it.kind !== "task");
-  if (otherItems.length > 0) {
+  // 3. KHO TRI THỨC TỔ CHỨC (DÙNG LÂU DÀI - KNOWLEDGE)
+  const knowledgeItems = filteredItems.filter(it => it.kind === "knowledge");
+  if (knowledgeItems.length > 0) {
     html += `
       <section class="inspector-section">
-        <div class="sec-title">Vướng Mắc & Tri Thức Khác (${otherItems.length})</div>
-        ${otherItems.map((it, idx) => renderOtherItemCard(it, idx)).join("")}
+        <div class="sec-title">Kho Tri Thức Tổ Chức (Dùng Lâu Dài) (${knowledgeItems.length})</div>
+        ${knowledgeItems.map((it, idx) => renderKnowledgeCard(it, idx)).join("")}
+      </section>
+    `;
+  }
+
+  // 4. VẤN ĐỀ CHƯA CHỐT & TẮC NGHẼN (UNRESOLVED & BLOCKERS)
+  const unresolvedItems = filteredItems.filter(it => it.kind === "open_question" || it.kind === "issue" || it.kind === "feedback");
+  if (unresolvedItems.length > 0) {
+    html += `
+      <section class="inspector-section">
+        <div class="sec-title">Vấn Đề Chưa Chốt & Tắc Nghẽn (Cần Làm Rõ) (${unresolvedItems.length})</div>
+        ${unresolvedItems.map((it, idx) => renderOtherItemCard(it, idx)).join("")}
       </section>
     `;
   }
@@ -610,6 +621,32 @@ function renderTopicCard(t) {
     `;
   }
 
+  // Decision Journey
+  let journeyHtml = "";
+  if (t.decision_journey && t.decision_journey.length > 0) {
+    const phaseIcons = {
+      proposal: "💡",
+      discussion: "💬",
+      modification: "🔄",
+      resolution: "⚖️"
+    };
+    journeyHtml = `
+      <div class="decision-journey-wrap">
+        <div class="decision-journey-title">TIẾN TRÌNH RA QUYẾT ĐỊNH (DECISION JOURNEY):</div>
+        <div class="decision-journey-steps">
+          ${t.decision_journey.map(step => `
+            <div class="journey-step-row" data-uid="${step.utterance_id}">
+              <span class="journey-phase-badge ${step.phase}">${phaseIcons[step.phase] || "•"} ${escapeHtml(step.phase_vi)}</span>
+              <span class="journey-speaker">${escapeHtml(step.speaker)}</span>
+              <span class="journey-action">${escapeHtml(step.action)}</span>
+              <span class="journey-quote" title="Bấm để xem phát biểu gốc">“${escapeHtml(step.quote)}”</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
   // Review status
   const currentReview = state.reviews[tid] || "";
   const isApproved = currentReview === "approved";
@@ -630,6 +667,8 @@ function renderTopicCard(t) {
         ${outcomeHtml}
         ${supersededHtml ? `<span style="color:var(--text-muted);font-size:12px;margin-left:8px;">Đã thay thế:</span> ${supersededHtml}` : ''}
       </div>
+
+      ${journeyHtml}
 
       ${t.flags && t.flags.length ? `
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
@@ -658,6 +697,12 @@ function renderTopicCard(t) {
   `;
 }
 
+function getUtteranceTs(uid) {
+  if (!uid || !state.meetingData || !state.meetingData.transcript) return "";
+  const u = state.meetingData.transcript.find(x => x.id === uid);
+  return u && u.ts_label ? u.ts_label : "";
+}
+
 function renderTaskCard(it, idx) {
   const iid = `item-task-${idx}`;
   const isAssigneeVerified = it.assignee && it.assignee_basis in { assigned: 1, self_accepted: 1 };
@@ -670,6 +715,8 @@ function renderTaskCard(it, idx) {
     : `<span class="badge-deadline">Hạn: ${it.deadline_text || 'Chưa rõ'}</span>`;
 
   const primaryUid = it.utterance_ids && it.utterance_ids[0] ? it.utterance_ids[0] : "";
+  const ts = getUtteranceTs(primaryUid);
+  const tsBadge = ts ? `<span class="quote-ts">[${ts}]</span> ` : "";
 
   return `
     <div class="task-item" id="${iid}">
@@ -681,7 +728,7 @@ function renderTaskCard(it, idx) {
         </div>
       </div>
       <div class="task-quote" data-uid="${primaryUid}" title="Bấm để cuộn đến phát biểu nguồn trong transcript">
-        “${escapeHtml(it.quote)}” <span style="font-size:11.5px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
+        ${tsBadge}“${escapeHtml(it.quote)}” <span style="font-size:11.5px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
       </div>
       ${it.flags && it.flags.length ? `
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
@@ -692,9 +739,42 @@ function renderTaskCard(it, idx) {
   `;
 }
 
+function renderKnowledgeCard(it, idx) {
+  const iid = `item-k-${idx}`;
+  const primaryUid = it.utterance_ids && it.utterance_ids[0] ? it.utterance_ids[0] : "";
+  const ts = getUtteranceTs(primaryUid);
+  const tsBadge = ts ? `<span class="quote-ts">[${ts}]</span> ` : "";
+  const catNames = {
+    architecture: "Kiến Trúc Kỹ Thuật (ADR)",
+    policy: "Chính Sách & Quy Chuẩn",
+    lesson_learned: "Bài Học Kinh Nghiệm",
+    general: "Tri Thức Dài Hạn"
+  };
+  const catLabel = catNames[it.knowledge_category] || "Tri Thức Dài Hạn";
+
+  return `
+    <div class="knowledge-card" id="${iid}">
+      <div class="k-header">
+        <span class="badge-knowledge-cat">${escapeHtml(catLabel)}</span>
+        <span class="k-title">${escapeHtml(it.title)}</span>
+      </div>
+      <div class="task-quote" data-uid="${primaryUid}" title="Bấm để cuộn đến nguồn trong transcript">
+        ${tsBadge}“${escapeHtml(it.quote)}” <span style="font-size:11.5px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
+      </div>
+      ${it.flags && it.flags.length ? `
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+          ${it.flags.map(f => `<span class="flag-chip">Cờ: ${f}</span>`).join("")}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
 function renderOtherItemCard(it, idx) {
   const iid = `item-other-${idx}`;
   const primaryUid = it.utterance_ids && it.utterance_ids[0] ? it.utterance_ids[0] : "";
+  const ts = getUtteranceTs(primaryUid);
+  const tsBadge = ts ? `<span class="quote-ts">[${ts}]</span> ` : "";
   const kindVi = { issue: "Vướng mắc", request: "Yêu cầu", feedback: "Góp ý", open_question: "Câu hỏi mở", knowledge: "Tri thức mới" }[it.kind] || it.kind;
 
   return `
@@ -704,7 +784,7 @@ function renderOtherItemCard(it, idx) {
         <span class="status-badge open">${kindVi}</span>
       </div>
       <div class="task-quote" data-uid="${primaryUid}" title="Bấm để cuộn đến phát biểu nguồn trong transcript">
-        “${escapeHtml(it.quote)}”
+        ${tsBadge}“${escapeHtml(it.quote)}” <span style="font-size:11.5px;color:var(--text-muted)">(${it.utterance_ids.join(", ")})</span>
       </div>
     </div>
   `;
@@ -812,7 +892,15 @@ function matchesFilter(item, type) {
     return type === "topic" && item.status === "decided";
   }
   if (state.activeFilter === "tasks") {
-    return type === "item" && item.kind === "task";
+    return type === "item" && (item.kind === "task" || item.kind === "request");
+  }
+  if (state.activeFilter === "knowledge") {
+    return type === "item" && item.kind === "knowledge";
+  }
+  if (state.activeFilter === "unresolved") {
+    if (type === "topic") return item.status === "open" || item.status === "leaning";
+    if (type === "item") return item.kind === "open_question" || item.kind === "issue";
+    return false;
   }
   if (state.activeFilter === "review-queue") {
     if (type === "topic") return item.status === "leaning" || item.needs_confirmation || (item.flags && item.flags.length > 0);
@@ -832,15 +920,22 @@ function updateSummaryStats() {
   const items = state.meetingData.items || [];
 
   const decidedCount = topics.filter(t => t.status === "decided").length;
-  const tasksCount = items.filter(it => it.kind === "task").length;
+  const tasksCount = items.filter(it => it.kind === "task" || it.kind === "request").length;
+  const knowledgeCount = items.filter(it => it.kind === "knowledge").length;
   const supersededCount = topics.filter(t => t.superseded && t.superseded.length > 0).length;
   const reviewCount = topics.filter(t => t.status === "leaning" || (t.flags && t.flags.length > 0)).length +
                       items.filter(it => it.flags && it.flags.length > 0).length;
 
-  document.getElementById("stat-decided").textContent = decidedCount;
-  document.getElementById("stat-tasks").textContent = tasksCount;
-  document.getElementById("stat-superseded").textContent = supersededCount;
-  document.getElementById("review-count").textContent = reviewCount;
+  const elDecided = document.getElementById("stat-decided");
+  if (elDecided) elDecided.textContent = decidedCount;
+  const elTasks = document.getElementById("stat-tasks");
+  if (elTasks) elTasks.textContent = tasksCount;
+  const elKnowledge = document.getElementById("stat-knowledge");
+  if (elKnowledge) elKnowledge.textContent = knowledgeCount;
+  const elSuperseded = document.getElementById("stat-superseded");
+  if (elSuperseded) elSuperseded.textContent = supersededCount;
+  const elReview = document.getElementById("review-count");
+  if (elReview) elReview.textContent = reviewCount;
 }
 
 function batchApproveSafeItems() {

@@ -1,0 +1,18 @@
+id: m09
+title: "Họp toàn thể kỹ thuật: Tái cấu trúc kiến trúc hệ thống (1h25)"
+date: "2026-10-22"
+project: aurora
+mode: authority
+leader: Hoàng
+purpose: "Đánh giá và chốt kiến trúc hệ thống, phân bổ công việc sprint và quy chuẩn kỹ thuật dài hạn"
+agenda:
+  - "Lựa chọn kiến trúc hệ thống: Monolith vs Microservices vs Modular Monolith"
+  - "Quy chuẩn cơ sở dữ liệu và lưu trữ dữ liệu"
+  - "Phân công công việc sprint và rà soát ngân sách"
+attendees:
+  - Hoàng
+  - Tuấn
+  - Dũng
+  - Lan
+  - Bảo
+  - Sơn

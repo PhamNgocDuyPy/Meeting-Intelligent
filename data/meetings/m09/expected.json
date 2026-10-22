@@ -1,0 +1,23 @@
+{
+  "difficulty": "dài 1h25: tranh luận 3 phương án A->B->C, chốt C, supersedes A&B, tri thức ADR, phân việc và blocker",
+  "topics": [
+    {
+      "keywords": ["kiến trúc", "modular monolith"],
+      "status": "decided",
+      "final_option_keywords": ["modular monolith"],
+      "superseded_keywords": ["monolith", "microservices"]
+    }
+  ],
+  "tasks": [
+    {
+      "keywords": ["staging"],
+      "assignee": "Tuấn",
+      "deadline": "2026-10-30"
+    },
+    {
+      "keywords": ["test plan"],
+      "assignee": "Lan",
+      "deadline": "2026-10-30"
+    }
+  ]
+}

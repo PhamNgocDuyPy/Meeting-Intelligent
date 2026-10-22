@@ -1,0 +1,155 @@
+{
+  "topics": [
+    {
+      "topic_id": "t_arch",
+      "title": "Kiến trúc hệ thống phần mềm",
+      "category": "technical",
+      "options": [
+        {
+          "option_id": "opt_mono",
+          "label": "Monolith"
+        },
+        {
+          "option_id": "opt_micro",
+          "label": "Microservices"
+        },
+        {
+          "option_id": "opt_modular",
+          "label": "Modular Monolith"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "utterance_id": "U002",
+      "topic_id": "t_arch",
+      "option_id": "opt_mono",
+      "stance": "propose",
+      "conditional": false,
+      "quote": "đề xuất chúng ta tiếp tục giữ mô hình Monolith nguyên khối"
+    },
+    {
+      "utterance_id": "U003",
+      "topic_id": "t_arch",
+      "option_id": "opt_mono",
+      "stance": "oppose",
+      "conditional": false,
+      "quote": "rất khó scale khi lượng người dùng đồng thời tăng vọt"
+    },
+    {
+      "utterance_id": "U004",
+      "topic_id": "t_arch",
+      "option_id": "opt_micro",
+      "stance": "propose",
+      "conditional": false,
+      "quote": "đề xuất chuyển sang Microservices hoàn toàn"
+    },
+    {
+      "utterance_id": "U005",
+      "topic_id": "t_arch",
+      "option_id": "opt_micro",
+      "stance": "oppose",
+      "conditional": false,
+      "quote": "chi phí hạ tầng và việc vận hành Kubernetes cho một team nhỏ như chúng ta là quá đắt đỏ"
+    },
+    {
+      "utterance_id": "U006",
+      "topic_id": "t_arch",
+      "option_id": "opt_micro",
+      "stance": "oppose",
+      "conditional": false,
+      "quote": "chi phí cloud cho cụm Microservices sẽ vượt quá hạn mức ngân sách"
+    },
+    {
+      "utterance_id": "U008",
+      "topic_id": "t_arch",
+      "option_id": "opt_modular",
+      "stance": "propose",
+      "conditional": false,
+      "quote": "đề xuất một phương án thỏa hiệp rất thực tế: áp dụng kiến trúc Modular Monolith"
+    },
+    {
+      "utterance_id": "U009",
+      "topic_id": "t_arch",
+      "option_id": "opt_modular",
+      "stance": "support",
+      "conditional": false,
+      "quote": "ủng hộ đề xuất của Sơn"
+    },
+    {
+      "utterance_id": "U010",
+      "topic_id": "t_arch",
+      "option_id": "opt_mono",
+      "stance": "reverse",
+      "conditional": false,
+      "quote": "đồng ý bỏ đề xuất Monolith cũ"
+    },
+    {
+      "utterance_id": "U011",
+      "topic_id": "t_arch",
+      "option_id": "opt_micro",
+      "stance": "reverse",
+      "conditional": false,
+      "quote": "rút lại đề xuất Microservices"
+    },
+    {
+      "utterance_id": "U012",
+      "topic_id": "t_arch",
+      "option_id": "opt_modular",
+      "stance": "conclude",
+      "conditional": false,
+      "quote": "chốt chính thức phương án Modular Monolith cho toàn bộ dự án"
+    }
+  ],
+  "items": [
+    {
+      "kind": "knowledge",
+      "title": "Chuẩn hóa kiến trúc Modular Monolith và cơ sở dữ liệu PostgreSQL",
+      "detail": null,
+      "utterance_ids": [
+        "U013"
+      ],
+      "quote": "toàn bộ hệ thống từ nay thống nhất chuẩn hóa kiến trúc Modular Monolith và cơ sở dữ liệu PostgreSQL cho mọi module",
+      "assignee": null,
+      "assignee_basis": "none",
+      "deadline_text": null
+    },
+    {
+      "kind": "task",
+      "title": "Dựng môi trường staging cho cấu trúc Modular Monolith",
+      "detail": null,
+      "utterance_ids": [
+        "U014"
+      ],
+      "quote": "dựng môi trường staging cho cấu trúc Modular Monolith",
+      "assignee": "Tuấn",
+      "assignee_basis": "self_accepted",
+      "deadline_text": "2026-10-30"
+    },
+    {
+      "kind": "task",
+      "title": "Viết test plan cho phần kiểm thử hồi quy của kiến trúc mới",
+      "detail": null,
+      "utterance_ids": [
+        "U015"
+      ],
+      "quote": "viết test plan chi tiết cho phần kiểm thử hồi quy của kiến trúc mới",
+      "assignee": "Lan",
+      "assignee_basis": "self_accepted",
+      "deadline_text": "thứ Sáu tuần sau"
+    },
+    {
+      "kind": "open_question",
+      "title": "Báo giá license Datadog và chứng chỉ SSL wildcard",
+      "detail": null,
+      "utterance_ids": [
+        "U016"
+      ],
+      "quote": "vấn đề báo giá license của Datadog và chứng chỉ SSL wildcard thì bên đối tác chưa gửi lại",
+      "assignee": null,
+      "assignee_basis": "none",
+      "deadline_text": null
+    }
+  ]
+}

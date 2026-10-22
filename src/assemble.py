@@ -10,7 +10,19 @@ from .schema import ItemOut, Label, LabelerOutput, TopicDef, Utterance, Validati
 from .textnorm import contains_word, normalize
 
 NEGATIVE = {"reverse", "oppose", "defer"}
-HEDGE = re.compile(r"\b(chắc|có lẽ|hình như|nhỉ|không biết|để (mình |em |anh |chị )?xem|thử xem)\b", re.IGNORECASE)
+HEDGE = re.compile(r"\b(chắc|có lẽ|hình như|nhỉ|không biết|để (mình |em |anh |chị )?xem|thử xem|chưa chắc)\b", re.IGNORECASE)
+OPINION_INQUIRY = re.compile(r"\b(nghĩ sao|thấy sao|ý kiến gì|thấy thế nào|nghĩ thế nào|có biết|có nhớ|chia sẻ|nhắc đến|từng làm|quan điểm|có rảnh|rảnh không)\b", re.IGNORECASE)
+
+
+def _categorize_knowledge(title: str, text: str) -> str:
+    combined = f"{title} {text}".lower()
+    if re.search(r"\b(kiến trúc|microservice|cluster|database|postgres|redis|grpc|api|schema|ha|failover)\b", combined):
+        return "architecture"
+    elif re.search(r"\b(quy định|chính sách|quy trình|tuân thủ|bảo mật|quy ước)\b", combined):
+        return "policy"
+    elif re.search(r"\b(bài học|kinh nghiệm|lưu ý|sự cố|postmortem|rút kinh nghiệm)\b", combined):
+        return "lesson_learned"
+    return "general"
 
 
 def validate_labels(out: LabelerOutput, by_id: dict[str, Utterance]) -> tuple[list[Label], ValidationReport]:
@@ -53,17 +65,20 @@ def assignment_ok(it, utts_list: list[Utterance], by_id: dict[str, Utterance], c
     cited = [by_id[u] for u in it.utterance_ids if u in by_id]
     if not cited:
         return False
-    # 1) câu nêu tên người nhận bởi người khác mà có từ do dự hoặc là câu hỏi -> chỉ nhắc tên
+    # 1) câu nêu tên người nhận bởi người khác mà có từ do dự, hỏi ý kiến hoặc là câu hỏi -> chỉ nhắc tên
     for u in cited:
         if contains_word(u.text, it.assignee) and not _same_person(u.speaker, it.assignee, ctx):
-            if HEDGE.search(normalize(u.text)) or u.text.rstrip().endswith("?"):
+            norm_text = normalize(u.text)
+            if HEDGE.search(norm_text) or OPINION_INQUIRY.search(norm_text) or u.text.rstrip().endswith("?"):
                 return False
-    # 2) trong 2 phát biểu kế tiếp, chính người đó trả lời do dự -> chưa nhận
+    # 2) trong 2 phát biểu kế tiếp, chính người đó trả lời do dự hoặc từ chối -> chưa nhận
     last = max(u.idx for u in cited)
     next_utts = [u for u in utts_list if last < u.idx <= last + 2]
     for u in next_utts:
-        if _same_person(u.speaker, it.assignee, ctx) and HEDGE.search(normalize(u.text)):
-            return False
+        if _same_person(u.speaker, it.assignee, ctx):
+            norm_u = normalize(u.text)
+            if HEDGE.search(norm_u) or OPINION_INQUIRY.search(norm_u) or re.search(r"\b(không làm được|bận|chưa nhận|khó lắm|chưa rõ)\b", norm_u):
+                return False
     return True
 
 
@@ -129,10 +144,11 @@ def build_items(out: LabelerOutput, by_id: dict[str, Utterance], ctx: ContextPac
         else:
             assignee, basis, deadline_text = None, "none", None
 
+        k_cat = _categorize_knowledge(it.title, cited_text) if it.kind == "knowledge" else None
         prio = {"task": 1 if assignee else 2, "issue": 2, "request": 2}.get(it.kind, 3)
         items.append(ItemOut(kind=it.kind, title=it.title, detail=it.detail, utterance_ids=it.utterance_ids, quote=it.quote,
                              assignee=assignee, assignee_basis=basis, deadline_text=deadline_text,
-                             deadline_date=deadline_date, flags=flags, priority=prio))
+                             deadline_date=deadline_date, flags=flags, priority=prio, knowledge_category=k_cat))
     rep.items_valid = len(items)
     return items
 

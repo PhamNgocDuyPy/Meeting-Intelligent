@@ -19,6 +19,14 @@ def resolve_deadline(text: Optional[str], meeting_date: Optional[str]) -> Option
         return None
     t = norm_plain(text)
 
+    # 0) yyyy-mm-dd (ISO date)
+    m_iso = re.search(r"(?<!\d)(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)", text)
+    if m_iso:
+        try:
+            return date(int(m_iso.group(1)), int(m_iso.group(2)), int(m_iso.group(3))).isoformat()
+        except ValueError:
+            return None
+
     # 1) dd/mm(/yyyy) hoặc "ngày dd tháng mm"
     m = re.search(r"(?<!\d)(\d{1,2})\s*/\s*(\d{1,2})(?:\s*/\s*(\d{4}))?(?!\d)", text)
     m2 = re.search(r"ngay (\d{1,2}) thang (\d{1,2})", t)

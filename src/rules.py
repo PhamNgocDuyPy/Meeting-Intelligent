@@ -12,12 +12,19 @@ Thiếu điều kiện nào -> hạ về "Nghiêng về" hoặc "Chưa chốt" +
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import re
 from typing import Optional
 
 from .context import ContextPack
-from .schema import STATUS_VI, Label, TimelineEvent, TopicDef, TopicState, Utterance
+from .schema import STATUS_VI, DecisionJourneyStep, Label, TimelineEvent, TopicDef, TopicState, Utterance
 
 POSITIVE = {"propose", "support", "conclude"}
+
+# Lớp chặn False Decision: Các từ ngữ biểu thị kết luận tạm thời / thử nghiệm / do dự
+TENTATIVE_PHRASE = re.compile(
+    r"\b(trước mắt|tạm thời|thử nghiệm|test thử|làm thử|chạy thử|chắc là|có lẽ|hình như|chờ xem|để xem|xem sao|tạm chốt|tạm tính|chưa chắc)\b",
+    re.IGNORECASE
+)
 
 
 @dataclass
@@ -103,6 +110,18 @@ def evaluate_topic(topic: TopicDef, labels: list[Label], utts: dict[str, Utteran
         else:
             speaker = utts[cand_lb.utterance_id].speaker
             fails = []
+
+            # Chặn False Decision: Nếu phát biểu chốt chứa từ ngữ tạm thời, do dự hoặc thử nghiệm
+            u_text = utts[cand_lb.utterance_id].text
+            check_text = f"{cand_lb.quote} {u_text}".lower()
+            tent_m = TENTATIVE_PHRASE.search(check_text)
+            if tent_m:
+                cand_lb = cand_lb.model_copy(update={
+                    "conditional": True,
+                    "condition_text": f"Phát biểu mang tính tạm thời/thử nghiệm ('{tent_m.group(0)}'); chưa phải quyết định chính thức."
+                })
+                flags.append("tentative_conclusion")
+
             # Lỗ hổng 7: Có bằng chứng phản đối/đảo ngược chưa kiểm chứng được trích dẫn -> không chốt
             if any(getattr(l, "quote_unverified", False) for l in ordered):
                 fails.append("unverified_negative_evidence")
@@ -181,6 +200,8 @@ def evaluate_topic(topic: TopicDef, labels: list[Label], utts: dict[str, Utteran
         if lean is not None:
             state.status, state.leaning_option = "leaning", lean.label
             state.needs_confirmation = True
+            others = [o for o in opts.values() if o.oid != lean.oid and (o.ever_positive or o.last_reverse_idx >= 0)]
+            state.superseded = [o.label for o in others]
         else:
             state.status = "open"
             if not reasons:
@@ -191,7 +212,66 @@ def evaluate_topic(topic: TopicDef, labels: list[Label], utts: dict[str, Utteran
 
     state.status_vi = STATUS_VI[state.status]
     state.flags = list(dict.fromkeys(flags))
+    state.decision_journey = _build_decision_journey(ordered, utts, opts, state)
     return state
+
+
+def _build_decision_journey(ordered: list[Label], utts: dict[str, Utterance], opts: dict[str, _Opt],
+                            state: TopicState) -> list[DecisionJourneyStep]:
+    steps: list[DecisionJourneyStep] = []
+    for lb in ordered:
+        u = utts.get(lb.utterance_id)
+        if not u:
+            continue
+        opt_name = opts[lb.option_id].label if (lb.option_id and lb.option_id in opts) else None
+
+        if lb.stance == "propose":
+            steps.append(DecisionJourneyStep(
+                phase="proposal",
+                phase_vi="Đề xuất ban đầu",
+                speaker=u.speaker,
+                action=f"Đề xuất phương án: {opt_name or 'ý kiến mới'}",
+                quote=lb.quote or u.text,
+                option_label=opt_name,
+                ts_label=u.ts_label,
+                utterance_id=u.id
+            ))
+        elif lb.stance in ("oppose", "defer", "question"):
+            act_text = "Phản đối phương án" if lb.stance == "oppose" else ("Tạm hoãn xem xét" if lb.stance == "defer" else "Đặt câu hỏi / thắc mắc")
+            steps.append(DecisionJourneyStep(
+                phase="discussion",
+                phase_vi="Thảo luận / Phản biện",
+                speaker=u.speaker,
+                action=f"{act_text} ({opt_name or ''})".strip(),
+                quote=lb.quote or u.text,
+                option_label=opt_name,
+                ts_label=u.ts_label,
+                utterance_id=u.id
+            ))
+        elif lb.stance == "reverse":
+            steps.append(DecisionJourneyStep(
+                phase="modification",
+                phase_vi="Thay đổi / Bác bỏ",
+                speaker=u.speaker,
+                action=f"Rút lại / Đổi ý đối với: {opt_name or 'phương án cũ'}",
+                quote=lb.quote or u.text,
+                option_label=opt_name,
+                ts_label=u.ts_label,
+                utterance_id=u.id
+            ))
+        elif lb.stance == "conclude":
+            cond_desc = " (tạm thời / có điều kiện)" if lb.conditional else ""
+            steps.append(DecisionJourneyStep(
+                phase="resolution",
+                phase_vi="Chốt hạ",
+                speaker=u.speaker,
+                action=f"Chốt phương án: {opt_name or state.final_option or ''}{cond_desc}".strip(),
+                quote=lb.quote or u.text,
+                option_label=opt_name,
+                ts_label=u.ts_label,
+                utterance_id=u.id
+            ))
+    return steps
 
 
 def evaluate_all(topics: list[TopicDef], labels: list[Label], utts: dict[str, Utterance], ctx: ContextPack) -> list[TopicState]:

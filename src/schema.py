@@ -102,6 +102,17 @@ class TimelineEvent(BaseModel):
     conditional: bool = False
 
 
+class DecisionJourneyStep(BaseModel):
+    phase: Literal["proposal", "discussion", "modification", "resolution"]
+    phase_vi: str  # "Đề xuất ban đầu", "Thảo luận / Phản biện", "Thay đổi / Bác bỏ", "Chốt hạ"
+    speaker: str
+    action: str
+    quote: str
+    option_label: Optional[str] = None
+    ts_label: str = "--:--:--"
+    utterance_id: str = ""
+
+
 class TopicState(BaseModel):
     topic_id: str
     title: str
@@ -116,6 +127,7 @@ class TopicState(BaseModel):
     explanation: str = ""
     needs_confirmation: bool = False
     timeline: list[TimelineEvent] = Field(default_factory=list)
+    decision_journey: list[DecisionJourneyStep] = Field(default_factory=list)
     evidence_ids: list[str] = Field(default_factory=list)
     judge: Optional[dict] = None
 
@@ -132,6 +144,7 @@ class ItemOut(BaseModel):
     deadline_date: Optional[str] = None  # ISO, chỉ khi suy ra được chắc chắn
     flags: list[str] = Field(default_factory=list)
     priority: int = 3
+    knowledge_category: Optional[str] = None  # "architecture", "policy", "lesson_learned", "convention"
 
 
 class ValidationReport(BaseModel):

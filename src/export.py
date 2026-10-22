@@ -26,20 +26,43 @@ def to_markdown(r: MeetingResult, approved_only: set[str] | None = None) -> str:
                 L.append(f"- {t.explanation}")
             if t.flags:
                 L.append(f"- Cờ: {', '.join(t.flags)}")
-            L.append("- Diễn biến:")
-            for e in t.timeline:
-                L.append(f"  - [{e.ts_label}] {e.speaker} ({e.stance}{', có điều kiện' if e.conditional else ''}): “{e.quote}” `{e.utterance_id}`")
+            if t.decision_journey:
+                L.append("- Tiến trình ra quyết định (Decision Journey):")
+                for step in t.decision_journey:
+                    opt_str = f" [{step.option_label}]" if step.option_label else ""
+                    L.append(f"  * **{step.phase_vi}** ({step.ts_label}): {step.speaker} — {step.action}{opt_str} — “{step.quote}” `{step.utterance_id}`")
+            else:
+                L.append("- Diễn biến:")
+                for e in t.timeline:
+                    L.append(f"  - [{e.ts_label}] {e.speaker} ({e.stance}{', có điều kiện' if e.conditional else ''}): “{e.quote}” `{e.utterance_id}`")
             L.append("")
-    for kind in ("task", "issue", "request", "feedback", "open_question", "knowledge"):
-        its = [(i, it) for i, it in enumerate(r.items) if it.kind == kind and (approved_only is None or f"item{i+1}" in approved_only)]
-        if not its:
-            continue
-        L += [f"## {KIND_VI[kind]}", ""]
-        for _, it in its:
+
+    # 1. Kho tri thức tổ chức (Dùng lâu dài)
+    k_items = [(i, it) for i, it in enumerate(r.items) if it.kind == "knowledge" and (approved_only is None or f"item{i+1}" in approved_only)]
+    if k_items:
+        L += ["## Kho Tri Thức Tổ Chức (Dùng Lâu Dài)", ""]
+        for _, it in k_items:
+            cat_badge = f" `[{it.knowledge_category.upper()}]`" if it.knowledge_category else ""
+            L.append(f"- **{it.title}**{cat_badge}  \n  “{it.quote}” `{', '.join(it.utterance_ids)}`" + (f"  \n  Cờ: {', '.join(it.flags)}" if it.flags else ""))
+        L.append("")
+
+    # 2. Bảng công việc tác nghiệp (Sprint / Dự án)
+    op_items = [(i, it) for i, it in enumerate(r.items) if it.kind in ("task", "request") and (approved_only is None or f"item{i+1}" in approved_only)]
+    if op_items:
+        L += ["## Bảng Công Việc Tác Nghiệp (Sprint / Dự Án)", ""]
+        for _, it in op_items:
             extra = ""
-            if kind == "task":
+            if it.kind == "task":
                 extra = f" — người nhận: **{it.assignee or 'chưa xác định'}** · hạn: **{it.deadline_date or it.deadline_text or 'chưa xác định'}**"
-            L.append(f"- {it.title}{extra}  \n  “{it.quote}” `{', '.join(it.utterance_ids)}`" + (f"  \n  Cờ: {', '.join(it.flags)}" if it.flags else ""))
+            L.append(f"- **[{KIND_VI[it.kind]}]** {it.title}{extra}  \n  “{it.quote}” `{', '.join(it.utterance_ids)}`" + (f"  \n  Cờ: {', '.join(it.flags)}" if it.flags else ""))
+        L.append("")
+
+    # 3. Vấn đề chưa chốt & Tắc nghẽn
+    unresolved_items = [(i, it) for i, it in enumerate(r.items) if it.kind in ("open_question", "issue", "feedback") and (approved_only is None or f"item{i+1}" in approved_only)]
+    if unresolved_items:
+        L += ["## Vấn Đề Chưa Chốt & Tắc Nghẽn (Cần Làm Rõ)", ""]
+        for _, it in unresolved_items:
+            L.append(f"- **[{KIND_VI[it.kind]}]** {it.title}  \n  “{it.quote}” `{', '.join(it.utterance_ids)}`" + (f"  \n  Cờ: {', '.join(it.flags)}" if it.flags else ""))
         L.append("")
     return "\n".join(L)
 
