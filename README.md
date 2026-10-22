@@ -4,7 +4,7 @@ Hệ thống trích xuất dữ liệu có cấu trúc từ biên bản cuộc h
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests: 16/16 Passed](https://img.shields.io/badge/tests-16%2F16%20passed-brightgreen.svg)]()
+[![Tests: 20/20 Passed](https://img.shields.io/badge/tests-20%2F20%20passed-brightgreen.svg)]()
 [![Benchmark: 90% Pass (Dev Set)](https://img.shields.io/badge/benchmark-90%25%20(0%20critical%20errors)-success.svg)]()
 
 ---
@@ -52,7 +52,9 @@ Trong các cuộc họp điều hành và kỹ thuật:
        │
        ▼
 [ Tầng 4: Giao diện duyệt cho con người & Xuất dữ liệu ]
-  • Đánh dấu phát biểu hai chiều: Bấm vào kết luận sẽ tự động cuộn đến và làm sáng câu thoại gốc trong biên bản.
+  • Trực quan hóa Hành trình Quyết định (Decision Journey): Minh họa lộ trình 4 giai đoạn (Đề xuất ➔ Phản biện ➔ Thay đổi ➔ Chốt hạ) theo mốc thời gian.
+  • Đánh dấu phát biểu hai chiều: Bấm vào kết luận/bằng chứng sẽ tự động cuộn đến và làm sáng câu thoại gốc trong biên bản.
+  • Phân định 3 miền dữ liệu riêng biệt: Kho tri thức dài hạn (ADR, quy chế, bài học), Bảng việc tác nghiệp (Người nhận, Hạn chót) và Vấn đề chưa chốt (Blockers/Open Questions).
   • Điều chỉnh bảng phân quyền linh hoạt: Chỉnh sửa trực tiếp quyền hạn theo chức danh ngay trên giao diện theo từng phiên họp.
   • Thao tác phê duyệt 3 trạng thái: Xác nhận (Approve), Chỉnh sửa (Edit), Bác bỏ (Reject).
   • Xuất dữ liệu đa định dạng: Biên bản Markdown (.md), Danh sách việc CSV (.csv), và file chuẩn (.jsonl) cho kho tri thức.
@@ -78,7 +80,7 @@ Sao chép `.env.example` thành `.env` nếu cần phân tích transcript mới 
 ```bash
 cp .env.example .env
 ```
-*Ghi chú: Toàn bộ 26 cuộc họp mẫu đã có sẵn dữ liệu phản hồi trong `demo_cache/`. Bạn có thể chạy kiểm thử và trải nghiệm giao diện đầy đủ mà không bắt buộc phải có API key.*
+*Ghi chú: Toàn bộ 27 cuộc họp mẫu đã có sẵn dữ liệu phản hồi trong `demo_cache/`. Bạn có thể chạy kiểm thử và trải nghiệm giao diện đầy đủ mà không bắt buộc phải có API key.*
 
 ### Bước 3: Khởi chạy Review UI
 ```bash
@@ -105,22 +107,23 @@ python main.py compare outputs/eval_gemini_none.json outputs/eval_gemini_jev.jso
 ```bash
 pytest -v
 ```
-Kết quả: **16/16 tests (Integrity & Mutation Tests) vượt qua thành công.**
+Kết quả: **20/20 tests (Integrity, Mutations & Mission 3 Tests) vượt qua thành công.**
 
 ---
 
-## 4. Bộ Kiểm Thử Mission 2 & Kết Quả Thực Nghiệm
+## 4. Bộ Kiểm Thử & Kết Quả Thực Nghiệm
 
 ### 4.1. Vị trí bộ kiểm thử trong repository
 
 Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh bạch và có thể tái lập 100%:
 * **Dữ liệu kịch bản họp & Nhãn chuẩn đối soát (Ground Truth):**
-  * `data/meetings/`: 20 kịch bản họp chuẩn (`m01`–`m08`, `g01`–`g12`). Mỗi thư mục bao gồm `transcript.txt` (lời thoại), `brief.yaml` (bối cảnh cuộc họp), và `expected.json` (kết quả chuẩn đối soát).
+  * `data/meetings/`: 21 kịch bản họp chuẩn (`m01`–`m09`, `g01`–`g12`). Mỗi thư mục bao gồm `transcript.txt` (lời thoại), `brief.yaml` (bối cảnh cuộc họp), và `expected.json` (kết quả chuẩn đối soát). Đặc biệt `m09` là kịch bản họp kỹ thuật dài (1h25) kiểm thử trọn vẹn diễn biến 3 phương án kiến trúc (A ➔ B ➔ C).
   * `data/independent_tests/meetings/`: 6 kịch bản họp kiểm thử độc lập (`indep_m01`–`indep_m06`).
   * `data/independent_tests/conditional_sentences_60.json`: Bộ 60 phát biểu kiểm thử biên điều kiện.
 * **Mã nguồn kiểm thử tự động (Unit & Mutation Tests):**
   * `tests/test_integrity.py`: 12 test cases tự động kiểm tra chuỗi bằng chứng substring, 4 điều kiện chốt, thẩm quyền (người ngoài vs PM), gán việc và phân giải hạn chót.
   * `tests/test_mutations.py`: 4 test cases kiểm thử đột biến (mutation testing) đánh giá khả năng phòng thủ trước ảo giác (trích dẫn giả mạo, gài bẫy người nhận việc).
+  * `tests/test_mission3.py`: 4 test cases kiểm tra diễn biến quyết định (Decision Journey), phân loại tri thức dài hạn, chuẩn hóa ngày ISO và chặn gán nhầm việc khi thăm dò ý kiến đồng nghiệp.
 * **Tài liệu phân tích chuyên sâu:**
   * [docs/TEST_CASES.md](docs/TEST_CASES.md): Mô tả chi tiết các ca kiểm thử tiêu biểu đối chiếu từng câu thoại gốc và bài học rút ra.
   * [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md): Báo cáo đối soát thực nghiệm, số liệu phân tích chuyên sâu và đối chứng bộ đánh giá.
@@ -205,42 +208,17 @@ Nhằm kiểm tra tính tổng quát hóa độc lập ngoài tập phát triể
 ### 4.5. Cơ Chế Bộ Nhớ Đệm Demo Cache (`demo_cache/`)
 
 Để bảo đảm quá trình đánh giá và nghiệm thu diễn ra mượt mà, không phụ thuộc vào tình trạng mạng hay giới hạn hạn mức API:
-1. **Dữ liệu cache chuẩn bị sẵn:** Toàn bộ 707 mục phản hồi của Gemini và Jev cho cả 26 cuộc họp mẫu (`m01`–`m08`, `g01`–`g12`, `indep_m01`–`indep_m06`) đã được lưu trữ trong thư mục `demo_cache/` (dung lượng 0.31 MB) và quản lý trực tiếp trong Git repository.
+1. **Dữ liệu cache chuẩn bị sẵn:** Toàn bộ phản hồi của Gemini và Jev cho cả 27 cuộc họp mẫu (`m01`–`m09`, `g01`–`g12`, `indep_m01`–`indep_m06`) đã được lưu trữ trong thư mục `demo_cache/` (dung lượng ~0.35 MB) và quản lý trực tiếp trong Git repository.
 2. **Kiểm tra an toàn dữ liệu:** Thư mục `demo_cache/` đã được quét tự động bằng regex chuyên dụng, **bảo đảm 100% không chứa API key, mật mã hay token riêng tư**.
 3. **Cơ chế nạp ưu tiên:** Trong [src/llm.py](src/llm.py), cả hai hàm `generate_json` và `call_jev` luôn kiểm tra thư mục `demo_cache/` đầu tiên trước khi gọi ra API bên ngoài.
 4. **Lợi ích khi đánh giá & kiểm thử thực tế:**
-   * Người đánh giá có thể xem và phân tích lại bất kỳ cuộc họp mẫu nào trong 26 cuộc họp với tốc độ phản hồi tức thì (~50ms).
+   * Người đánh giá có thể xem và phân tích lại bất kỳ cuộc họp mẫu nào trong 27 cuộc họp với tốc độ phản hồi tức thì (~50ms).
    * Hệ thống hoạt động 100% ổn định kể cả khi API key hết hạn mức (quota = 0) hoặc chưa cấu hình biến môi trường trên Render.
    * Chỉ khi người dùng tải lên transcript mới chưa từng có trong cache, hệ thống mới gọi API bên ngoài (có trần 100 lượt/ngày bảo vệ).
 
 ---
 
-## 5. Trả Lời 3 Câu Hỏi Bắt Buộc
-
-### Câu hỏi 1: Phần quan trọng nhất bạn chọn để hiện thực hóa trong MVP là gì? Vì sao nếu phần này hoạt động, bạn tin rằng hướng giải quyết của mình là khả thi?
-
-* **Phần quan trọng nhất:** Tách rời hoàn toàn khâu đọc hiểu trích xuất của AI khỏi khâu phân định hiệu lực quyết định. AI chỉ trích xuất câu chữ và dẫn chứng nguyên văn; sau đó bộ quy tắc logic bằng code sẽ kiểm tra tuần tự theo dòng thời gian (*Exact Substring Verification + Timeline Logic Engine*).
-* **Vì sao tin là khả thi:** 
-  Trong thực tế họp hành, rủi ro tai hại nhất là ghi nhận sai quyết định (người tham gia ban đầu đề xuất Phương án A, sau đó đổi ý chốt Phương án B) hoặc gán nhầm trách nhiệm công việc cho người chỉ được nhắc tên gián tiếp. Nếu để AI tự do tóm tắt hoặc dùng tìm kiếm ngữ nghĩa (RAG), mô hình rất dễ gặp ảo giác, coi cả ý kiến đề xuất ban đầu và kết luận mới đều là các quyết định song song.
-  Bằng cách bắt buộc mọi trích dẫn chứng cứ phải khớp nguyên văn từng chữ trong biên bản gốc, sau đó dùng code logic kiểm tra tuần tự 4 điều kiện: (1) Không ràng buộc điều kiện treo, (2) Đúng người có quyền theo quy chế công ty, (3) Không có ý kiến phản đối sau cùng, (4) Không bị đổi ý hoặc thay thế ở phát biểu muộn hơn, hệ thống triệt tiêu nguy cơ chốt nhầm. Thực nghiệm chứng minh hệ thống đạt 0 lỗi chốt nhầm trên toàn bộ 20 cuộc họp tập phát triển.
-
-### Câu hỏi 2: So với kế hoạch ở Mission 1, bạn đã thay đổi quyết định hoặc thiết kế nào? Điều gì trong quá trình làm khiến bạn thay đổi?
-
-* **Loại bỏ mô hình Reranker bên ngoài:** Ban đầu dự kiến dùng một mô hình AI riêng để xếp hạng lại tài liệu quy định công ty trước khi đưa vào ngữ cảnh. Tuy nhiên qua thực nghiệm, các tài liệu dự án thường ngắn gọn; việc nạp trực tiếp toàn bộ tài liệu vào bộ nhớ vừa nhanh hơn, vừa loại bỏ phụ thuộc mạng và tiết kiệm chi phí gọi API.
-* **Nguyên tắc an toàn khi xử lý ý kiến phản đối:** Ban đầu nếu nhãn trích dẫn bị lệch định dạng dù chỉ một ký tự, hệ thống sẽ loại bỏ nhãn đó. Tuy nhiên, nếu loại bỏ một nhãn phản đối hoặc đổi ý, hệ thống có thể vô tình xác nhận một quyết định vốn đã bị bác bỏ trong thực tế. Vì vậy, hệ thống áp dụng nguyên tắc thận trọng: câu phản đối dù trích dẫn chưa chuẩn tuyệt đối vẫn được bảo lưu để hạ cấp quyết định về "Nghiêng về", tuân thủ nguyên tắc thà rà soát thêm còn hơn chốt thiếu căn cứ.
-* **Chuyển bộ đánh giá an toàn sang chế độ cảnh báo (Advisory Mode):** Ban đầu dự kiến để mô hình kiểm toán phụ tự động hạ cấp quyết định. Thực nghiệm cho thấy mô hình phụ có thể nhầm lẫn trước các câu nói do dự và hạ cấp oan quyết định đã được đồng thuận (như ca `g12`). Chuyển sang chế độ cảnh báo giúp hệ thống vừa bảo đảm an toàn dữ liệu, vừa tránh gây phiền hà cho người vận hành.
-
-### Câu hỏi 3: Loại thông tin nào hệ thống hiện dễ ghi nhận sai nhất? Bạn đang làm gì để tránh tạo ra một quyết định, công việc hoặc dữ liệu không thực sự tồn tại trong cuộc họp?
-
-* **Thông tin dễ sai nhất:** Xác định người nhận việc khi người tham gia chỉ được nhắc tên gián tiếp ("chắc Nam làm được việc này"), các phát biểu ngập ngừng do dự ("để em xem lại đã", "chắc là được"), và các đầu việc trao đổi quá vắn tắt ở những giây cuối buổi họp.
-* **Giải pháp kiểm soát và phòng ngừa:**
-  1. **Nhận diện phát biểu do dự:** Tự động phát hiện các câu nói ngập ngừng, thăm dò; nếu phát hiện, hệ thống không tự động gán tên người đó mà chuyển về trạng thái cần xác nhận (`assignee: null`, gắn cờ `assignee_only_mentioned`).
-  2. **Kiểm soát chặt chẽ theo bảng phân quyền công ty (Decision Rights):** Chỉ những người có vai trò phù hợp trong quy chế phân quyền mới có thể chốt các chủ đề tương ứng (ví dụ: chỉ Tech Lead mới có quyền chốt kiến trúc kỹ thuật; thành viên không có quyền kết luận sẽ tự động được đưa về "Nghiêng về").
-  3. **Hàng chờ duyệt (Review Queue) cho con người:** Toàn bộ các trường hợp có cờ cảnh báo nghi vấn đều được đưa vào hàng chờ duyệt trên giao diện để người chủ trì rà soát và phê duyệt với một thao tác, ngăn chặn triệt để dữ liệu sai lệch lọt vào cơ sở tri thức doanh nghiệp.
-
----
-
-## 6. Bảo Mật và Bản Quyền
+## 5. Bảo Mật và Bản Quyền
 
 * **Bảo mật dữ liệu:** Hệ thống không lưu trữ API key, mã truy cập hay nội dung phát biểu nhạy cảm vào log. Bản demo trực tuyến có cơ chế xác thực bằng `ACCESS_CODE`, giới hạn tần suất yêu cầu (rate limiting) theo IP và trần số lượt chạy mỗi ngày.
 * **Bản quyền:** Mã nguồn được phát hành theo giấy phép tự do [MIT License](LICENSE).
