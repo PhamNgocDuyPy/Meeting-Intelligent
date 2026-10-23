@@ -622,32 +622,6 @@ function renderTopicCard(t) {
     `;
   }
 
-  // Decision Journey
-  let journeyHtml = "";
-  if (t.decision_journey && t.decision_journey.length > 0) {
-    const phaseIcons = {
-      proposal: "💡",
-      discussion: "💬",
-      modification: "🔄",
-      resolution: "⚖️"
-    };
-    journeyHtml = `
-      <div class="decision-journey-wrap">
-        <div class="decision-journey-title">TIẾN TRÌNH RA QUYẾT ĐỊNH (DECISION JOURNEY):</div>
-        <div class="decision-journey-steps">
-          ${t.decision_journey.map(step => `
-            <div class="journey-step-row" data-uid="${step.utterance_id}">
-              <span class="journey-phase-badge ${step.phase}">${phaseIcons[step.phase] || "•"} ${escapeHtml(step.phase_vi)}</span>
-              <span class="journey-speaker">${escapeHtml(step.speaker)}</span>
-              <span class="journey-action">${escapeHtml(step.action)}</span>
-              <span class="journey-quote" title="Bấm để xem phát biểu gốc">“${escapeHtml(step.quote)}”</span>
-            </div>
-          `).join("")}
-        </div>
-      </div>
-    `;
-  }
-
   // Review status
   const currentReview = state.reviews[tid] || "";
   const isApproved = currentReview === "approved";
@@ -668,8 +642,6 @@ function renderTopicCard(t) {
         ${outcomeHtml}
         ${supersededHtml ? `<span style="color:var(--text-muted);font-size:12px;margin-left:8px;">Đã thay thế:</span> ${supersededHtml}` : ''}
       </div>
-
-      ${journeyHtml}
 
       ${t.flags && t.flags.length ? `
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
