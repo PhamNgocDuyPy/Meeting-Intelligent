@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 Stance = Literal["propose", "support", "oppose", "conclude", "reverse", "defer", "question", "info"]
 Category = Literal["scope", "technical", "design", "budget", "release", "process", "other"]
@@ -26,6 +26,7 @@ class Utterance(BaseModel):
     speaker: str
     text: str
 
+    @computed_field
     @property
     def ts_label(self) -> str:
         if self.ts is None:

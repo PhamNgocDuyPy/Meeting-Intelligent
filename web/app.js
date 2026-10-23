@@ -459,10 +459,11 @@ function renderTranscript() {
 
   feed.innerHTML = utts.map(u => {
     const formattedText = formatTranscriptText(u.text);
+    const tsDisplay = (u.ts_label && u.ts_label !== "--:--:--") ? u.ts_label : formatSecondsToTs(u.ts);
     return `
       <div class="utterance-card" id="utt-${u.id}" data-uid="${u.id}">
         <div class="utt-meta">
-          <span class="utt-ts">[${u.ts_label || "--:--:--"}]</span>
+          <span class="utt-ts">[${tsDisplay}]</span>
           <span class="utt-speaker">${escapeHtml(u.speaker)}</span>
           <span class="utt-id">${u.id}</span>
         </div>
@@ -697,10 +698,21 @@ function renderTopicCard(t) {
   `;
 }
 
+function formatSecondsToTs(sec) {
+  if (sec === null || sec === undefined) return "--:--:--";
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = Math.floor(sec % 60);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
 function getUtteranceTs(uid) {
   if (!uid || !state.meetingData || !state.meetingData.transcript) return "";
   const u = state.meetingData.transcript.find(x => x.id === uid);
-  return u && u.ts_label ? u.ts_label : "";
+  if (!u) return "";
+  if (u.ts_label && u.ts_label !== "--:--:--") return u.ts_label;
+  if (u.ts !== null && u.ts !== undefined) return formatSecondsToTs(u.ts);
+  return "";
 }
 
 function renderTaskCard(it, idx) {
