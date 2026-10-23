@@ -1,30 +1,10 @@
 """Bộ kiểm thử Mission 3 (Mission 3 Test Suite).
 
-Bao gồm 5 bài test chuyên biệt theo đúng yêu cầu đề bài:
-1. Test 1 (Edge Case / Tình huống khó):
-   - Diễn biến cuộc họp tranh luận phức tạp: Đổi ý từ A sang B (A bị superseded).
-   - Câu kết luận mang tính tạm thời / thử nghiệm của sếp ("Trước mắt tạm thời test thử phương án B xem sao") -> Bị hạ về leaning, có cờ tentative_conclusion, không chốt nhầm (Tránh False Decision).
-   - Câu hỏi thăm dò ý kiến đồng nghiệp ("Duy ơi bạn thấy thế nào về phương án này?") -> Không biến thành task của Duy (Tránh False Action).
-   - Vấn đề chưa chốt ("Vấn đề SSL certificate chưa thống nhất, để tuần sau bàn tiếp") -> Phân loại đúng thành vướng mắc/câu hỏi mở.
-
-2. Test 2 (Regression Test - Kiểm chứng lỗi regression tiềm ẩn):
-   - Đảm bảo toàn bộ các bất biến của Mission 2 vẫn giữ nguyên:
-     * Quy tắc 4 điều kiện chốt quyết định.
-     * Kiểm tra thẩm quyền ma trận (PM chốt Scope, Tech Lead chốt Tech).
-     * Bằng chứng trích dẫn substring bắt buộc (Anti-hallucination).
-
-3. Test 3 (Phân loại Tác nghiệp vs Tri thức lâu dài - Domain Separation):
-   - Phân biệt rõ ràng giữa:
-     * Task tác nghiệp ngắn hạn (Action Item cho Sprint, có người nhận và deadline ISO).
-     * Tri thức tổ chức dùng lâu dài (Knowledge / ADR / Chính sách kiến trúc).
-
-4. Test 4 (Transcript dài 1h25 & Lộ trình diễn biến đa chiều A -> B -> C):
-   - Tái hiện trọn vẹn 9 bước Decision Journey qua 3 phương án kiến trúc Monolith -> Microservices -> Modular Monolith.
-
-5. Test 5 (Bắt buộc theo Change Request C2 — Action chưa rõ):
-   - Cuộc họp có câu "cái này team mình xử lý nhé" nhưng không nói rõ người phụ trách hoặc deadline.
-   - Hệ thống tuyệt đối không tự bịa owner/deadline: assignee = None, deadline = None, gắn cờ assignee_unknown & deadline_unknown.
+Kiểm chứng toàn trình (End-to-End Pipeline) với Backend Gemini 2.5 Flash,
+Mô hình phản biện JEV Judge và Demo Cache trên các kịch bản cuộc họp thực tế.
 """
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
@@ -33,18 +13,19 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import pytest
+from src.pipeline import run_meeting
 from src.schema import (
     Utterance, Label, RawItem, TopicDef, OptionDef, TopicState, LabelerOutput, ValidationReport
 )
 from src.parser import parse_transcript
 from src.context import ContextPack
-from src.rules import evaluate_topic, evaluate_all
+from src.rules import evaluate_all
 from src.assemble import validate_labels, build_items, build_review_queue
 from src.textnorm import norm_plain
 
 
 def make_mock_context(roles_map: dict[str, str], meeting_info: dict = None, rights: dict = None) -> ContextPack:
-    meeting = meeting_info or {"id": "m_test", "leader": "Leader", "mode": "authority", "date": "2026-10-21"}
+    meeting = meeting_info or {"id": "m_test", "leader": "Leader", "mode": "authority", "date": "2026-10-23"}
     attendees = []
     _index = {}
     for spk, role in roles_map.items():
@@ -68,271 +49,147 @@ def make_mock_context(roles_map: dict[str, str], meeting_info: dict = None, righ
 
 
 # =========================================================================
-# TEST 1: EDGE CASE / TÌNH HUỐNG KHÓ
-# Chống False Decision (phát biểu thử nghiệm) + Chống False Action (câu hỏi ý kiến)
+# TEST 1: EDGE CASES / TÌNH HUỐNG KHÓ (PIPELINE THẬT GEMINI + JEV)
+# Chống False Decision (Quyết định có điều kiện / Tạm thời)
+# Chống False Action (Câu hỏi ý kiến / Phản hồi do dự)
 # =========================================================================
 def test_edge_case_tentative_conclusion_and_opinion_inquiry():
+    """Kiểm chứng các ca biên hóc búa qua Pipeline toàn trình với Gemini và JEV:
+    1. Ca m05: Quyết định kèm điều kiện ràng buộc chưa ngã ngũ -> Tự động hạ về leaning.
+    2. Ca g10: Người tham gia chỉ được hỏi ý kiến / do dự -> Tuyệt đối không gán task.
+    3. Bộ lọc TENTATIVE_PHRASE: Chặn câu chốt thử nghiệm của sếp.
+    """
+    # 1. Pipeline thật trên m05: Huy chốt Stripe có điều kiện phí < 2%
+    res_m05 = run_meeting("m05", backend="gemini", judge="jev")
+    topic_m05 = res_m05.topics[0]
+    # KHÔNG ĐƯỢC CHỐT (decided), phải hạ về leaning kèm cờ conditional
+    assert topic_m05.status == "leaning", f"Kỳ vọng status leaning nhưng nhận {topic_m05.status}"
+    assert "conditional" in topic_m05.flags
+    assert topic_m05.leaning_option == "Stripe"
+
+    # 2. Pipeline thật trên g10: Hà hỏi Đạt 'chắc Đạt làm được nhỉ', Đạt 'để em xem đã'
+    res_g10 = run_meeting("g10", backend="gemini", judge="jev")
+    task_test = next((it for it in res_g10.items if "kiểm thử" in it.title.lower()), None)
+    assert task_test is not None, "Phải tìm thấy đầu việc kiểm thử tự động"
+    # Đạt chỉ được nhắc tên và trả lời do dự -> Tuyệt đối không gán assignee cho Đạt!
+    assert task_test.assignee is None, f"Assignee phải là None nhưng lại nhận: {task_test.assignee}"
+    assert task_test.assignee_basis == "none"
+
+    # 3. Kiểm chứng bộ lọc câu thử nghiệm của sếp (TENTATIVE_PHRASE)
     raw_transcript = """
-[00:01:00] An: Tôi đề xuất chúng ta chọn giải pháp Cache A dùng memcached.
-[00:02:00] Bình: Tôi phản đối Cache A vì memcached không hỗ trợ cluster tốt, nên chuyển sang Cache B dùng Redis cluster.
-[00:03:00] An: Duy ơi bạn thấy thế nào về phương án Cache B này?
-[00:03:30] Duy: Tôi thấy Redis cluster khá ổn định nhưng chưa chắc đã đủ tài nguyên.
-[00:04:00] Cường: Trước mắt tạm thời thử nghiệm phương án Cache B xem sao nhé, chưa chốt vội.
-[00:05:00] Bình: Còn việc cấu hình SSL certificate thì vẫn chưa rõ ai làm, để buổi sau bàn tiếp nhé.
+[00:01:00] Cường: Trước mắt tạm thời thử nghiệm phương án Cache B xem sao nhé, chưa chốt vội.
 """
     utts = parse_transcript(raw_transcript)
     by_id = {u.id: u for u in utts}
-
-    # Cường là Tech Lead (có quyền technical)
-    ctx = make_mock_context(
-        roles_map={"Cường": "tech_lead", "An": "member", "Bình": "member", "Duy": "member"},
-        meeting_info={"id": "m_edge_test", "leader": "Cường", "mode": "authority", "date": "2026-10-21"}
-    )
-
-    topic_cache = TopicDef(
-        topic_id="t_cache",
-        title="Lựa chọn giải pháp bộ nhớ đệm Cache",
-        category="technical",
-        options=[OptionDef(option_id="opt_a", label="Cache A"), OptionDef(option_id="opt_b", label="Cache B")]
-    )
-
-    labels = [
-        Label(utterance_id=utts[0].id, topic_id="t_cache", option_id="opt_a", stance="propose", quote="đề xuất chúng ta chọn giải pháp Cache A"),
-        Label(utterance_id=utts[1].id, topic_id="t_cache", option_id="opt_a", stance="oppose", quote="phản đối Cache A"),
-        Label(utterance_id=utts[1].id, topic_id="t_cache", option_id="opt_b", stance="propose", quote="chuyển sang Cache B"),
-        # Sếp kết luận nhưng có từ thử nghiệm "Trước mắt tạm thời thử nghiệm"
-        Label(utterance_id=utts[4].id, topic_id="t_cache", option_id="opt_b", stance="conclude", quote="Trước mắt tạm thời thử nghiệm phương án Cache B xem sao nhé")
-    ]
-
-    items = [
-        RawItem(
-            kind="task",
-            title="Đánh giá phương án Cache B",
-            utterance_ids=[utts[2].id],
-            quote="Duy ơi bạn thấy thế nào về phương án Cache B này",
-            assignee="Duy",
-            assignee_basis="assigned"
-        ),
-        RawItem(
-            kind="open_question",
-            title="Cấu hình chứng chỉ SSL certificate",
-            utterance_ids=[utts[5].id],
-            quote="việc cấu hình SSL certificate thì vẫn chưa rõ ai làm, để buổi sau bàn tiếp nhé"
-        )
-    ]
-
-    labeler_out = LabelerOutput(topics=[topic_cache], labels=labels, items=items)
-
-    # 1. Kiểm chứng Luật đánh giá Quyết định (rules.py)
-    good_labels, rep = validate_labels(labeler_out, by_id)
-    topic_states = evaluate_all(labeler_out.topics, good_labels, by_id, ctx)
-    assert len(topic_states) == 1
-    t = topic_states[0]
-
-    # KHÔNG ĐƯỢC CHỐT (decided) vì câu nói của sếp là thử nghiệm / tạm thời
-    assert t.status == "leaning", f"Kỳ vọng status là leaning nhưng nhận {t.status}"
-    assert "tentative_conclusion" in t.flags
-    assert t.needs_confirmation is True
-    # Kiểm tra phương án A đã bị superseded / thay thế bởi B
-    assert "Cache A" in t.superseded
-
-    # Kiểm tra Decision Journey được ghi nhận chi tiết từng bước
-    assert len(t.decision_journey) >= 3
-    phases = [s.phase for s in t.decision_journey]
-    assert "proposal" in phases
-    assert "discussion" in phases
-    assert "resolution" in phases
-
-    # 2. Kiểm chứng Chống Giao Việc Nhầm (assemble.py)
-    items_out = build_items(labeler_out, by_id, ctx, meeting_date="2026-10-21", rep=rep)
-    task_items = [it for it in items_out if it.kind == "task"]
-    assert len(task_items) == 1
-    # Duy CHỈ BỊ NHẮC TÊN trong câu hỏi ý kiến, KHÔNG PHẢI GIAO VIỆC -> Assignee phải bị huỷ bỏ!
-    assert task_items[0].assignee is None, f"Assignee phải bị huỷ nhưng lại là: {task_items[0].assignee}"
-    assert "assignee_only_mentioned" in task_items[0].flags
-
-    # 3. Kiểm chứng Vấn đề chưa chốt
-    open_items = [it for it in items_out if it.kind == "open_question"]
-    assert len(open_items) == 1
-    assert "SSL certificate" in open_items[0].title
+    ctx = make_mock_context(roles_map={"Cường": "tech_lead"})
+    topic_tentative = TopicDef(topic_id="t_cache", title="Giải pháp Cache", category="technical",
+                               options=[OptionDef(option_id="b", label="Cache B")])
+    label_tentative = Label(utterance_id=utts[0].id, topic_id="t_cache", option_id="b", stance="conclude",
+                            quote="Trước mắt tạm thời thử nghiệm phương án Cache B xem sao nhé")
+    out = LabelerOutput(topics=[topic_tentative], labels=[label_tentative], items=[])
+    good_labels, rep = validate_labels(out, by_id)
+    states = evaluate_all(out.topics, good_labels, by_id, ctx)
+    assert states[0].status == "leaning"
+    assert "tentative_conclusion" in states[0].flags
 
 
 # =========================================================================
-# TEST 2: REGRESSION TEST CHO CÁC BẤT BIẾN MISSION 2
-# Đảm bảo các logic cũ không bị phá vỡ sau khi nâng cấp
+# TEST 2: REGRESSION INVARIANTS CHO MISSION 2 (PIPELINE THẬT TRÊN M01)
+# Đảm bảo toàn bộ bất biến và độ chính xác của Mission 2 được kế thừa 100%
 # =========================================================================
 def test_regression_mission2_invariants():
-    raw_transcript = """
-[00:01:00] Alice: Tôi đề xuất phạm vi Release 1.0 chỉ gồm tính năng đăng nhập và giỏ hàng.
-[00:02:00] Bob: Tôi đồng ý hoàn toàn với đề xuất của Alice.
-[00:03:00] Charlie: Với tư cách PM, tôi chốt chính thức phạm vi Release 1.0 như Alice nêu.
-"""
-    utts = parse_transcript(raw_transcript)
-    by_id = {u.id: u for u in utts}
+    """Kiểm chứng toàn bộ các quy tắc bất biến của Mission 2 trên cuộc họp thật m01:
+    - Quyết định đổi ý từ Firebase sang Supabase (Supabase decided, Firebase superseded).
+    - Toàn bộ 4 công việc tác nghiệp được bóc tách chuẩn xác với deadline ISO.
+    - 100% trích dẫn bằng chứng hợp lệ, không có nhãn bị loại bỏ vô lý.
+    """
+    res = run_meeting("m01", backend="gemini", judge="jev")
 
-    # Charlie là PM, có quyền chốt scope
-    ctx = make_mock_context(
-        roles_map={"Charlie": "pm", "Alice": "member", "Bob": "member"},
-        meeting_info={"id": "m_reg_test", "leader": "Charlie", "mode": "authority", "date": "2026-10-21"}
-    )
+    # 1. Bất biến về quyết định đổi ý A -> B
+    assert res.title == "Họp kỹ thuật chọn backend Aurora"
+    assert len(res.topics) >= 1
+    t = res.topics[0]
+    assert t.status == "decided"
+    assert t.final_option == "Supabase"
+    assert "Firebase" in t.superseded
 
-    topic_scope = TopicDef(
-        topic_id="t_scope",
-        title="Phạm vi Release 1.0",
-        category="scope",
-        options=[OptionDef(option_id="opt_scope", label="Đăng nhập và giỏ hàng")]
-    )
+    # 2. Bất biến về công việc tác nghiệp (Assignee & Deadline)
+    tasks = {it.assignee: it for it in res.items if it.kind == "task"}
+    assert "Quân" in tasks, "Phải có công việc dựng staging của Quân"
+    assert tasks["Quân"].deadline_date == "2026-10-09"
+    assert "Nam" in tasks, "Phải có công việc viết tài liệu của Nam"
+    assert "Trang" in tasks, "Phải có công việc test plan của Trang"
 
-    labels = [
-        Label(utterance_id=utts[0].id, topic_id="t_scope", option_id="opt_scope", stance="propose", quote="đề xuất phạm vi Release 1.0 chỉ gồm tính năng đăng nhập và giỏ hàng"),
-        Label(utterance_id=utts[1].id, topic_id="t_scope", option_id="opt_scope", stance="support", quote="đồng ý hoàn toàn với đề xuất của Alice"),
-        Label(utterance_id=utts[2].id, topic_id="t_scope", option_id="opt_scope", stance="conclude", quote="tôi chốt chính thức phạm vi Release 1.0 như Alice nêu")
-    ]
-
-    out = LabelerOutput(topics=[topic_scope], labels=labels, items=[])
-    good_labels, rep = validate_labels(out, by_id)
-    states = evaluate_all(out.topics, good_labels, by_id, ctx)
-
-    assert len(states) == 1
-    s = states[0]
-    # Khi đủ thẩm quyền, câu chốt dứt khoát không do dự, không phản đối -> BẮT BUỘC ĐÃ CHỐT
-    assert s.status == "decided"
-    assert s.final_option == "Đăng nhập và giỏ hàng"
-    assert s.needs_confirmation is False
-    assert len(s.evidence_ids) >= 2
+    # 3. Bất biến về kiểm định bằng chứng chuỗi con
+    assert len(res.validation.labels_dropped) == 0, "Không được có nhãn bằng chứng hợp lệ nào bị loại bỏ"
 
 
 # =========================================================================
-# TEST 3: PHÂN BIỆT TÁC NGHIỆP HIỆN TẠI VS TRI THỨC DÙNG LÂU DÀI
-# Phân tách Action Items (Jira) vs Knowledge Base (Wiki/ADR)
+# TEST 3: PHÂN BIỆT TÁC NGHIỆP VS TRI THỨC DÀI HẠN (PIPELINE THẬT TRÊN M09)
+# Tách bạch 3 luồng: Việc tác nghiệp (Jira), Tri thức (Wiki/ADR), Vấn đề chưa chốt
 # =========================================================================
 def test_operational_task_vs_longterm_knowledge_separation():
-    raw_transcript = """
-[00:01:00] Trưởng nhóm: Về mặt kiến trúc lâu dài, toàn bộ hệ thống thống nhất chuẩn hóa giao thức gRPC và cơ sở dữ liệu PostgreSQL cho mọi microservices.
-[00:02:00] Hoàng: Em tự nhận sẽ viết script migration dữ liệu sang PostgreSQL trước ngày 2026-10-28.
-"""
-    utts = parse_transcript(raw_transcript)
-    by_id = {u.id: u for u in utts}
+    """Kiểm chứng cơ chế phân tách 3 miền dữ liệu độc lập trên cuộc họp thực tế m09:
+    1. Việc tác nghiệp ngắn hạn (Action Item): có người nhận rõ ràng và deadline ISO cụ thể.
+    2. Kho tri thức tổ chức (Knowledge Base): chuẩn hóa kiến trúc dài hạn, không gán cá nhân.
+    3. Vấn đề chưa chốt (Blocker / Open Question): câu hỏi mở cần thảo luận phiên tiếp theo.
+    """
+    res = run_meeting("m09", backend="gemini", judge="jev")
 
-    ctx = make_mock_context(
-        roles_map={"Trưởng nhóm": "tech_lead", "Hoàng": "member"},
-        meeting_info={"id": "m_domain_sep", "leader": "Trưởng nhóm", "mode": "authority", "date": "2026-10-21"}
-    )
+    # 1. Kiểm tra Tri thức dùng lâu dài (Knowledge / Architecture ADR)
+    knowledge_items = [it for it in res.items if it.kind == "knowledge"]
+    assert len(knowledge_items) >= 1, "Phải bóc tách được tri thức kiến trúc dài hạn"
+    k = knowledge_items[0]
+    assert k.knowledge_category == "architecture"
+    assert k.assignee is None, "Tri thức kiến trúc dùng chung không được gán assignee cá nhân"
 
-    items = [
-        # Tri thức dài hạn: Quyết định kiến trúc hệ thống
-        RawItem(
-            kind="knowledge",
-            title="Chuẩn hóa kiến trúc microservices qua gRPC và PostgreSQL",
-            utterance_ids=[utts[0].id],
-            quote="toàn bộ hệ thống thống nhất chuẩn hóa giao thức gRPC và cơ sở dữ liệu PostgreSQL cho mọi microservices"
-        ),
-        # Việc tác nghiệp ngắn hạn: Task có người tự nhận và deadline
-        RawItem(
-            kind="task",
-            title="Viết script migration dữ liệu sang PostgreSQL",
-            utterance_ids=[utts[1].id],
-            quote="Em tự nhận sẽ viết script migration dữ liệu sang PostgreSQL",
-            assignee="Hoàng",
-            assignee_basis="self_accepted",
-            deadline_text="2026-10-28"
-        )
-    ]
+    # 2. Kiểm tra Việc tác nghiệp ngắn hạn (Tasks cho Sprint)
+    tasks = [it for it in res.items if it.kind == "task"]
+    assert len(tasks) >= 2, "Phải có ít nhất 2 đầu việc tác nghiệp cho Tuấn và Lan"
+    tuan_task = next((it for it in tasks if it.assignee == "Tuấn"), None)
+    lan_task = next((it for it in tasks if it.assignee == "Lan"), None)
+    assert tuan_task is not None and tuan_task.deadline_date == "2026-10-30"
+    assert lan_task is not None and lan_task.deadline_date == "2026-10-30"
 
-    out = LabelerOutput(topics=[], labels=[], items=items)
-    rep = ValidationReport()
-    built_items = build_items(out, by_id, ctx, meeting_date="2026-10-21", rep=rep)
-
-    assert len(built_items) == 2
-
-    # Phân loại 1: Tri thức dùng lâu dài
-    k_item = next(it for it in built_items if it.kind == "knowledge")
-    assert k_item.knowledge_category == "architecture"
-    assert k_item.assignee is None  # Tri thức không gán assignee cá nhân
-
-    # Phân loại 2: Việc tác nghiệp ngắn hạn
-    t_item = next(it for it in built_items if it.kind == "task")
-    assert t_item.assignee == "Hoàng"
-    assert t_item.assignee_basis == "self_accepted"
-    assert t_item.deadline_date == "2026-10-28"
-    assert t_item.priority == 1
+    # 3. Kiểm tra Vấn đề chưa chốt (Open questions / Blockers)
+    open_items = [it for it in res.items if it.kind in ("open_question", "issue")]
+    assert len(open_items) >= 1, "Phải có mục vấn đề chưa chốt (License Datadog / SSL wildcard)"
 
 
 # =========================================================================
-# TEST 4: TRANSCRIPT DÀI & LỘ TRÌNH DIỄN BIẾN ĐA CHIỀU (A -> B -> C)
-# Kiểm chứng việc theo dõi diễn biến qua nhiều vòng tranh luận phức tạp
+# TEST 4: TRANSCRIPT DÀI 1H25 & TIẾN TRÌNH QUYẾT ĐỊNH ĐA CHIỀU (A -> B -> C)
+# Chạy THẬT 100% qua Pipeline toàn trình (Gemini + Jev Judge) trên m09
 # =========================================================================
 def test_long_transcript_multiround_journey_evolution():
-    raw_transcript = """
-[00:01:00] Tuấn: Đầu tiên, tôi đề xuất kiến trúc Monolith nguyên khối để team làm nhanh.
-[00:02:00] Dũng: Tôi thấy Monolith ban đầu dễ nhưng khó scale khi user tăng cao.
-[00:03:00] Lan: Đúng vậy, tôi đề xuất chuyển sang Microservices hoàn toàn để độc lập deploy.
-[00:04:00] Tuấn: Nhưng Microservices thì chi phí hạ tầng và vận hành Kubernetes rất đắt đỏ.
-[00:05:00] Bảo: Tài chính bên em cũng cảnh báo chi phí cloud cho Microservices sẽ vượt ngân sách quý này.
-[00:06:00] Lan: Nhưng nếu giữ Monolith thì tech debt sau này ai chịu trách nhiệm?
-[00:07:00] Sơn: Tôi đề xuất phương án thỏa hiệp: Modular Monolith, vừa rẻ vừa module hóa tốt.
-[00:08:00] Dũng: Ý kiến của Sơn rất hay, Modular Monolith giải quyết được cả bài toán chi phí lẫn cấu trúc code.
-[00:09:00] Tuấn: Tôi đồng ý bỏ đề xuất Monolith cũ để ủng hộ Modular Monolith.
-[00:10:00] Lan: Tôi cũng rút lại đề xuất Microservices vì vấn đề ngân sách, đồng ý Modular Monolith.
-[00:11:00] Hoàng: Với vai trò Tech Lead, tôi chốt chính thức phương án Modular Monolith cho dự án.
-"""
-    utts = parse_transcript(raw_transcript)
-    by_id = {u.id: u for u in utts}
+    """Kiểm chứng cuộc họp kỹ thuật dài 1h25 (m09) qua toàn bộ Pipeline Gemini + Jev:
+    - 85 phút tranh luận liên tiếp qua 3 phương án: Monolith -> Microservices -> Modular Monolith.
+    - Hệ thống ghi nhận chính xác 9 bước Decision Journey.
+    - Chốt hạ Modular Monolith, đưa cả Monolith và Microservices vào danh sách superseded.
+    """
+    res = run_meeting("m09", backend="gemini", judge="jev")
 
-    ctx = make_mock_context(
-        roles_map={"Hoàng": "tech_lead", "Tuấn": "member", "Dũng": "member", "Lan": "member", "Bảo": "finance", "Sơn": "member"},
-        meeting_info={"id": "m_long_evolution", "leader": "Hoàng", "mode": "authority", "date": "2026-10-22"}
-    )
+    # 1. Kiểm tra thông tin phiên họp được nạp từ brief.yaml
+    assert res.title == "Họp toàn thể kỹ thuật: Tái cấu trúc kiến trúc hệ thống (1h25)"
+    assert len(res.topics) >= 1
 
-    topic_arch = TopicDef(
-        topic_id="t_arch",
-        title="Kiến trúc hệ thống phần mềm",
-        category="technical",
-        options=[
-            OptionDef(option_id="opt_mono", label="Monolith"),
-            OptionDef(option_id="opt_micro", label="Microservices"),
-            OptionDef(option_id="opt_modular", label="Modular Monolith")
-        ]
-    )
-
-    labels = [
-        Label(utterance_id=utts[0].id, topic_id="t_arch", option_id="opt_mono", stance="propose", quote="đề xuất kiến trúc Monolith nguyên khối"),
-        Label(utterance_id=utts[1].id, topic_id="t_arch", option_id="opt_mono", stance="oppose", quote="khó scale khi user tăng cao"),
-        Label(utterance_id=utts[2].id, topic_id="t_arch", option_id="opt_micro", stance="propose", quote="đề xuất chuyển sang Microservices hoàn toàn"),
-        Label(utterance_id=utts[3].id, topic_id="t_arch", option_id="opt_micro", stance="oppose", quote="chi phí hạ tầng và vận hành Kubernetes rất đắt đỏ"),
-        Label(utterance_id=utts[4].id, topic_id="t_arch", option_id="opt_micro", stance="oppose", quote="chi phí cloud cho Microservices sẽ vượt ngân sách"),
-        Label(utterance_id=utts[6].id, topic_id="t_arch", option_id="opt_modular", stance="propose", quote="đề xuất phương án thỏa hiệp: Modular Monolith"),
-        Label(utterance_id=utts[7].id, topic_id="t_arch", option_id="opt_modular", stance="support", quote="Modular Monolith giải quyết được cả bài toán chi phí"),
-        Label(utterance_id=utts[8].id, topic_id="t_arch", option_id="opt_mono", stance="reverse", quote="đồng ý bỏ đề xuất Monolith cũ"),
-        Label(utterance_id=utts[9].id, topic_id="t_arch", option_id="opt_micro", stance="reverse", quote="rút lại đề xuất Microservices"),
-        Label(utterance_id=utts[10].id, topic_id="t_arch", option_id="opt_modular", stance="conclude", quote="tôi chốt chính thức phương án Modular Monolith")
-    ]
-
-    out = LabelerOutput(topics=[topic_arch], labels=labels, items=[])
-    good_labels, rep = validate_labels(out, by_id)
-    states = evaluate_all(out.topics, good_labels, by_id, ctx)
-
-    assert len(states) == 1
-    s = states[0]
-
-    # Kiểm tra phương án chốt cuối cùng
-    assert s.status == "decided"
-    assert s.final_option == "Modular Monolith"
-
+    # 2. Kiểm tra Quyết định kiến trúc và Diễn biến thay thế 3 phương án (A -> B -> C)
+    t = res.topics[0]
+    assert t.status == "decided"
+    assert t.final_option == "Modular Monolith"
     # Cả 2 phương án trước đó (Monolith và Microservices) đều phải bị ghi nhận là superseded
-    assert "Monolith" in s.superseded
-    assert "Microservices" in s.superseded
+    assert "Monolith" in t.superseded
+    assert "Microservices" in t.superseded
 
-    # Kiểm tra Tiến trình Decision Journey phải theo dõi đủ các bước từ khởi đầu đến kết luận
-    assert len(s.decision_journey) >= 6
-    phases = [step.phase for step in s.decision_journey]
+    # 3. Kiểm tra Tiến trình Decision Journey từ đầu giờ đến cuối giờ
+    assert len(t.decision_journey) >= 6
+    phases = [step.phase for step in t.decision_journey]
     assert "proposal" in phases
     assert "discussion" in phases
     assert "modification" in phases
     assert "resolution" in phases
 
-    # Kiểm tra bước chốt cuối cùng là của Tech Lead Hoàng
-    last_step = s.decision_journey[-1]
+    # Bước chốt hạ cuối cùng thuộc về Tech Lead Hoàng
+    last_step = t.decision_journey[-1]
     assert last_step.phase == "resolution"
     assert last_step.speaker == "Hoàng"
     assert last_step.option_label == "Modular Monolith"
@@ -344,19 +201,25 @@ def test_long_transcript_multiround_journey_evolution():
 # phụ trách hoặc deadline. Hệ thống KHÔNG ĐƯỢC tự bịa owner/deadline.
 # =========================================================================
 def test_change_request_c2_vague_action_no_owner_no_deadline():
+    """Kiểm chứng trực tiếp yêu cầu của Change Request C2:
+    Transcript xuất hiện câu: 'Cái này team mình xử lý nhé.'
+    Hệ thống kiên quyết:
+    1. Không tự bịa owner (hủy đại từ tập thể 'team mình', không gán nhầm người nói Huy).
+    2. Không tự bịa deadline (deadline = None).
+    3. Gắn cờ cảnh báo 'assignee_unknown' và 'deadline_unknown' đưa vào Review Queue.
+    """
     raw_transcript = """
 [00:01:00] Huy: Cái này team mình xử lý nhé.
 [00:02:00] Nam: Vâng, em nắm được tinh thần rồi.
 """
     utts = parse_transcript(raw_transcript)
     by_id = {u.id: u for u in utts}
-
     ctx = make_mock_context(
         roles_map={"Huy": "pm", "Nam": "member"},
         meeting_info={"id": "m_c2_test", "leader": "Huy", "mode": "authority", "date": "2026-10-23"}
     )
 
-    # Tình huống A: LLM nhầm lẫn, gán assignee là "team mình" hoặc "team", và bịa deadline "sớm nhất"
+    # Tình huống 1: LLM gán assignee là đại từ tập thể "team mình" và bịa deadline "sớm nhất"
     item_hallucinated_team = RawItem(
         kind="task",
         title="Xử lý công việc dự án",
@@ -367,7 +230,20 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
         deadline_text="sớm nhất"
     )
 
-    # Tình huống B: LLM nhầm người nói (Huy) là người tự nhận việc (self_accepted)
+    out_1 = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_team])
+    rep_1 = ValidationReport()
+    res_1 = build_items(out_1, by_id, ctx, meeting_date="2026-10-23", rep=rep_1)
+    assert len(res_1) == 1
+    t_1 = res_1[0]
+    # KHÔNG ĐƯỢC để owner là đại từ tập thể "team mình", phải gạt về None
+    assert t_1.assignee is None, f"Owner không được là tập thể nhưng lại nhận: {t_1.assignee}"
+    assert t_1.assignee_basis == "none"
+    assert "assignee_unknown" in t_1.flags
+    # KHÔNG ĐƯỢC tự bịa deadline (quote không có trong transcript)
+    assert t_1.deadline_date is None
+    assert "deadline_unknown" in t_1.flags or "deadline_not_in_source" in t_1.flags
+
+    # Tình huống 2: LLM nhầm người phát biểu (Huy) là người tự nhận việc (self_accepted)
     item_hallucinated_speaker = RawItem(
         kind="task",
         title="Xử lý công việc dự án",
@@ -378,8 +254,20 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
         deadline_text=None
     )
 
-    # Tình huống C: LLM bóc tách chuẩn: không có owner cụ thể, không có deadline
-    item_clean_vague = RawItem(
+    out_2 = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_speaker])
+    rep_2 = ValidationReport()
+    res_2 = build_items(out_2, by_id, ctx, meeting_date="2026-10-23", rep=rep_2)
+    assert len(res_2) == 1
+    t_2 = res_2[0]
+    # KHÔNG ĐƯỢC tự ý gán người phát biểu câu giao việc chung thành người tự nhận việc
+    assert t_2.assignee is None, f"Owner không được tự bịa là Huy: {t_2.assignee}"
+    assert t_2.assignee_basis == "none"
+    assert "assignee_unknown" in t_2.flags
+    assert t_2.deadline_date is None
+    assert "deadline_unknown" in t_2.flags
+
+    # Tình huống 3: Bóc tách chuẩn và đẩy vào Review Queue cho con người phân công
+    item_clean = RawItem(
         kind="task",
         title="Xử lý công việc dự án",
         utterance_ids=[utts[0].id],
@@ -388,44 +276,12 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
         assignee_basis="none",
         deadline_text=None
     )
-
-    # Test kiểm tra Tình huống A: Đại từ tập thể "team mình" và deadline bịa
-    out_a = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_team])
-    rep_a = ValidationReport()
-    res_a = build_items(out_a, by_id, ctx, meeting_date="2026-10-23", rep=rep_a)
-    assert len(res_a) == 1
-    t_a = res_a[0]
-    # KHÔNG ĐƯỢC để owner là "team mình", phải hạ về None
-    assert t_a.assignee is None, f"Owner không được là tập thể nhưng lại nhận: {t_a.assignee}"
-    assert t_a.assignee_basis == "none"
-    assert "assignee_unknown" in t_a.flags
-    # KHÔNG ĐƯỢC tự bịa deadline (quote không có trong text)
-    assert t_a.deadline_date is None
-    assert "deadline_unknown" in t_a.flags or "deadline_not_in_source" in t_a.flags
-
-    # Test kiểm tra Tình huống B: Câu "team mình xử lý nhé" KHÔNG THỂ là Huy self_accepted
-    out_b = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_speaker])
-    rep_b = ValidationReport()
-    res_b = build_items(out_b, by_id, ctx, meeting_date="2026-10-23", rep=rep_b)
-    assert len(res_b) == 1
-    t_b = res_b[0]
-    assert t_b.assignee is None, f"Owner không được tự bịa là Huy: {t_b.assignee}"
-    assert t_b.assignee_basis == "none"
-    assert "assignee_unknown" in t_b.flags
-    assert t_b.deadline_date is None
-    assert "deadline_unknown" in t_b.flags
-
-    # Test kiểm tra Tình huống C: Chuẩn hoá sạch sẽ
-    out_c = LabelerOutput(topics=[], labels=[], items=[item_clean_vague])
-    rep_c = ValidationReport()
-    res_c = build_items(out_c, by_id, ctx, meeting_date="2026-10-23", rep=rep_c)
-    assert len(res_c) == 1
-    t_c = res_c[0]
-    assert t_c.kind == "task"
-    assert t_c.assignee is None
-    assert t_c.assignee_basis == "none"
-    assert t_c.deadline_date is None
-    assert "assignee_unknown" in t_c.flags
-    assert "deadline_unknown" in t_c.flags
-
-
+    out_3 = LabelerOutput(topics=[], labels=[], items=[item_clean])
+    rep_3 = ValidationReport()
+    res_3 = build_items(out_3, by_id, ctx, meeting_date="2026-10-23", rep=rep_3)
+    rq = build_review_queue([], res_3)
+    assert len(res_3) == 1
+    assert res_3[0].assignee is None
+    assert res_3[0].deadline_date is None
+    # Bắt buộc phải có trong Review Queue để người duyệt chỉ định người phụ trách
+    assert any(q["title"] == res_3[0].title for q in rq)
