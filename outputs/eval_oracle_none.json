@@ -3,7 +3,7 @@
   "judge": "none",
   "judge_mode": "downgrade",
   "summary": {
-    "meetings": 1,
+    "meetings": 3,
     "pass_rate": 1.0,
     "critical_errors": 0,
     "conservative_misses": 0,
@@ -76,6 +76,195 @@
       "labels_total": 10,
       "labels_dropped": 0,
       "items_total": 4,
+      "items_dropped": 0,
+      "pass": true
+    },
+    {
+      "meeting_id": "m01",
+      "difficulty": "core: ý kiến đổi giữa họp (A->B)",
+      "topics": [
+        {
+          "keywords": [
+            "firebase",
+            "supabase",
+            "backend"
+          ],
+          "expected": [
+            "decided"
+          ],
+          "ok": true,
+          "actual": "decided",
+          "final_option": "Supabase",
+          "superseded": [
+            "Firebase"
+          ],
+          "superseded_ok": true
+        }
+      ],
+      "tasks": [
+        {
+          "keywords": [
+            "staging"
+          ],
+          "expected_assignee": "Quân",
+          "expected_deadline": "2026-10-09",
+          "found": true,
+          "actual_assignee": "Quân",
+          "actual_deadline": "2026-10-09",
+          "assignee_ok": true,
+          "deadline_ok": true
+        },
+        {
+          "keywords": [
+            "tài liệu api",
+            "api"
+          ],
+          "expected_assignee": "Nam",
+          "expected_deadline": null,
+          "found": true,
+          "actual_assignee": "Nam",
+          "actual_deadline": null,
+          "assignee_ok": true,
+          "deadline_ok": true
+        },
+        {
+          "keywords": [
+            "test plan"
+          ],
+          "expected_assignee": "Trang",
+          "expected_deadline": null,
+          "found": true,
+          "actual_assignee": "Trang",
+          "actual_deadline": null,
+          "assignee_ok": true,
+          "deadline_ok": true
+        },
+        {
+          "keywords": [
+            "nhắn anh phúc",
+            "phúc"
+          ],
+          "expected_assignee": "Minh",
+          "expected_deadline": null,
+          "found": true,
+          "actual_assignee": "Minh",
+          "actual_deadline": null,
+          "assignee_ok": true,
+          "deadline_ok": true
+        }
+      ],
+      "items": [
+        {
+          "kind": "issue",
+          "keywords": [
+            "ngân sách",
+            "gói pro"
+          ],
+          "found": true
+        },
+        {
+          "kind": "request",
+          "keywords": [
+            "apple"
+          ],
+          "found": true
+        }
+      ],
+      "critical_errors": 0,
+      "conservative_misses": 0,
+      "fabricated_assignee": 0,
+      "fabricated_deadline": 0,
+      "forbidden_hits": 0,
+      "extra_tasks": 0,
+      "problems": [],
+      "labels_total": 7,
+      "labels_dropped": 0,
+      "items_total": 6,
+      "items_dropped": 0,
+      "pass": true
+    },
+    {
+      "meeting_id": "m02",
+      "difficulty": "dễ: việc có người nhận và hạn rõ",
+      "topics": [
+        {
+          "keywords": [
+            "demo"
+          ],
+          "expected": [
+            "decided"
+          ],
+          "ok": true,
+          "actual": "decided",
+          "final_option": "Demo ngày 15/10",
+          "superseded": []
+        }
+      ],
+      "tasks": [
+        {
+          "keywords": [
+            "bộ lọc",
+            "chi nhánh"
+          ],
+          "expected_assignee": "Quân",
+          "expected_deadline": "2026-10-08",
+          "found": true,
+          "actual_assignee": "Quân",
+          "actual_deadline": "2026-10-08",
+          "assignee_ok": true,
+          "deadline_ok": true
+        },
+        {
+          "keywords": [
+            "thiết kế biểu đồ"
+          ],
+          "expected_assignee": "Nam",
+          "expected_deadline": "2026-10-09",
+          "found": true,
+          "actual_assignee": "Nam",
+          "actual_deadline": "2026-10-09",
+          "assignee_ok": true,
+          "deadline_ok": true
+        },
+        {
+          "keywords": [
+            "tài liệu hướng dẫn"
+          ],
+          "expected_assignee": "Đạt",
+          "expected_deadline": null,
+          "found": true,
+          "actual_assignee": "Đạt",
+          "actual_deadline": null,
+          "assignee_ok": true,
+          "deadline_ok": true
+        }
+      ],
+      "items": [
+        {
+          "kind": "issue",
+          "keywords": [
+            "trùng mã"
+          ],
+          "found": true
+        },
+        {
+          "kind": "feedback",
+          "keywords": [
+            "dữ liệu mẫu"
+          ],
+          "found": true
+        }
+      ],
+      "critical_errors": 0,
+      "conservative_misses": 0,
+      "fabricated_assignee": 0,
+      "fabricated_deadline": 0,
+      "forbidden_hits": 0,
+      "extra_tasks": 0,
+      "problems": [],
+      "labels_total": 4,
+      "labels_dropped": 0,
+      "items_total": 6,
       "items_dropped": 0,
       "pass": true
     }

@@ -1,13 +1,13 @@
 """Bộ kiểm thử Mission 3 (Mission 3 Test Suite).
 
-Bao gồm tối thiểu 3 bài test theo đúng yêu cầu đề bài Mission 3:
+Bao gồm 5 bài test chuyên biệt theo đúng yêu cầu đề bài:
 1. Test 1 (Edge Case / Tình huống khó):
    - Diễn biến cuộc họp tranh luận phức tạp: Đổi ý từ A sang B (A bị superseded).
    - Câu kết luận mang tính tạm thời / thử nghiệm của sếp ("Trước mắt tạm thời test thử phương án B xem sao") -> Bị hạ về leaning, có cờ tentative_conclusion, không chốt nhầm (Tránh False Decision).
    - Câu hỏi thăm dò ý kiến đồng nghiệp ("Duy ơi bạn thấy thế nào về phương án này?") -> Không biến thành task của Duy (Tránh False Action).
    - Vấn đề chưa chốt ("Vấn đề SSL certificate chưa thống nhất, để tuần sau bàn tiếp") -> Phân loại đúng thành vướng mắc/câu hỏi mở.
 
-2. Test 2 (Regression Test):
+2. Test 2 (Regression Test - Kiểm chứng lỗi regression tiềm ẩn):
    - Đảm bảo toàn bộ các bất biến của Mission 2 vẫn giữ nguyên:
      * Quy tắc 4 điều kiện chốt quyết định.
      * Kiểm tra thẩm quyền ma trận (PM chốt Scope, Tech Lead chốt Tech).
@@ -15,8 +15,15 @@ Bao gồm tối thiểu 3 bài test theo đúng yêu cầu đề bài Mission 3:
 
 3. Test 3 (Phân loại Tác nghiệp vs Tri thức lâu dài - Domain Separation):
    - Phân biệt rõ ràng giữa:
-     * Task tác nghiệp ngắn hạn (Action Item cho Sprint, có người nhận và deadline).
+     * Task tác nghiệp ngắn hạn (Action Item cho Sprint, có người nhận và deadline ISO).
      * Tri thức tổ chức dùng lâu dài (Knowledge / ADR / Chính sách kiến trúc).
+
+4. Test 4 (Transcript dài 1h25 & Lộ trình diễn biến đa chiều A -> B -> C):
+   - Tái hiện trọn vẹn 9 bước Decision Journey qua 3 phương án kiến trúc Monolith -> Microservices -> Modular Monolith.
+
+5. Test 5 (Bắt buộc theo Change Request C2 — Action chưa rõ):
+   - Cuộc họp có câu "cái này team mình xử lý nhé" nhưng không nói rõ người phụ trách hoặc deadline.
+   - Hệ thống tuyệt đối không tự bịa owner/deadline: assignee = None, deadline = None, gắn cờ assignee_unknown & deadline_unknown.
 """
 import sys
 from pathlib import Path
@@ -329,4 +336,96 @@ def test_long_transcript_multiround_journey_evolution():
     assert last_step.phase == "resolution"
     assert last_step.speaker == "Hoàng"
     assert last_step.option_label == "Modular Monolith"
+
+
+# =========================================================================
+# TEST 5: CHANGE REQUEST C2 — ACTION CHƯA RÕ (BẮT BUỘC)
+# Cuộc họp có câu "cái này team mình xử lý nhé" nhưng không nói rõ người
+# phụ trách hoặc deadline. Hệ thống KHÔNG ĐƯỢC tự bịa owner/deadline.
+# =========================================================================
+def test_change_request_c2_vague_action_no_owner_no_deadline():
+    raw_transcript = """
+[00:01:00] Huy: Cái này team mình xử lý nhé.
+[00:02:00] Nam: Vâng, em nắm được tinh thần rồi.
+"""
+    utts = parse_transcript(raw_transcript)
+    by_id = {u.id: u for u in utts}
+
+    ctx = make_mock_context(
+        roles_map={"Huy": "pm", "Nam": "member"},
+        meeting_info={"id": "m_c2_test", "leader": "Huy", "mode": "authority", "date": "2026-10-23"}
+    )
+
+    # Tình huống A: LLM nhầm lẫn, gán assignee là "team mình" hoặc "team", và bịa deadline "sớm nhất"
+    item_hallucinated_team = RawItem(
+        kind="task",
+        title="Xử lý công việc dự án",
+        utterance_ids=[utts[0].id],
+        quote="Cái này team mình xử lý nhé",
+        assignee="team mình",
+        assignee_basis="assigned",
+        deadline_text="sớm nhất"
+    )
+
+    # Tình huống B: LLM nhầm người nói (Huy) là người tự nhận việc (self_accepted)
+    item_hallucinated_speaker = RawItem(
+        kind="task",
+        title="Xử lý công việc dự án",
+        utterance_ids=[utts[0].id],
+        quote="Cái này team mình xử lý nhé",
+        assignee="Huy",
+        assignee_basis="self_accepted",
+        deadline_text=None
+    )
+
+    # Tình huống C: LLM bóc tách chuẩn: không có owner cụ thể, không có deadline
+    item_clean_vague = RawItem(
+        kind="task",
+        title="Xử lý công việc dự án",
+        utterance_ids=[utts[0].id],
+        quote="Cái này team mình xử lý nhé",
+        assignee=None,
+        assignee_basis="none",
+        deadline_text=None
+    )
+
+    # Test kiểm tra Tình huống A: Đại từ tập thể "team mình" và deadline bịa
+    out_a = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_team])
+    rep_a = ValidationReport()
+    res_a = build_items(out_a, by_id, ctx, meeting_date="2026-10-23", rep=rep_a)
+    assert len(res_a) == 1
+    t_a = res_a[0]
+    # KHÔNG ĐƯỢC để owner là "team mình", phải hạ về None
+    assert t_a.assignee is None, f"Owner không được là tập thể nhưng lại nhận: {t_a.assignee}"
+    assert t_a.assignee_basis == "none"
+    assert "assignee_unknown" in t_a.flags
+    # KHÔNG ĐƯỢC tự bịa deadline (quote không có trong text)
+    assert t_a.deadline_date is None
+    assert "deadline_unknown" in t_a.flags or "deadline_not_in_source" in t_a.flags
+
+    # Test kiểm tra Tình huống B: Câu "team mình xử lý nhé" KHÔNG THỂ là Huy self_accepted
+    out_b = LabelerOutput(topics=[], labels=[], items=[item_hallucinated_speaker])
+    rep_b = ValidationReport()
+    res_b = build_items(out_b, by_id, ctx, meeting_date="2026-10-23", rep=rep_b)
+    assert len(res_b) == 1
+    t_b = res_b[0]
+    assert t_b.assignee is None, f"Owner không được tự bịa là Huy: {t_b.assignee}"
+    assert t_b.assignee_basis == "none"
+    assert "assignee_unknown" in t_b.flags
+    assert t_b.deadline_date is None
+    assert "deadline_unknown" in t_b.flags
+
+    # Test kiểm tra Tình huống C: Chuẩn hoá sạch sẽ
+    out_c = LabelerOutput(topics=[], labels=[], items=[item_clean_vague])
+    rep_c = ValidationReport()
+    res_c = build_items(out_c, by_id, ctx, meeting_date="2026-10-23", rep=rep_c)
+    assert len(res_c) == 1
+    t_c = res_c[0]
+    assert t_c.kind == "task"
+    assert t_c.assignee is None
+    assert t_c.assignee_basis == "none"
+    assert t_c.deadline_date is None
+    assert "assignee_unknown" in t_c.flags
+    assert "deadline_unknown" in t_c.flags
+
 

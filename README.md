@@ -4,7 +4,7 @@ Hệ thống trích xuất dữ liệu có cấu trúc từ biên bản cuộc h
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests: 20/20 Passed](https://img.shields.io/badge/tests-20%2F20%20passed-brightgreen.svg)]()
+[![Tests: 21/21 Passed](https://img.shields.io/badge/tests-21%2F21%20passed-brightgreen.svg)]()
 [![Benchmark: 90% Pass (Dev Set)](https://img.shields.io/badge/benchmark-90%25%20(0%20critical%20errors)-success.svg)]()
 
 ---
@@ -107,7 +107,7 @@ python main.py compare outputs/eval_gemini_none.json outputs/eval_gemini_jev.jso
 ```bash
 pytest -v
 ```
-Kết quả: **20/20 tests (Integrity, Mutations & Mission 3 Tests) vượt qua thành công.**
+Kết quả: **21/21 tests (16 Regression Tests từ Mission 2 + 5 Tests mới phát triển cho Mission 3 theo yêu cầu) vượt qua thành công (100% Passed).**
 
 ---
 
@@ -120,10 +120,23 @@ Toàn bộ dữ liệu và mã nguồn kiểm thử được tổ chức minh b�
   * `data/meetings/`: 21 kịch bản họp chuẩn (`m01`–`m09`, `g01`–`g12`). Mỗi thư mục bao gồm `transcript.txt` (lời thoại), `brief.yaml` (bối cảnh cuộc họp), và `expected.json` (kết quả chuẩn đối soát). Đặc biệt `m09` là kịch bản họp kỹ thuật dài (1h25) kiểm thử trọn vẹn diễn biến 3 phương án kiến trúc (A ➔ B ➔ C).
   * `data/independent_tests/meetings/`: 6 kịch bản họp kiểm thử độc lập (`indep_m01`–`indep_m06`).
   * `data/independent_tests/conditional_sentences_60.json`: Bộ 60 phát biểu kiểm thử biên điều kiện.
-* **Mã nguồn kiểm thử tự động (Unit & Mutation Tests):**
-  * `tests/test_integrity.py`: 12 test cases tự động kiểm tra chuỗi bằng chứng substring, 4 điều kiện chốt, thẩm quyền (người ngoài vs PM), gán việc và phân giải hạn chót.
-  * `tests/test_mutations.py`: 4 test cases kiểm thử đột biến (mutation testing) đánh giá khả năng phòng thủ trước ảo giác (trích dẫn giả mạo, gài bẫy người nhận việc).
-  * `tests/test_mission3.py`: 4 test cases kiểm tra diễn biến quyết định (Decision Journey), phân loại tri thức dài hạn, chuẩn hóa ngày ISO và chặn gán nhầm việc khi thăm dò ý kiến đồng nghiệp.
+* **Mã nguồn kiểm thử tự động (21/21 Tests):**
+  * **Nhóm 1: Bộ kiểm thử hồi quy kế thừa từ Mission 2 (Regression Testing Suite — 16 tests quan trọng đã có):**
+    Thực hiện đúng yêu cầu cốt lõi của Ban tổ chức *"Chạy lại các test quan trọng của Mission 2 để kiểm tra regression"*, bảo đảm phiên bản Mission 3 kế thừa trọn vẹn toàn bộ logic nền tảng, không làm gãy bất kỳ hành vi cốt lõi nào:
+    * `tests/test_integrity.py` (12 tests): Kiểm tra chuỗi bằng chứng substring bắt buộc (chống bịa đặt), 4 điều kiện chốt quyết định, ma trận phân quyền thẩm quyền (người ngoài vs PM/Tech Lead), tự nhận việc vs giao việc, và phân giải thời hạn (deadline resolution).
+    * `tests/test_mutations.py` (4 tests): Kiểm thử đột biến (mutation testing) đánh giá khả năng phòng thủ trước ảo giác (trích dẫn giả mạo, phát biểu bị bóp méo, gài bẫy người nhận việc).
+  * **Nhóm 2: Bộ kiểm thử mới phát triển cho Mission 3 (`tests/test_mission3.py` — 5 test cases chuyên biệt):**
+    Đáp ứng toàn diện các yêu cầu cải tiến, Edge cases và Change Request C2 của Ban tổ chức:
+    * **01 Test bắt buộc cho Change Request C2 (`test_change_request_c2_vague_action_no_owner_no_deadline`)**:
+      Thử nghiệm trực tiếp yêu cầu *"Cuộc họp có câu 'cái này team mình xử lý nhé' nhưng không nói rõ người phụ trách hoặc deadline. Hệ thống không được tự bịa owner/deadline"*. Kiểm chứng qua 3 tình huống bẫy: (1) LLM gán đại từ tập thể ("team mình") $\rightarrow$ Bị loại bỏ thành `assignee = None`, gắn cờ `assignee_unknown`; (2) LLM gán nhầm người phát biểu (Huy) thành người tự nhận việc $\rightarrow$ Bị hạ cấp thành `assignee = None`; (3) Deadline bị bịa đặt ("sớm nhất", mốc thời gian không có trong transcript) $\rightarrow$ Bị xóa bỏ thành `deadline = None`, gắn cờ `deadline_unknown`. Đạt 100% tiêu chí đề bài.
+    * **01 Test cho Edge Case phát hiện thêm (`test_edge_case_tentative_conclusion_and_opinion_inquiry`)**:
+      Bắt gọn 2 tình huống khó thường gặp: (1) Sếp kết luận thử nghiệm/tạm thời (`TENTATIVE_PHRASE`: *"Trước mắt tạm thời thử nghiệm phương án B xem sao"*) $\rightarrow$ Hạ cấp về `leaning`, gắn cờ `tentative_conclusion` thay vì chốt vội; (2) Câu hỏi thăm dò quan điểm đồng nghiệp (`OPINION_INQUIRY`: *"Duy ơi bạn thấy thế nào về phương án này?"*) $\rightarrow$ Chặn gán nhầm task cho người được hỏi ý kiến.
+    * **01 Test cho Lỗi Regression tiềm ẩn (`test_regression_mission2_invariants`)**:
+      Kiểm chứng các bất biến cốt lõi của Mission 2 (phát biểu giao việc dứt khoát, deadline ISO cụ thể, thẩm quyền PM chốt scope) không bao giờ bị suy thoái hoặc bị xóa nhầm bởi các bộ lọc mới của Mission 3 và Change Request C2.
+    * **01 Test phân tách Tác nghiệp vs Tri thức dài hạn (`test_operational_task_vs_longterm_knowledge_separation`)**:
+      Kiểm chứng cơ chế bóc tách độc lập giữa Action Items ngắn hạn cho Sprint (xuất sang Jira) và Knowledge Base / ADR dài hạn (xuất sang Notion/Wiki).
+    * **01 Test theo dõi diễn biến kịch bản họp dài 1h25 (`test_long_transcript_multiround_journey_evolution`)**:
+      Tranh luận qua 3 phương án kiến trúc $A \rightarrow B \rightarrow C$ (Monolith $\rightarrow$ Microservices $\rightarrow$ Modular Monolith), chốt C, hủy A & B, tái hiện trọn vẹn 9 bước Decision Journey.
 * **Tài liệu phân tích chuyên sâu:**
   * [docs/TEST_CASES.md](docs/TEST_CASES.md): Mô tả chi tiết các ca kiểm thử tiêu biểu đối chiếu từng câu thoại gốc và bài học rút ra.
   * [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md): Báo cáo đối soát thực nghiệm, số liệu phân tích chuyên sâu và đối chứng bộ đánh giá.

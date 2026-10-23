@@ -12,6 +12,9 @@ from .textnorm import contains_word, normalize
 NEGATIVE = {"reverse", "oppose", "defer"}
 HEDGE = re.compile(r"\b(chắc|có lẽ|hình như|nhỉ|không biết|để (mình |em |anh |chị )?xem|thử xem|chưa chắc)\b", re.IGNORECASE)
 OPINION_INQUIRY = re.compile(r"\b(nghĩ sao|thấy sao|ý kiến gì|thấy thế nào|nghĩ thế nào|có biết|có nhớ|chia sẻ|nhắc đến|từng làm|quan điểm|có rảnh|rảnh không)\b", re.IGNORECASE)
+COLLECTIVE_ASSIGNEE = re.compile(r"^(team|nhóm|team mình|nhóm mình|cả team|cả nhóm|chúng ta|chúng tôi|chúng mình|mọi người|anh em|các bạn|ai đó|bên mình|toàn đội)$", re.IGNORECASE)
+COLLECTIVE_DELEGATION = re.compile(r"\b(team|nhóm|cả team|cả nhóm|chúng ta|chúng mình|mọi người|anh em)\s+(mình\s+)?(xử lý|làm|lo|chạy|triển khai|phụ trách|follow|gánh|bàn|giải quyết)\b", re.IGNORECASE)
+PERSONAL_COMMITMENT = re.compile(r"(?<!team\s)(?<!nhóm\s)(?<!cả\s)(?<!bên\s)\b(tôi|mình|em|anh|chị)\s+(sẽ|nhận|làm|lo|phụ trách|đảm nhiệm|triển khai|xử lý)\b|\bđể\s+(tôi|mình|em|anh|chị)\b", re.IGNORECASE)
 
 
 def _categorize_knowledge(title: str, text: str) -> str:
@@ -103,10 +106,23 @@ def build_items(out: LabelerOutput, by_id: dict[str, Utterance], ctx: ContextPac
         deadline_text, deadline_date = it.deadline_text, None
 
         if it.kind == "task":
+            # --- Chặn đại từ tập thể ("team mình", "cả nhóm") làm assignee ---
+            if assignee and COLLECTIVE_ASSIGNEE.match(assignee.strip()):
+                rep.downgrades.append({"item": it.title, "field": "assignee", "value": assignee, "reason": "collective_not_individual"})
+                assignee, basis = None, "none"
+
             # --- người nhận: phải được giao hoặc tự nhận rõ ràng; chỉ bị nhắc tên là chưa đủ ---
             if assignee and basis in ("assigned", "self_accepted"):
                 if basis == "self_accepted":
-                    verified = any(_same_person(u.speaker, assignee, ctx) for u in cited)
+                    is_speaker = any(_same_person(u.speaker, assignee, ctx) for u in cited)
+                    is_collective = any(COLLECTIVE_DELEGATION.search(normalize(u.text)) for u in cited)
+                    has_personal = any(PERSONAL_COMMITMENT.search(normalize(u.text)) for u in cited)
+                    if is_speaker and is_collective and not has_personal:
+                        # Câu kiểu "cái này team mình xử lý nhé" -> không phải tự nhận cá nhân
+                        verified = False
+                        rep.downgrades.append({"item": it.title, "field": "assignee", "value": assignee, "reason": "collective_delegation_not_self_accepted"})
+                    else:
+                        verified = is_speaker
                 else:
                     verified = contains_word(cited_text, assignee) or any(_same_person(u.speaker, assignee, ctx) for u in cited)
                 
