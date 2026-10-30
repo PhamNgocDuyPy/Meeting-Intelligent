@@ -1,17 +1,72 @@
-[00:01:15] Hoàng: Chào cả đội, hôm nay chúng ta có buổi họp kỹ thuật dài dự kiến hơn một tiếng để giải quyết bài toán tái cấu trúc toàn diện hệ thống.
-[00:04:30] Tuấn: Đầu tiên về phần kiến trúc tổng thể, tôi đề xuất chúng ta tiếp tục giữ mô hình Monolith nguyên khối để team đẩy nhanh tiến độ bàn giao.
+[00:01:15] Hoàng: Chào cả đội, hôm nay chúng ta có buổi họp kỹ thuật dài dự kiến hơn một tiếng để giải quyết bài toán tái cấu trúc toàn diện hệ thống Aurora.
+[00:02:00] Hoàng: Hiện tại lượng người dùng hoạt động đồng thời trong quý 3 đã tăng gấp bốn lần, dẫn đến tình trạng nghẽn cổ chai nghiêm trọng ở tầng ứng dụng và cơ sở dữ liệu.
+[00:02:45] Dũng: Đúng rồi anh Hoàng, đợt flash sale tuần trước hệ thống bị timeout liên tục ở API tra cứu đơn hàng, CPU server nhảy lên gần 95%.
+[00:03:30] Lan: Bên phía QA cũng ghi nhận rất nhiều lỗi hồi quy mỗi lần deploy, do code của các module bị phụ thuộc chéo vào nhau quá nhiều.
+[00:04:30] Tuấn: Đầu tiên về phần kiến trúc tổng thể, tôi đề xuất chúng ta tiếp tục giữ mô hình Monolith nguyên khối để team đẩy nhanh tiến độ bàn giao cho khách hàng.
+[00:05:20] Tuấn: Toàn bộ codebase hiện tại đang nằm chung một repository, anh em trong đội đã quen tay với workflow này từ hai năm nay rồi.
+[00:06:10] Tuấn: Nếu giữ Monolith, việc build, test và deploy lên một cụm server duy nhất vẫn rất đơn giản, không tốn nhân lực DevOps vận hành.
+[00:07:05] Dũng: Nhưng vấn đề là code đang biến thành một khối spaghetti khổng lồ rồi anh Tuấn ơi.
+[00:08:15] Dũng: Mỗi lần sửa một hàm nhỏ bên module người dùng là module thanh toán cũng có nguy cơ bị ảnh hưởng lây, rất khó cô lập rủi ro.
 [00:09:45] Dũng: Tôi thấy Monolith ban đầu thì nhanh nhưng sau này rất khó scale khi lượng người dùng đồng thời tăng vọt, bảo trì sẽ cực kỳ mệt.
+[00:10:40] Hoàng: Nhận xét của Dũng rất đúng thực tế. Khi team mở rộng lên mười mấy lập trình viên cùng commit vào một khối, việc merge conflict diễn ra hàng ngày.
+[00:11:35] Bảo: Về góc độ vận hành, mỗi lần restart server Monolith là toàn bộ dịch vụ của công ty đều bị gián đoạn ít nhất ba đến năm phút.
+[00:12:30] Tuấn: Nhưng nếu tối ưu lại câu lệnh SQL và thêm tầng caching Redis thì Monolith vẫn có thể chịu tải thêm ít nhất sáu tháng nữa mà.
+[00:13:45] Lan: Tối ưu cache chỉ là giải pháp chắp vá tạm thời thôi, gốc rễ là ranh giới domain giữa các phân hệ chưa hề được bóc tách rõ ràng.
 [00:15:20] Lan: Đúng vậy, tôi đề xuất chuyển sang Microservices hoàn toàn để các phân hệ có thể độc lập deploy và scale riêng rẽ.
+[00:16:30] Lan: Chúng ta có thể chia hệ thống thành bốn service độc lập: Auth Service, Catalog Service, Order Service và Payment Service.
+[00:17:45] Lan: Mỗi service sẽ có database riêng, codebase riêng và pipeline CI/CD riêng, đội nào phụ trách phần nào thì hoàn toàn làm chủ phần đó.
+[00:19:00] Dũng: Nghe về mặt lý thuyết thì rất hấp dẫn, nhưng việc chia nhỏ database sẽ dẫn tới bài toán phân tán dữ liệu rất phức tạp.
+[00:20:15] Sơn: Chính xác, khi đó chúng ta phải giải quyết bài toán Distributed Transaction bằng Saga Pattern hoặc Two-Phase Commit, độ phức tạp code sẽ tăng gấp ba lần.
+[00:21:20] Hoàng: Chưa kể chúng ta sẽ phải cấu hình thêm Service Mesh, API Gateway và hệ thống Distributed Tracing như Jaeger để debug lỗi giữa các service.
 [00:22:10] Tuấn: Nhưng Microservices thì chi phí hạ tầng và việc vận hành Kubernetes cho một team nhỏ như chúng ta là quá đắt đỏ và phức tạp.
+[00:23:30] Tuấn: Hiện tại team chúng ta không có kỹ sư SRE chuyên trách, nếu cụm Kubernetes gặp sự cố giữa đêm thì ai sẽ là người đứng ra trực cứu hộ?
+[00:24:50] Lan: Chúng ta có thể thuê dịch vụ managed Kubernetes trên cloud của AWS hoặc GCP để giảm tải gánh nặng vận hành mà anh Tuấn.
+[00:26:15] Bảo: Thuê managed K8s thì tiện thật nhưng chi phí hàng tháng sẽ đội lên rất cao đấy chị Lan.
+[00:27:40] Bảo: Em đã ngồi tính toán sơ bộ với bên cung cấp dịch vụ hạ tầng tuần trước.
+[00:28:35] Bảo: Riêng tiền duy trì các node compute, load balancer cho từng microservice và phí truyền dữ liệu giữa các availability zone đã ngốn không dưới bốn ngàn đô mỗi tháng.
 [00:29:40] Bảo: Về phía tài chính, em cũng lưu ý các anh là chi phí cloud cho cụm Microservices sẽ vượt quá hạn mức ngân sách quý 4 này.
-[00:36:15] Lan: Nhưng nếu cứ giữ Monolith thuần túy thì tech debt sau này ai sẽ đứng ra chịu trách nhiệm gánh?
+[00:31:00] Hoàng: Cảm ơn Bảo đã đưa ra con số định lượng kịp thời. Ngân sách hạ tầng quý này của chúng ta đang bị siết chặt, không thể chi tiêu vượt trần được.
+[00:32:20] Dũng: Ngoài ra, độ trễ mạng giữa các microservice gọi nhau qua giao thức HTTP REST cũng sẽ làm chậm thời gian phản hồi tổng thể của ứng dụng.
+[00:33:40] Lan: Nhưng nếu cứ giữ Monolith thuần túy thì tech debt sau này ai sẽ đứng ra chịu trách nhiệm gánh?
+[00:35:00] Lan: Chẳng lẽ chúng ta cứ để tình trạng deploy một tính năng nhỏ mà phải test lại toàn bộ cả hệ thống như thế này mãi sao?
+[00:36:15] Lan: Nếu không chịu thay đổi bây giờ thì đến quý 1 năm sau khi người dùng tăng gấp đôi nữa, cả hệ thống chắc chắn sẽ tê liệt hoàn toàn.
+[00:37:30] Tuấn: Tôi hiểu sự lo lắng của Lan, nhưng bài toán ở đây là nguồn lực và kinh phí hiện tại không cho phép chúng ta đập đi xây lại toàn bộ theo Microservices.
+[00:39:00] Hoàng: Cả Tuấn và Lan đều có những lý lẽ rất xác đáng. Monolith truyền thống thì bộc lộ giới hạn mở rộng, còn Microservices thì lại quá sức về chi phí và năng lực vận hành.
+[00:40:30] Hoàng: Chúng ta cần một giải pháp dung hòa được ưu điểm của cả hai bên: vừa phân chia ranh giới module sạch sẽ, vừa không phải gánh chi phí hạ tầng phân tán đắt đỏ.
+[00:42:00] Sơn: Tôi đã nghiên cứu rất kỹ case study chuyển đổi kiến trúc của các công ty công nghệ có quy mô tương đương chúng ta gần đây.
+[00:43:20] Sơn: Rất nhiều đội ngũ kỹ thuật hàng đầu đã chọn một bước đệm hoàn hảo trước khi nhảy sang microservices.
 [00:44:50] Sơn: Tôi đề xuất một phương án thỏa hiệp rất thực tế: áp dụng kiến trúc Modular Monolith, vừa tiết kiệm chi phí vừa tách module rõ ràng.
+[00:46:15] Sơn: Về cơ bản, toàn bộ ứng dụng vẫn chạy trên một tiến trình duy nhất và deploy chung một artifact, nên chi phí hạ tầng chỉ tương đương monolith cũ.
+[00:47:40] Sơn: Tuy nhiên, bên trong mã nguồn chúng ta sẽ chia thành các module nghiệp vụ hoàn toàn độc lập với nhau theo nguyên lý Domain-Driven Design.
+[00:49:00] Sơn: Các module chỉ được phép giao tiếp với nhau thông qua public interface được định nghĩa chặt chẽ, nghiêm cấm việc import trực tiếp logic nội bộ của nhau.
+[00:50:25] Dũng: Ý tưởng này rất hay Sơn ạ! Giao tiếp giữa các module diễn ra in-process qua hàm gọi trực tiếp nên độ trễ gần như bằng không, không tốn overhead mạng.
 [00:52:10] Dũng: Tôi ủng hộ đề xuất của Sơn. Modular Monolith giải quyết được cả bài toán chi phí hạ tầng lẫn cấu trúc code gọn gàng cho team.
+[00:53:30] Lan: Nhưng còn về cơ sở dữ liệu thì sao hả Sơn? Các module có được phép query chéo bảng của nhau không?
+[00:54:45] Sơn: Tuyệt đối không chị Lan. Chúng ta vẫn dùng chung một instance PostgreSQL duy nhất để tiết kiệm chi phí, nhưng sẽ phân tách thành các schema logic riêng biệt.
+[00:56:10] Sơn: Module nào chỉ được truy cập vào schema của module đó. Sau này nếu một phân hệ cần scale đột biến, chúng ta chỉ việc bóc module đó thành microservice trong một nốt nhạc.
+[00:57:35] Hoàng: Giải pháp tách schema logic trong cùng database PostgreSQL của Sơn rất sáng tạo và chuẩn chỉ theo kiến trúc hiện đại.
+[00:58:40] Hoàng: Như vậy rào cản về việc quản trị Kubernetes phức tạp và chi phí cloud đắt đỏ đều được tháo gỡ triệt để.
 [00:59:30] Tuấn: Tôi cũng thấy hợp lý, tôi đồng ý bỏ đề xuất Monolith cũ để chuyển sang ủng hộ Modular Monolith.
+[01:01:00] Tuấn: Phương án của Sơn giúp anh em dev vẫn giữ được sự tiện lợi khi code cục bộ mà codebase lại ngăn nắp, dễ quản lý hơn hẳn.
+[01:02:40] Bảo: Em cũng hoàn toàn đồng tình với phương án này. Chúng ta không phải mua thêm server Kubernetes đắt tiền, ngân sách quý 4 sẽ hoàn toàn được đảm bảo an toàn.
+[01:04:15] Dũng: Lan thấy thế nào? Chuyển sang Modular Monolith là bước đi vững chắc nhất để chuẩn bị cho microservices sau này rồi đấy.
+[01:05:30] Lan: Sau khi nghe Sơn phân tích kỹ về cách cô lập domain và phân tách schema cơ sở dữ liệu, em thấy phương án này hoàn toàn giải quyết được nỗi lo của em.
 [01:06:40] Lan: Tôi cũng rút lại đề xuất Microservices vì vấn đề rào cản ngân sách, hoàn toàn nhất trí phương án Modular Monolith.
+[01:08:00] Hoàng: Rất tuyệt vời khi toàn bộ đội ngũ đã tìm được tiếng nói chung sau hơn một tiếng thảo luận sôi nổi và sâu sát kỹ thuật.
+[01:09:30] Hoàng: Chúng ta đã đi từ việc bảo lưu monolith sang cân nhắc microservices, và cuối cùng hội tụ về giải pháp Modular Monolith tối ưu nhất cho giai đoạn này.
+[01:10:50] Hoàng: Có ai còn bất kỳ thắc mắc hay ý kiến phản biện nào nữa về hướng đi kiến trúc này không?
+[01:11:35] Dũng: Phía backend hoàn toàn nhất trí, không còn phản đối nào anh Hoàng ơi.
 [01:12:00] Hoàng: Với tư cách Tech Lead phụ trách kỹ thuật, tôi chốt chính thức phương án Modular Monolith cho toàn bộ dự án.
+[01:13:10] Hoàng: Đây sẽ là quyết định kỹ thuật nền tảng có hiệu lực ngay từ ngày hôm nay cho sprint tái cấu trúc sắp tới.
 [01:14:20] Hoàng: Về mặt tri thức dài hạn, toàn bộ hệ thống từ nay thống nhất chuẩn hóa kiến trúc Modular Monolith và cơ sở dữ liệu PostgreSQL cho mọi module.
+[01:15:30] Hoàng: Quyết định kiến trúc ADR này sẽ được đưa vào tài liệu kỹ thuật của công ty để các kỹ sư gia nhập sau này bắt buộc phải tuân thủ nghiêm ngặt.
+[01:16:40] Hoàng: Bây giờ chúng ta chuyển sang phần phân công công việc cụ thể cho sprint hai tuần tới.
 [01:17:45] Tuấn: Em tự nhận sẽ dựng môi trường staging cho cấu trúc Modular Monolith trước ngày 2026-10-30.
+[01:18:50] Tuấn: Em sẽ cấu hình lại pipeline GitHub Actions để tự động build và chạy test cho từng module riêng biệt khi có pull request mới.
 [01:20:10] Lan: Em sẽ viết test plan chi tiết cho phần kiểm thử hồi quy của kiến trúc mới trước thứ Sáu tuần sau.
+[01:21:00] Lan: Mục tiêu là đảm bảo toàn bộ luồng nghiệp vụ hiện tại vẫn hoạt động ổn định 100% sau khi refactor code sang cấu trúc module.
+[01:21:50] Hoàng: Cái phần tài liệu hướng dẫn triển khai này team mình xử lý nhé.
+[01:22:30] Bảo: Dạ vâng, phần phân chia công việc tác nghiệp cho sprint như vậy là rất rõ ràng rồi ạ.
 [01:23:00] Bảo: Còn vấn đề báo giá license của Datadog và chứng chỉ SSL wildcard thì bên đối tác chưa gửi lại, mục này em xin phép để buổi sau báo cáo tiếp nhé.
+[01:23:50] Hoàng: Được rồi Bảo, mục license Datadog và chứng chỉ SSL chúng ta sẽ xếp vào danh sách các vấn đề tồn đọng để giải quyết trong buổi họp đầu tuần sau.
 [01:24:45] Hoàng: Nhất trí, cảm ơn cả đội. Buổi họp hôm nay đến đây là kết thúc.
