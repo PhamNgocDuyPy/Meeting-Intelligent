@@ -8,7 +8,7 @@
 
 2. Test đột biến cho Lỗ hổng 8 (Adversarial Assignee Hallucination):
    Lấy g10 và m07, cố tình ép assignee="Đạt", assignee_basis="assigned" cho việc kiểm thử tự động (g10),
-   và assignee="Nam", assignee_basis="assigned" cho việc xuất file (m07) (giả lập LLM bị ảo giác gán bừa).
+   và assignee="Nam", assignee_basis="assigned" cho việc xuất file (m07) (giả lập LLM bị ảo giác gán nhầm người nhận).
    Kỳ vọng: Lớp 1 (assignment_ok) phát hiện từ do dự ("chắc", "nhỉ", "để em xem", "để xem")
    và buộc hạ assignee về None kèm cờ 'assignee_only_mentioned'.
 """

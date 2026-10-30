@@ -54,7 +54,7 @@ def make_mock_context(roles_map: dict[str, str], meeting_info: dict = None, righ
 # Chống False Action (Câu hỏi ý kiến / Phản hồi do dự)
 # =========================================================================
 def test_edge_case_tentative_conclusion_and_opinion_inquiry():
-    """Kiểm chứng các ca biên hóc búa qua Pipeline toàn trình với Gemini và JEV:
+    """Kiểm chứng các ca biên phức tạp qua Pipeline toàn trình với Gemini và JEV:
     1. Ca m05: Quyết định kèm điều kiện ràng buộc chưa ngã ngũ -> Tự động hạ về leaning.
     2. Ca g10: Người tham gia chỉ được hỏi ý kiến / do dự -> Tuyệt đối không gán task.
     3. Bộ lọc TENTATIVE_PHRASE: Chặn câu chốt thử nghiệm của sếp.
@@ -188,7 +188,7 @@ def test_long_transcript_multiround_journey_evolution():
     assert "modification" in phases
     assert "resolution" in phases
 
-    # Bước chốt hạ cuối cùng thuộc về Tech Lead Hoàng
+    # Bước quyết định cuối cùng thuộc về Tech Lead Hoàng
     last_step = t.decision_journey[-1]
     assert last_step.phase == "resolution"
     assert last_step.speaker == "Hoàng"
@@ -198,14 +198,14 @@ def test_long_transcript_multiround_journey_evolution():
 # =========================================================================
 # TEST 5: CHANGE REQUEST C2 — ACTION CHƯA RÕ (BẮT BUỘC)
 # Cuộc họp có câu "cái này team mình xử lý nhé" nhưng không nói rõ người
-# phụ trách hoặc deadline. Hệ thống KHÔNG ĐƯỢC tự bịa owner/deadline.
+# phụ trách hoặc deadline. Hệ thống KHÔNG ĐƯỢC tự ý gán owner/deadline.
 # =========================================================================
 def test_change_request_c2_vague_action_no_owner_no_deadline():
     """Kiểm chứng trực tiếp yêu cầu của Change Request C2:
     Transcript xuất hiện câu: 'Cái này team mình xử lý nhé.'
     Hệ thống kiên quyết:
-    1. Không tự bịa owner (hủy đại từ tập thể 'team mình', không gán nhầm người nói Huy).
-    2. Không tự bịa deadline (deadline = None).
+    1. Không tự suy diễn owner (hủy đại từ tập thể 'team mình', không gán nhầm người nói Huy).
+    2. Không tự suy diễn deadline (deadline = None).
     3. Gắn cờ cảnh báo 'assignee_unknown' và 'deadline_unknown' đưa vào Review Queue.
     """
     raw_transcript = """
@@ -219,7 +219,7 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
         meeting_info={"id": "m_c2_test", "leader": "Huy", "mode": "authority", "date": "2026-10-23"}
     )
 
-    # Tình huống 1: LLM gán assignee là đại từ tập thể "team mình" và bịa deadline "sớm nhất"
+    # Tình huống 1: LLM gán assignee là đại từ tập thể "team mình" và suy diễn deadline "sớm nhất"
     item_hallucinated_team = RawItem(
         kind="task",
         title="Xử lý công việc dự án",
@@ -239,7 +239,7 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
     assert t_1.assignee is None, f"Owner không được là tập thể nhưng lại nhận: {t_1.assignee}"
     assert t_1.assignee_basis == "none"
     assert "assignee_unknown" in t_1.flags
-    # KHÔNG ĐƯỢC tự bịa deadline (quote không có trong transcript)
+    # KHÔNG ĐƯỢC tự suy diễn deadline (quote không có trong transcript)
     assert t_1.deadline_date is None
     assert "deadline_unknown" in t_1.flags or "deadline_not_in_source" in t_1.flags
 
@@ -260,7 +260,7 @@ def test_change_request_c2_vague_action_no_owner_no_deadline():
     assert len(res_2) == 1
     t_2 = res_2[0]
     # KHÔNG ĐƯỢC tự ý gán người phát biểu câu giao việc chung thành người tự nhận việc
-    assert t_2.assignee is None, f"Owner không được tự bịa là Huy: {t_2.assignee}"
+    assert t_2.assignee is None, f"Owner không được tự suy diễn là Huy: {t_2.assignee}"
     assert t_2.assignee_basis == "none"
     assert "assignee_unknown" in t_2.flags
     assert t_2.deadline_date is None

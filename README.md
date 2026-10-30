@@ -52,7 +52,7 @@ Trong các cuộc họp điều hành và kỹ thuật:
        │
        ▼
 [ Tầng 4: Giao diện duyệt cho con người & Xuất dữ liệu ]
-  • Trực quan hóa Hành trình Quyết định (Decision Journey): Minh họa lộ trình 4 giai đoạn (Đề xuất ➔ Phản biện ➔ Thay đổi ➔ Chốt hạ) theo mốc thời gian.
+  • Trực quan hóa Hành trình Quyết định (Decision Journey): Minh họa lộ trình 4 giai đoạn (Đề xuất ➔ Phản biện ➔ Thay đổi ➔ Quyết định chính thức) theo mốc thời gian.
   • Đánh dấu phát biểu hai chiều: Bấm vào kết luận/bằng chứng sẽ tự động cuộn đến và làm sáng câu thoại gốc trong biên bản.
   • Phân định 3 miền dữ liệu riêng biệt: Kho tri thức dài hạn (ADR, quy chế, bài học), Bảng việc tác nghiệp (Người nhận, Hạn chót) và Vấn đề chưa chốt (Blockers/Open Questions).
   • Điều chỉnh bảng phân quyền linh hoạt: Chỉnh sửa trực tiếp quyền hạn theo chức danh ngay trên giao diện theo từng phiên họp.

@@ -105,7 +105,7 @@ class TimelineEvent(BaseModel):
 
 class DecisionJourneyStep(BaseModel):
     phase: Literal["proposal", "discussion", "modification", "resolution"]
-    phase_vi: str  # "Đề xuất ban đầu", "Thảo luận / Phản biện", "Thay đổi / Bác bỏ", "Chốt hạ"
+    phase_vi: str  # "Đề xuất ban đầu", "Thảo luận / Phản biện", "Thay đổi / Bác bỏ", "Quyết định chính thức"
     speaker: str
     action: str
     quote: str

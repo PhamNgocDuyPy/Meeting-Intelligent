@@ -263,7 +263,7 @@ def _build_decision_journey(ordered: list[Label], utts: dict[str, Utterance], op
             cond_desc = " (tạm thời / có điều kiện)" if lb.conditional else ""
             steps.append(DecisionJourneyStep(
                 phase="resolution",
-                phase_vi="Chốt hạ",
+                phase_vi="Quyết định chính thức",
                 speaker=u.speaker,
                 action=f"Chốt phương án: {opt_name or state.final_option or ''}{cond_desc}".strip(),
                 quote=lb.quote or u.text,

@@ -43,7 +43,7 @@
 [00:52:10] Dũng: Tôi ủng hộ đề xuất của Sơn. Modular Monolith giải quyết được cả bài toán chi phí hạ tầng lẫn cấu trúc code gọn gàng cho team.
 [00:53:30] Lan: Nhưng còn về cơ sở dữ liệu thì sao hả Sơn? Các module có được phép query chéo bảng của nhau không?
 [00:54:45] Sơn: Tuyệt đối không chị Lan. Chúng ta vẫn dùng chung một instance PostgreSQL duy nhất để tiết kiệm chi phí, nhưng sẽ phân tách thành các schema logic riêng biệt.
-[00:56:10] Sơn: Module nào chỉ được truy cập vào schema của module đó. Sau này nếu một phân hệ cần scale đột biến, chúng ta chỉ việc bóc module đó thành microservice trong một nốt nhạc.
+[00:56:10] Sơn: Module nào chỉ được truy cập vào schema của module đó. Sau này nếu một phân hệ cần scale đột biến, chúng ta chỉ việc bóc module đó thành microservice một cách rất thuận tiện và độc lập.
 [00:57:35] Hoàng: Giải pháp tách schema logic trong cùng database PostgreSQL của Sơn rất sáng tạo và chuẩn chỉ theo kiến trúc hiện đại.
 [00:58:40] Hoàng: Như vậy rào cản về việc quản trị Kubernetes phức tạp và chi phí cloud đắt đỏ đều được tháo gỡ triệt để.
 [00:59:30] Tuấn: Tôi cũng thấy hợp lý, tôi đồng ý bỏ đề xuất Monolith cũ để chuyển sang ủng hộ Modular Monolith.
