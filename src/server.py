@@ -62,7 +62,7 @@ def _check_and_increment_daily_run() -> bool:
 
 
 class MeetingIntelHandler(SimpleHTTPRequestHandler):
-    timeout = 60
+    timeout = 180
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT / "web"), **kwargs)
@@ -80,16 +80,16 @@ class MeetingIntelHandler(SimpleHTTPRequestHandler):
         return self.client_address[0] if self.client_address else "127.0.0.1"
 
     def _check_access_code(self, qs: dict, payload: Optional[dict] = None) -> bool:
-        required_code = os.environ.get("ACCESS_CODE", "").strip()
+        required_code = os.environ.get("ACCESS_CODE", "").strip().strip('"').strip("'")
         if not required_code:
             return True  # Không cấu hình ACCESS_CODE thì cho phép (tiện chạy local)
-        auth_header = self.headers.get("X-Access-Code", "").strip()
+        auth_header = self.headers.get("X-Access-Code", "").strip().strip('"').strip("'")
         if not auth_header:
             auth = self.headers.get("Authorization", "").strip()
             if auth.lower().startswith("bearer "):
-                auth_header = auth[7:].strip()
-        code_qs = qs.get("code", [""])[0].strip() if qs else ""
-        code_payload = payload.get("access_code", "").strip() if payload else ""
+                auth_header = auth[7:].strip().strip('"').strip("'")
+        code_qs = qs.get("code", [""])[0].strip().strip('"').strip("'") if qs else ""
+        code_payload = payload.get("access_code", "").strip().strip('"').strip("'") if payload else ""
         provided = auth_header or code_qs or code_payload
         return provided == required_code
 

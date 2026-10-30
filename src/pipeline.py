@@ -50,37 +50,57 @@ def run_meeting_dir(meeting_dir: Path, backend: str = "gemini", judge: str = "no
                 t.explanation += " [Có nhãn phản đối/đảo ngược bị thất lạc ID phát biểu -> hạ về Nghiêng về]"
 
     if judge != "none":
-        for t in topics:
-            if t.status in ("decided", "leaning") and any(e.stance == "conclude" for e in t.timeline):
+        eligible_topics = [t for t in topics if t.status in ("decided", "leaning") and any(e.stance == "conclude" for e in t.timeline)]
+        if eligible_topics:
+            def _eval_topic(t):
                 try:
                     verdict = judge_topic(judge, t, utts, ctx)
-                    if verdict is not None:
-                        dg = apply_judge(t, verdict, mode=judge_mode)
-                        if dg and dg.get("mode") == "downgrade":
-                            rep.downgrades.append({"item": t.title, "field": "status", "value": "decided", "reason": ",".join(dg["reasons"])})
-                        elif dg and dg.get("mode") == "advisory":
-                            rep.downgrades.append({"item": t.title, "field": "status_flag", "value": "advisory_flag", "reason": ",".join(dg["reasons"])})
-                except Exception as e:  # bộ chấm lỗi không được làm hỏng kết quả luật
-                    t.flags.append(f"judge_error:{type(e).__name__}")
+                    return t, verdict, None
+                except Exception as e:
+                    return t, None, e
+
+            from concurrent.futures import ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=min(len(eligible_topics), 5)) as ex:
+                results = list(ex.map(_eval_topic, eligible_topics))
+
+            for t, verdict, err in results:
+                if err is not None:
+                    t.flags.append(f"judge_error:{type(err).__name__}")
+                elif verdict is not None:
+                    dg = apply_judge(t, verdict, mode=judge_mode)
+                    if dg and dg.get("mode") == "downgrade":
+                        rep.downgrades.append({"item": t.title, "field": "status", "value": "decided", "reason": ",".join(dg["reasons"])})
+                    elif dg and dg.get("mode") == "advisory":
+                        rep.downgrades.append({"item": t.title, "field": "status_flag", "value": "advisory_flag", "reason": ",".join(dg["reasons"])})
 
     meeting_date = ctx.meeting.get("date")
     items = build_items(out, by_id, ctx, meeting_date, rep)
 
     if judge != "none":
-        for it in items:
-            if it.kind == "task" and it.assignee:
+        eligible_items = [it for it in items if it.kind == "task" and it.assignee]
+        if eligible_items:
+            def _eval_item(it):
                 cited_utts = [by_id[u] for u in it.utterance_ids if u in by_id]
                 cited_text = " ".join(f"{u.speaker}: {u.text}" for u in cited_utts)
                 try:
                     p_task, act = judge_task_assignee(judge, it.title, it.assignee, cited_text)
-                    if act == "drop":
-                        rep.downgrades.append({"item": it.title, "field": "assignee", "value": it.assignee, "reason": f"judge_rejected:p={p_task:.2f}"})
-                        it.assignee = None
-                        it.flags.append("judge_assignee_dropped")
-                    elif act == "confirm":
-                        it.flags.append("assignee_needs_confirm")
+                    return it, p_task, act, None
                 except Exception as e:
-                    it.flags.append(f"judge_task_error:{type(e).__name__}")
+                    return it, None, None, e
+
+            from concurrent.futures import ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=min(len(eligible_items), 5)) as ex:
+                results = list(ex.map(_eval_item, eligible_items))
+
+            for it, p_task, act, err in results:
+                if err is not None:
+                    it.flags.append(f"judge_task_error:{type(err).__name__}")
+                elif act == "drop":
+                    rep.downgrades.append({"item": it.title, "field": "assignee", "value": it.assignee, "reason": f"judge_rejected:p={p_task:.2f}"})
+                    it.assignee = None
+                    it.flags.append("judge_assignee_dropped")
+                elif act == "confirm":
+                    it.flags.append("assignee_needs_confirm")
 
     return MeetingResult(meeting_id=ctx.meeting.get("id", meeting_dir.name), title=ctx.meeting.get("title", ""),
                          date=meeting_date, backend=backend, judge=judge, topics=topics, items=items,

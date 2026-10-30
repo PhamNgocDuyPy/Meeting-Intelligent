@@ -238,10 +238,10 @@ function setupEventListeners() {
       });
 
       btnSubmitUpload.disabled = true;
-      btnSubmitUpload.textContent = "Đang phân tích...";
+      btnSubmitUpload.textContent = "Đang phân tích AI...";
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
 
       try {
         const res = await fetch("/api/upload", {
@@ -307,7 +307,7 @@ function setupEventListeners() {
       } catch (err) {
         clearTimeout(timeoutId);
         if (err.name === "AbortError") {
-          showToast("Quá thời gian chờ (60s). Máy chủ hoặc mô hình AI phản hồi quá lâu.");
+          showToast("Quá thời gian chờ (120s). Máy chủ hoặc mô hình AI phản hồi quá lâu.");
         } else {
           showToast("Lỗi kết nối máy chủ: " + err.message);
         }
